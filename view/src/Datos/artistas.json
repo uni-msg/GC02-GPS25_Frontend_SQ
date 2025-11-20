@@ -1,0 +1,162 @@
+[
+  {
+    "id": 1,
+    "nombre": "Adele",
+    "fechaRegistro": "2008-10-01",
+    "email": "adele@gmail.com",
+    "genero": "pop",
+    "subgenero": "soul",
+    "imagen":"BillieJean.png",
+    "oyentes": "123.122"
+  },
+  {
+    "id": 2,
+    "nombre": "Ed Sheeran",
+    "fechaRegistro": "2007-03-13",
+    "email": "edsheeran@gmail.com",
+    "genero": "pop",
+    "subgenero": "folk",
+    "imagen":"EnterSandman.png",
+    "oyentes": "2.123.122"
+  },
+  {
+    "id": 3,
+    "nombre": "Dua Lipa",
+    "fechaRegistro": "2015-05-02",
+    "email": "dualipa@gmail.com",
+    "genero": "pop",
+    "subgenero": "dance",
+    "imagen":"BillieJean.png",
+    "oyentes": "12.731.222"
+  },
+  {
+    "id": 4,
+    "nombre": "Sam Smith",
+    "fechaRegistro": "2008-07-16",
+    "email": "samsmith@gmail.com",
+    "genero": "pop",
+    "subgenero": "ballad",
+    "imagen":"EnterSandman.png",
+    "oyentes": "7.731.222"
+  },
+  {
+    "id": 5,
+    "nombre": "Little Mix",
+    "fechaRegistro": "2008-10-14",
+    "email": "littlemix@gmail.com",
+    "genero": "pop",
+    "subgenero": "pop",
+    "imagen":"Adele.png",
+    "oyentes": "5.731.862"
+  },
+  {
+    "id": 6,
+    "nombre": "One Direction",
+    "fechaRegistro": "2010-09-01",
+    "email": "onedirection@gmail.com",
+    "genero": "pop",
+    "subgenero": "boyband",
+    "imagen":"BillieJean.png",
+    "oyentes": "731.862"
+  },
+  {
+    "id": 7,
+    "nombre": "Harry Styles",
+    "fechaRegistro": "2012-11-01",
+    "email": "harrystyles@gmail.com",
+    "genero": "pop",
+    "subgenero": "rock",
+    "imagen":"EnterSandman.png",
+    "oyentes": "7.381.862"
+  },
+  {
+    "id": 8,
+    "nombre": "Anne-Marie",
+    "fechaRegistro": "2013-04-10",
+    "email": "annemarie@gmail.com",
+    "genero": "pop",
+    "subgenero": "electro",
+    "imagen":"Adele.png",
+    "oyentes": "381.862"
+  },
+  {
+    "id": 9,
+    "nombre": "Rita Ora",
+    "fechaRegistro": "2012-08-15",
+    "email": "ritaora@gmail.com",
+    "genero": "pop",
+    "subgenero": "rnb",
+    "imagen":"BillieJean.png",
+    "oyentes": "27.657.539"
+  },
+  {
+    "id": 10,
+    "nombre": "Emeli Sandé",
+    "fechaRegistro": "2009-06-25",
+    "email": "emelisande@gmail.com",
+    "genero": "pop",
+    "subgenero": "soul",
+    "imagen":"EnterSandman.png",
+    "oyentes": "2.237.239"
+  },
+  {
+    "id": 11,
+    "nombre": "Jessie J",
+    "fechaRegistro": "2011-05-20",
+    "email": "jessiej@gmail.com",
+    "genero": "pop",
+    "subgenero": "rap",
+    "imagen":"Adele.png",
+    "oyentes": "1.237.239"
+  },
+  {
+    "id": 12,
+    "nombre": "Olly Murs",
+    "fechaRegistro": "2010-07-30",
+    "email": "ollymurs@gmail.com",
+    "genero": "pop",
+    "subgenero": "funk",
+    "imagen":"BillieJean.png",
+    "oyentes": "15.627.739"
+  },
+  {
+    "id": 13,
+    "nombre": "Clean Bandit",
+    "fechaRegistro": "2013-03-15",
+    "email": "cleanbandit@gmail.com",
+    "genero": "pop",
+    "subgenero": "electro",
+    "imagen":"EnterSandman.png",
+    "oyentes": "7.777.777"
+  },
+  {
+    "id": 14,
+    "nombre": "Joss Stone",
+    "fechaRegistro": "2006-03-15",
+    "email": "jossstone@gmail.com",
+    "genero": "pop",
+    "subgenero": "soul",
+    "imagen":"BillieJean.png",
+    "oyentes": "5.227.239"
+  },
+  {
+    "id": 15,
+    "nombre": "James Arthur",
+    "fechaRegistro": "2012-09-20",
+    "email": "jamesarthur@gmail.com",
+    "genero": "pop",
+    "subgenero": "ballad",
+    "imagen":"EnterSandman.png",
+    "oyentes": "3.127.734"
+  },
+  {
+    "id": 16,
+    "nombre": "Florence + The Machine",
+    "fechaRegistro": "2008-09-15",
+    "email": "florence@gmail.com",
+    "genero": "pop",
+    "subgenero": "indie",
+    "imagen":"Adele.png",
+    "oyentes": "123.122"
+  }
+]

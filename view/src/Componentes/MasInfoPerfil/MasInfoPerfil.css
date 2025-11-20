@@ -1,0 +1,135 @@
+#masInfoPerfil {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 3em;
+    padding: 1em;
+    width: 100%;
+}
+
+#masInfoPerfil h1 {
+    text-align: center;
+}
+
+#masInfoPerfil .btnFavoritePer{
+    margin-left: 0.2em;
+    color: rgb(201, 0, 0);
+    background: transparent;
+    border: 0em solid transparent;
+}
+  
+#masInfoPerfil  .btnFavoritePer:hover{
+    color: rgb(120, 2, 2);
+}
+
+#masInfoPerfil .text-esNovedad {
+    animation: colorLetra 4s linear infinite;
+}
+
+#masInfoPerfil .puntuacion {
+    text-align: center;
+}
+
+#masInfoPerfil .desc {
+    margin-top: 0.4rem;
+    margin-bottom: 1.5rem;
+}
+
+#masInfoPerfil .anio, 
+#masInfoPerfil .oye {
+    width: fit-content;
+    font-size: 1rem;
+}
+
+#masInfoPerfil .anio {
+    background-color: #f3ebff;
+}
+
+#masInfoPerfil .oye {
+    background-color: #d5f5fd;
+}
+
+#masInfoPerfil #etiquetas {
+    margin-bottom: 3rem;
+}
+
+#masInfoPerfil #etiquetas .tags {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    background-color: #572362;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+}
+
+#masInfoPerfil .card-img-circle {
+    margin: 1em 15%;
+    width: 70%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#masInfoPerfil #listaElementos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+    width: 100%;
+}
+
+#masInfoPerfil .elemento {
+    padding: 0.8em;
+    border: 0.1em solid #ccc;
+    border-radius: 0.5em;
+    background-color: #fff;
+}
+
+#masInfoPerfil .cabeElem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.5em;
+}
+
+#masInfoPerfil .botonCanAlb,
+#masInfoPerfil .verMasElem,
+#masInfoPerfil .verMasCanc {
+    background-color: #572362;
+    color: #fff;
+    border: none;
+    padding: 0.4em 0.8em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#masInfoPerfil .botonCanAlb:hover,
+#masInfoPerfil .verMasElem:hover,
+#masInfoPerfil .verMasCanc:hover {
+    background-color: #c84de0;
+    color: black;
+}
+
+#masInfoPerfil .canciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    margin-left: 1em;
+    padding-left: 0.5em;
+    border-left: 2px solid #572362;
+}
+
+#masInfoPerfil .cardCancion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 0.7em;
+    border-radius: 0.5em;
+    border: 0.1em solid #572362;
+}
+
+#masInfoPerfil .cardCancion span {
+    font-weight: bold;
+}

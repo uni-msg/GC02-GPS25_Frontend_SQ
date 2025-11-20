@@ -1,0 +1,14 @@
+[
+    {
+      "id": 1,
+      "nombre": "cancion"
+    },
+    {
+      "id": 2,
+      "nombre": "album"
+    },
+    {
+      "id": 3,
+      "nombre": "artista"
+    }
+]

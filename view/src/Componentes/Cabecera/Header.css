@@ -1,0 +1,73 @@
+/* ELEMENTO PRINCIPAL DEL COMPONENTE Y ESTRUCTURACION*/
+#cabecera{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+#cabecera div{
+    width: auto;
+}
+#cabecera div img{
+    width: 3.5em;
+    border-radius: 10px;
+}
+
+/* ESTILO SOBRE EL TEXTO */
+#cabecera h3{
+    margin: 0;
+    padding-left: 0.2em;
+}
+#cabecera i{
+    padding: 0.2em;
+    font-size: 1.8em;
+    color: var(--morado-color);
+}
+#cabecera #iconoPerfilHeader{
+    width: 2em;
+    border-radius: 100%;
+}
+
+/* ---------------- HOVER ----------------------------*/
+#cabecera i:hover{
+    animation: colorIconoHeader 2.5s infinite; /* Aplica de manera infinita la animacion keyframe colorIcono */
+    filter: brightness(90%); /* Reduce el brillo en un 90% */
+    cursor: pointer;
+}
+
+#cabecera h3:hover{
+    animation: colorLetra 2.5s infinite; /* Aplica de manera infinita la animacion keyframe colorIcono */
+    filter: brightness(90%); /* Reduce el brillo en un 90% */
+    cursor: pointer;
+}
+
+/* ---------------- MODAL ----------------------------*/
+#cabecera .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+  #cabecera .modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    width: 90%;            /* Ocupa hasta el 90% del viewport, adaptable */
+    max-width: 500px;      /* No será más ancho que 500px */
+    max-height: 80vh;      /* Limita altura si hay mucho contenido */
+    overflow-y: auto;      /* Agrega scroll si se desborda */
+  }
+  #cabecera  .modal-botones {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+  #cabeceera .xIcono {
+    margin-left: auto;
+  }

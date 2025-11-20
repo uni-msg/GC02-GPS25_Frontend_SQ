@@ -1,0 +1,375 @@
+/* masInfo.css */
+
+.vinilo-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 23rem;
+  height: 23rem;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden; /* por si acaso algo se sale */
+}
+
+/* Hacemos que todo el wrapper (vinilo + imagen) gire */
+.vinilo-wrapper.girando {
+  animation: rotar 5s linear infinite;
+}
+
+.portada {
+  width: 26rem;
+  height: 26rem;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.vinilo-icon {
+  position: absolute;
+  font-size: 23rem; /* mismo tamaño que el wrapper para que encaje */
+  color: rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Animación de rotación */
+@keyframes rotar {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/*CONTENEDOR PRINCIPAL*/ 
+#contenidoCancion{
+  margin-top: 1.5rem;       
+  margin-bottom: 1.5rem;    
+  width: 100%;              
+  padding: 1rem;            
+}
+/*REPRODUCTOR*/ 
+#reproductor {
+  width: auto;
+  background-color: #52666A;
+}
+
+.btnCancionAnterior{
+  border-radius: 10%;
+  width: 20%;
+  background-color: #ffffff;
+  font-weight: bold;
+}
+
+.btnCancionAnterior:hover{
+  background-color: #c6c6c6;
+}
+
+.btnCancionPosterior{
+  border-radius: 10%;
+  width: 20%;
+  background-color: #ffffff;
+  font-weight: bold;
+}
+
+.btnCancionPosterior:hover{
+  background-color: #c6c6c6;
+}
+
+.btnPlay{
+  border-radius: 10%;
+  width: 20%;
+  background-color: #ffffff;
+  font-weight: bold;
+}
+
+.btnPlay:hover{
+  background-color: #c6c6c6;
+}
+
+.barraProgreso{
+  width: 100%;
+  align-items: center;
+}
+.progress{
+  width: 80%;
+  color: #ffffff;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.progreso{
+  background-color: #000;
+}
+
+.duracion{
+  color: #fff;
+}
+
+.tiempoAhora{
+  color:#fff;
+}
+
+.filaPlayFav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.btnFavorite{
+  color: rgb(201, 0, 0);
+  position: relative;
+  left: 35%;
+}
+
+.btnFavorite:hover{
+  color: rgb(120, 2, 2);
+}
+/*PRECIO*/
+.precio {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+/* BOTÓN COMPRAR Y AÑADIR CESTA*/
+.btn-comprar {
+  width: 47%;
+  margin-right: 5%;
+  background-color: #27c010;
+  border-color: #27c010;
+  color: #fff;
+  font-weight: bold;
+  transition-duration: 0.4s;
+}
+
+.btn-comprar:hover {
+  background-color: #33f515;
+  color: black;
+}
+
+.btn-anadircesta{
+  width: 47%;
+  background-color: #4184BF;
+  border-color: #4184BF;
+  color: #fff;
+  font-weight: bold;
+  transition-duration: 0.4s;
+}
+
+.btn-anadircesta:hover {
+  background-color: #3770a2;
+  color: black;
+}
+
+/* VALORACIONES */
+.my-icon {
+  font-size: 2rem;
+  margin-right: 0.3rem;
+}
+
+/*TÍTULO DE LA CANCIÓN*/
+.tituloCancion {
+  margin-bottom: 1.5rem;
+}
+
+/*DESCRIPCIÓN DE LA CANCIÓN*/
+.descripcionCancion {
+  margin-top: 0.4rem;
+  margin-bottom: 1.5rem;
+}
+
+/*AÑO LANZAMIENTO*/
+.anio{
+  width: fit-content;
+  background-color: #f3ebff;
+  font-size: 1rem;
+}
+
+.numVentas{
+  width: fit-content;
+  background-color: #d5f5fd;
+  font-size: 1rem;
+}
+/*COLUMNAS*/
+
+#colDerechaMasInfoCancion {
+  margin-left: 3%;
+  width: auto;
+}
+
+#colIzquierdaMasInfo{
+  width: 28rem;
+}
+
+
+/*COMENTARIOS USUARIO*/
+.comentario-container{
+  width: 100%;
+  margin-bottom: 5%;
+}
+
+.textarea-comentario {
+  width: 100%; 
+  height: 50%; 
+  resize: none; 
+}
+
+.rating-container {
+  cursor: pointer;
+  margin-right: 2%; /* Espaciado entre las notas */
+  transition: color 0.2s ease-in-out; /* Transición suave para el color */
+  margin-bottom: 2%;
+}
+
+
+.cardHeaderComentario {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  border: 1px solid #ddd;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  background: rgb(238, 238, 238);
+  padding-left: 1rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  align-items: center;
+  gap: 37%;
+}
+
+.cardComentario {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.cardBodyComentario {
+  padding-top: 0.7rem;
+  padding-bottom: 1rem;
+  padding-left: 1rem;
+  text-align: left;
+  padding-right: 1rem;
+}
+
+/*ARTISTA*/
+
+.nombreArtista {
+  font-size: 1.3rem;
+  color: rgb(142, 142, 142);
+  margin-bottom: 0.5rem;
+}
+
+/* ETIQUETAS/TAGS */
+#etiquetas .tags {
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  background-color: #572362;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+#etiquetas {
+  margin-bottom: 3rem;
+}
+
+/* LETRA DE CANCION */
+
+#letraCancion #letra-texto {
+  text-align: center;
+  font-size: 1em !important;
+  padding: 1em;
+  margin: 0 auto 0 0;
+  height: 15em;
+  width: 50%;
+
+  border-radius: 1em;
+  border: 0.1rem solid var(--gris-claro-color);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--morado-color) transparent; /* Firefox */
+  font-size: 1em !important;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+}
+
+/* Scrollbar personalizada para navegadores Webkit */
+#letraCancion::-webkit-scrollbar {
+  width: 0.5em;
+}
+#letraCancion::-webkit-scrollbar-track {
+  background: transparent; 
+  margin-top: 0.5em; 
+  margin-bottom: 0.5em;
+  border-radius: 1em;
+}
+#letraCancion::-webkit-scrollbar-thumb {
+  background: var(--morado-color); 
+  border-radius: 1em;
+}
+#letraCancion::-webkit-scrollbar-thumb:hover {
+  background: var(--purpura-color); 
+}
+
+/*CANCIONES RELACIONADAS*/
+#cancionesRelacionadas .botonVerMasColor {
+  background-color: #572362;
+  padding: 5%;
+  width: 100%;
+  border-radius: 5%;
+  color: white;
+  display: block;
+  transition-duration: 0.4s;
+  font-weight: bold;
+}
+
+#cancionesRelacionadas .botonVerMasColor:hover{
+  background-color: #c84de0; /* Green */
+  color: black;
+}
+
+.card-title {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.cardCancionRelacionada {
+  display: block;
+  width: 70%;
+  margin: auto;
+}
+
+.vinilo-wrapperelacionadas {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15rem;
+  height: 15rem;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden; /* por si acaso algo se sale */
+}
+
+.cardCancionRelacionada {
+  width: 15rem;
+  height: 15rem;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.vinilo-icon {
+  position: absolute;
+  font-size: 23rem; /* mismo tamaño que el wrapper para que encaje */
+  color: rgba(0, 0, 0, 0.8);
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+

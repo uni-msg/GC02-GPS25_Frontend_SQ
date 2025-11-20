@@ -1,0 +1,50 @@
+[
+    {
+      "id": 1,
+      "titulo": "¿Cómo puedo realizar una compra?",
+      "descripcion": "Para comprar, selecciona un producto, agrégalo a la cesta y procede al pago. Puedes elegir entre varios métodos de pago seguros.",
+      "numGusta": 120
+    },
+    {
+      "id": 2,
+      "titulo": "¿Cuáles son los métodos de pago disponibles?",
+      "descripcion": "Aceptamos tarjetas de crédito, débito, PayPal y transferencias bancarias. También puedes pagar en efectivo en algunos puntos autorizados.",
+      "numGusta": 95
+    },
+    {
+      "id": 3,
+      "titulo": "¿Cuánto tarda en llegar mi pedido?",
+      "descripcion": "El tiempo de entrega varía según la ubicación y el tipo de envío seleccionado. Generalmente, los envíos nacionales tardan entre 3 y 7 días hábiles.",
+      "numGusta": 87
+    },
+    {
+      "id": 4,
+      "titulo": "¿Puedo devolver un producto?",
+      "descripcion": "Sí, tienes hasta 30 días para devolver un producto si no estás satisfecho. Consulta nuestra política de devoluciones para más detalles.",
+      "numGusta": 110
+    },
+    {
+      "id": 5,
+      "titulo": "¿Cómo puedo contactar con el servicio de atención al cliente?",
+      "descripcion": "Puedes contactarnos a través del formulario en la vista de Contacto, por correo electrónico o por teléfono en horario de atención.",
+      "numGusta": 78
+    },
+    {
+      "id": 6,
+      "titulo": "¿Ofrecen envíos internacionales?",
+      "descripcion": "Sí, realizamos envíos a varios países. Consulta la lista de destinos disponibles y los costos adicionales en nuestra sección de envíos.",
+      "numGusta": 65
+    },
+    {
+      "id": 7,
+      "titulo": "¿Cómo puedo aplicar un cupón de descuento?",
+      "descripcion": "Durante el proceso de pago, introduce el código del cupón en la casilla correspondiente y el descuento se aplicará automáticamente.",
+      "numGusta": 90
+    },
+    {
+      "id": 8,
+      "titulo": "¿Cómo puedo rastrear mi pedido?",
+      "descripcion": "Una vez enviado tu pedido, recibirás un número de seguimiento por correo electrónico para rastrearlo en tiempo real.",
+      "numGusta": 105
+    }
+  ]

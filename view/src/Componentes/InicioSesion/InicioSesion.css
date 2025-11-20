@@ -1,0 +1,270 @@
+#login-container {
+    background: rgb(255, 255, 255);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 360px;
+    margin: 0 auto;
+
+    --bg-body: #a99d9d;
+    --bg-cont: #000000;
+    --bg-active: #cfe2ff;
+}
+
+#login-container .opcionesRegistro {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center
+}
+
+#login-container h2 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+#login-container input:not([type="checkbox"]){
+    width: 100%;
+    height: 80%;
+    padding: 5px;
+    margin: 7px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#login-container button {
+    width: 50%;
+    height: 40%;
+    padding: 3px;
+    background-color: #4590bf;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#login-container .button2 {
+    width: 70%;
+    height: 40%;
+    padding: 3px;
+    background-color: #4590bf;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#login-container button:hover {
+    background-color: #0056b3;
+}
+
+#login-container .error {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+#login-container .tab-content {
+    display: none;
+}
+
+#login-container .tab:target .tab-content,
+.tab:last-of-type .tab-content {
+    display: block;
+}
+
+#login-container .tab:target~.tab:last-of-type .tab-content {
+    display: none;
+}
+
+#login-container p {
+    margin: 0;
+}
+
+#login-container a {
+    color: inherit;
+    text-decoration: none;
+}
+
+#login-container * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#login-container body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: var(--bg-body);
+}
+
+#login-container .tab-container {
+    width: 100%;
+    height: 100%;
+    box-shadow: 3px 5px 10px rgba(0, 0, 0, .8);
+    border-radius: 5px;
+    overflow: hidden;
+
+}
+
+#login-container .options {
+    display: flex;
+    width: 100%;
+    height: 12%;
+    list-style: none;
+}
+
+#login-container .option {
+    flex-grow: 1;
+    text-align: center;
+    line-height: 50px;
+    border-bottom: solid 1px rgba(255, 233, 233, 0);
+    color: #000000;
+    cursor: pointer;
+}
+
+#login-container .option-active {
+    background: var(--bg-active);
+    border-bottom: solid 2px rgba(0, 0, 0, 0.6);
+}
+
+#login-container .contents {
+    width: 100%;
+    height: 100%;
+}
+
+#login-container .content {
+    width: 100%;
+    height: 100%;
+    color: #000000;
+    display: none;
+    padding: 20px;
+}
+
+#login-container .content-active {
+    background: var(--bg-active);
+    display: block;
+}
+
+#login-container .content h3 {
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: solid 1px rgba(255, 255, 255, .3);
+    letter-spacing: 2px;
+    margin: 10px;
+}
+
+#login-container .content p {
+    margin: 15px;
+    letter-spacing: 1px;
+}
+
+#login-container .hr {
+    color: #000000;
+}
+
+#login-container .captcha-small {
+    transform: scale(0.60);
+    /* Cambia el valor para ajustar el tamaño */
+}
+
+/* Contenedor del checkbox y el texto */
+#login-container .checkbox-politica {
+    display: flex;
+    align-items: center;
+    gap: 10%;
+    font-size: 80%;
+    margin: 0 auto;
+}
+
+/* Checkbox */
+#login-container .checkbox-politica input[type="checkbox"] {
+    width: 10%;
+    height: 10%;
+    cursor: pointer;
+}
+
+/* Enlace a la política */
+#login-container .checkbox-politica a {
+    color: #156ecc;
+    text-decoration: underline;
+}
+
+#login-container .checkbox-politica a:hover {
+    color: #3687d2;
+}
+
+/* Mensaje de error (si no acepta) */
+#login-container .error-politica {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/*toggle*/
+#login-container .switch {
+    position: relative;
+    display: inline-block;
+    width: 35%;         /* Ajusta este valor para hacerlo más pequeño */
+    max-width: 60px;    /* Evita que se vuelva gigante en pantallas grandes */
+    aspect-ratio: 2 / 1; /* Mantiene proporción */
+  }
+  
+  #login-container .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  #login-container .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 50px;
+    top: 25%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+    height: 60%;         /* Tamaño relativo al contenedor */
+    width: 60%;
+  }
+  
+  #login-container .slider::before {
+    position: absolute;
+    content: "";
+    height: 80%;         /* Tamaño relativo al contenedor */
+    width: 35%;
+    left: 5%;
+    bottom: 10%;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+  }
+  
+  #login-container input:checked + .slider {
+    background-color: #4590bf;
+    height: 60%;         /* Tamaño relativo al contenedor */
+    width: 60%;
+  }
+  
+  #login-container input:checked + .slider::before {
+    transform: translateX(170%);
+  }
+  
+  #login-container .modoArtista {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }

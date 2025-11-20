@@ -1,0 +1,38 @@
+.aviso {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px 24px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.95;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* Tipos de aviso */
+  .aviso-info {
+    background-color: #007bff;
+  }
+  
+  .aviso-exito {
+    background-color: #28a745;
+  }
+  
+  .aviso-error {
+    background-color: #dc3545;
+  }
+  
+  .aviso-advertencia {
+    background-color: #ffc107;
+    color: black;
+  }
+  
+  /* Animación de entrada */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 0.95; transform: translateY(0); }
+  }
+  

@@ -1,0 +1,132 @@
+[
+  [
+    {
+      "id": 1,
+      "nombre": "Adele",
+      "fechaRegistro": "2008-10-01",
+      "email": "adele@gmail.com",
+      "genero": "pop",
+      "subgenero": "soul"
+    },
+    {
+      "id": 2,
+      "nombre": "Ed Sheeran",
+      "fechaRegistro": "2007-03-13",
+      "email": "edsheeran@gmail.com",
+      "genero": "pop",
+      "subgenero": "folk"
+    },
+    {
+      "id": 4,
+      "nombre": "Sam Smith",
+      "fechaRegistro": "2008-07-16",
+      "email": "samsmith@gmail.com",
+      "genero": "pop",
+      "subgenero": "ballad"
+    },
+    {
+      "id": 5,
+      "nombre": "Little Mix",
+      "fechaRegistro": "2008-10-14",
+      "email": "littlemix@gmail.com",
+      "genero": "pop",
+      "subgenero": "pop"
+    }
+  ],
+  [
+      {
+        "id": 2,
+        "nombre": "Smells Like Teen Spirit",
+        "anio": 1991,
+        "descripcion": "Canción representativa del grunge, interpretada por Nirvana y considerada un himno de la generación de los 90.",
+        "genero": "Rock",
+        "subgenero": "Grunge",
+        "album": "Nevermind",
+        "artista": "Nirvana",
+        "numVentas": 345,
+        "precio": 3.23
+      },
+      {
+        "id": 3,
+        "nombre": "Billie Jean",
+        "anio": 1982,
+        "descripcion": "Uno de los mayores éxitos de Michael Jackson, con un ritmo contagioso y una historia intrigante en su letra.",
+        "genero": "Pop",
+        "subgenero": "R&B",
+        "album": "Thriller",
+        "artista": "Michael Jackson",
+        "numVentas": 334,
+        "precio": 3.23
+      },
+      {
+        "id": 6,
+        "nombre": "Stairway to Heaven",
+        "año": 1971,
+        "descripcion": "Una obra maestra de Led Zeppelin con una de las progresiones más icónicas en la historia del rock.",
+        "genero": "Rock",
+        "subgenero": "Rock progresivo",
+        "album": "Led Zeppelin IV",
+        "artista": "Led Zeppelin",
+        "numVentas": 3244,
+        "precio": 6.46
+      },
+      {
+        "id": 12,
+        "nombre": "Sweet Child O' Mine",
+        "año": 1987,
+        "descripcion": "Una de las canciones más reconocidas de Guns N' Roses con un icónico riff de guitarra.",
+        "genero": "Rock",
+        "subgenero": "Hard rock",
+        "album": "Appetite for Destruction",
+        "artista": "Guns N' Roses",
+        "numVentas": 3244,
+        "precio": 3.45
+      }
+  ],
+  [
+      {
+      "id": 1,
+      "nombre": "Thriller",
+      "artistas": ["Michael Jackson"],
+      "genero": "Pop",
+      "subgeneros": ["Pop Rock", "R&B"],
+      "listaCanciones": ["Wanna Be Startin' Somethin'", "Thriller", "Beat It", "Billie Jean"],
+      "fechaRegistro": "1982-11-30",
+      "numVentas": 70000000,
+      "precio": 19.99
+      },
+      {
+      "id": 3,
+      "nombre": "Back in Black",
+      "artistas": ["AC/DC"],
+      "genero": "Rock",
+      "subgeneros": ["Hard Rock"],
+      "listaCanciones": ["Hells Bells", "Shoot to Thrill", "Back in Black", "You Shook Me All Night Long"],
+      "fechaRegistro": "1980-07-25",
+      "numVentas": 50000000,
+      "precio": 99.99
+      },
+      {
+      "id": 7,
+      "nombre": "Nevermind",
+      "artistas": ["Nirvana"],
+      "genero": "Rock",
+      "subgeneros": ["Grunge", "Alternative Rock"],
+      "listaCanciones": ["Smells Like Teen Spirit", "In Bloom", "Come as You Are", "Lithium"],
+      "fechaRegistro": "1991-09-24",
+      "numVentas": 30000000,
+      "precio": 33.33
+      },
+      {
+      "id": 15,
+      "nombre": "AM",
+      "artistas": ["Arctic Monkeys"],
+      "genero": "Rock",
+      "subgeneros": ["Indie Rock", "Alternative Rock"],
+      "listaCanciones": ["Do I Wanna Know?", "R U Mine?", "Arabella", "Why'd You Only Call Me When You're High?"],
+      "fechaRegistro": "2013-09-09",
+      "numVentas": 3000000,
+      "precio": 5.99
+      }
+  ]
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "id": 1,
+    "usuario": "adri.x",
+    "fechaPublicacion": "2025-03-13",
+    "descripcion": "Increíble banda emergente, su sonido es único!",
+    "valoracion": 5
+  },
+  {
+    "id": 2,
+    "usuario": "jazzlozano",
+    "fechaPublicacion": "2025-03-12",
+    "descripcion": "Buena energía, pero la mezcla de sonido podría mejorar.",
+    "valoracion": 4
+  },
+  {
+    "id": 3,
+    "usuario": "Noelia",
+    "fechaPublicacion": "2025-03-11",
+    "descripcion": "Me encantó el estilo indie, pero esperaba más.",
+    "valoracion": 3
+  },
+  {
+    "id": 4,
+    "usuario": "shasa rosa",
+    "fechaPublicacion": "2025-03-10",
+    "descripcion": "El vocalista tiene una energía brutal en el escenario!",
+    "valoracion": 5
+  },
+  {
+    "id": 5,
+    "usuario": "COSMO",
+    "fechaPublicacion": "2025-03-09",
+    "descripcion": "Interesante fusión de géneros, aunque algo experimental para mi gusto.",
+    "valoracion": 4
+  },
+  {
+    "id": 6,
+    "usuario": "Hamura",
+    "fechaPublicacion": "2025-03-08",
+    "descripcion": "Son brutales, pero les falta pulir algunos detalles técnicos.",
+    "valoracion": 4
+  },
+  {
+    "id": 7,
+    "usuario": "Alex Pizarro",
+    "fechaPublicacion": "2025-03-07",
+    "descripcion": "Me fascinó su set acústico, me erizó la piel!",
+    "valoracion": 5
+  },
+  {
+    "id": 8,
+    "usuario": "Solagne",
+    "fechaPublicacion": "2025-03-06",
+    "descripcion": "Buen intento de synthwave, pero necesitan mejorar en producción.",
+    "valoracion": 3
+  },
+  {
+    "id": 9,
+    "usuario": "Jose",
+    "fechaPublicacion": "2025-03-05",
+    "descripcion": "Gran descubrimiento, definitivamente seguiré a esta banda!",
+    "valoracion": 5
+  },
+  {
+    "id": 10,
+    "usuario": "Guadalupe",
+    "fechaPublicacion": "2025-03-04",
+    "descripcion": "Suenan muy bien, pero deberían trabajar más en su identidad musical.",
+    "valoracion": 3
+  }
+]
+

@@ -1,0 +1,78 @@
+:root {
+  --morado-color: #572363; /* Morado */
+  --azul-color: #6AD9D9; /* Azul chillon */
+  --verde-color: #39FF14;  /* Verde */
+  --blanco-color: #F2F2F2;
+  --azul2-color:#54ACBF; /* Azul  */
+  --azul3-color:#4590BF; /* Azul Oscuro */
+  --azul4-color:#4184BF; /* Azul Oscuro2 */
+  --gris-azul-color: #52666A; /*Gris azul*/
+  --gris-azul2-color: #373E40; /*Gris azul2*/
+  --gris-azulOp-color: #52666a30;
+  --gris-azul2-color: #341D39;  /*Gris morado*/
+  --gris-morado-color: #D3B8D0;  /*Gris morado*/
+  --lavanda-color: #B6A8C8 ;  /*Gris morado*/
+  --purpura-color: #8E7C8D ;  /*Gris morado*/
+  --gris-azulC-color: #B0C4DE ;  /*Gris morado*/
+  --azul-acero-color: #A2B9B9  ;  /*Gris morado*/
+  --azul-oscuro-color: #6A7F7F  ;  /*Gris morado*/
+  --gris-claro-color: #D3D3D3 ;  /*Gris morado*/
+  --gris-medio-color: #A9A9A9 ;  /*Gris morado*/
+  --gris-oscuro-color: #696969 ;  /*Gris morado*/
+}
+
+/* Aplicar la fuente a todo el contenido de la página */
+body {
+  width: 100% !important;
+  margin: 0;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Estilo para el código */
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Estilo de colores de texto y fondo */
+.text-morado{ color: var(--morado-color);}
+.text-azul{color: var(--azul2-color);}
+.text-dark-azul{color: var(--azul3-color);}
+.text-verde{  color: var(--verde-color);}
+
+.bg-morado{  background-color: var(--morado-color);}
+.bg-azul{  background-color: var(--azul2-color);}
+.bg-dark-azul{  background-color: var(--azul3-color);}
+.bg-verde{  background-color: var(--verde-color);}
+
+a{
+  color: var(--morado-color) !important;
+  text-decoration: none  !important ;
+}
+
+/* KEYFRAME PARA LAS ANIMACIONES*/
+
+@keyframes colorIconoHeader {
+  0% { color: var(--azul-color); font-size: 1.8em;}
+  25% { color: var(--verde-color); font-size: 2em;}
+  50% { color: var(--azul-color); font-size: 1.8em;}
+  75% { color: var(--verde-color); font-size: 2em;}
+  100% { color: var(--azul-color); font-size: 1.8em;}
+}
+
+@keyframes colorLetra {
+  0% { color: var(--azul-color);}
+  25% { color: var(--verde-color); }
+  50% { color: var(--azul-color); }
+  75% { color: var(--verde-color);  }
+  100% { color: var(--azul-color); }
+}
+
+@keyframes colorBorde {
+  0% {border: 0.3em solid var(--azul-color);}
+  25% { border: 0.3em solid var(--verde-color); }
+  50% { border: 0.3em solid var(--azul-color); }
+  75% { border: 0.3em solid  var(--verde-color);  }
+  100% { border: 0.3em solid var(--azul-color); }
+}

@@ -1,0 +1,20 @@
+{
+  "elementos": [
+      {
+        "id": 1,
+        "titulo": "Rolling in the Deep",
+        "precio": 1.29
+      },
+      {
+        "id": 2,
+        "titulo": "Someone Like You",
+        "precio": 1.29
+      },
+      {
+        "id": 1,
+        "titulo": "21",
+        "precio": 9.99
+      }
+    ],
+  "precioTotal": 12.57
+  }

@@ -1,0 +1,61 @@
+#pie{
+    width: 100%;
+}
+#pie  #infoPie{
+    display: flex;
+}
+#pie #iconoPie{
+    padding: 0.4em 0 0.4em 5vw;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#pie #iconoPie img{
+    width: 10vw;
+    border-radius: 100%;
+}
+#pie #pieTexto1{
+    width: 42.5vw;
+    padding: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#pie #pieTexto1 h5, #pie #pieTexto1 h3{
+    padding: 0 0 0 2vw;
+}
+#pie #pieTexto2{
+    text-align: right;
+    width: 42.5vw;
+    padding: 0 12vw 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#pie #pieTexto2 div{
+    margin: 0 0 0 auto;
+}
+#pie #pieTexto2 #otrosContactos{
+    font-size: 1.5em;
+}
+#pie #pieTexto2 #otrosContactos i{
+    font-size: 1.5em;
+}
+#pie #pieTexto2 #otrosContactos i:hover, #pie a:hover, #pie h5:hover{
+    animation: colorLetra 2.5s infinite ; /* Aplica de manera infinita la animacion keyframe colorIcono */
+    filter: brightness(90%); /* Reduce el brillo en un 90% */
+    cursor: pointer;
+}
+#pie #lineaPie{
+    height: 0.4em;  /* Grosor del <hr> */
+    background-color: var(--morado-color); /* Color de la línea */
+    border: none;  /* Quitar el borde por defecto */
+    opacity: 100%;
+    width: 80vw;
+    z-index: 100;
+    position: relative;
+    left: 10vw;
+    top: 6vw;
+    margin: 0;
+}

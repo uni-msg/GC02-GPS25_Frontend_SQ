@@ -1,0 +1,208 @@
+#crear-form {
+    width: 70%;
+    margin: 0 auto;
+    background: var(--blanco-color);
+    padding: 3em;
+    border-radius: 2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-size: 0.8em;
+}
+
+#crear-form #fotoCrearElem{
+    padding: 0 auto;
+    text-align: center;
+}
+
+#crear-form #fotoCrearElem img{
+    width: 20em;
+}
+  
+#crear-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#crear-form label {
+    display: block;
+    margin: 12px 0 4px;
+    font-weight: 600;
+}
+
+#crear-form input,
+#crear-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+#crear-form input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
+#crear-form button {
+    margin: 2em 5% 0 5% !important;
+    width: 90%;
+    padding: 1em;
+    background: var(--azul4-color);
+    color: var(--blanco-color);
+    font-weight: bold;
+    border: none;
+    border-radius: 1em;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#crear-form button:hover {
+    background: #0056b3;
+}
+
+#crear-form label{
+    text-align: center;
+    width: fit-content;
+    margin: 0 0 0 10%;
+    display: block;
+    position: relative;
+    background-color: white;
+    padding: 0 0.4em;
+    border-radius: 0.2em;
+    background-color: var(--blanco-color);
+    top: 2em;
+}
+#crear-form input,#crear-form textarea,#crear-form select{
+    margin: 1em auto 0 auto;
+    padding: 2%;
+    display: block;
+    width: 90%;
+    border: 0.2em solid var(--morado-color);
+    background-color: var(--blanco-color);
+    border-radius: 0.2em;
+}
+
+#crear-form #esAlbumContainer{
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#crear-form #esAlbumContainer label:first-of-type {
+    margin: 0 !important;
+}
+#crear-form #esAlbumContainer .switch {
+    position: relative;
+    display: inline-block;
+    width: 5em;
+    height: 2.3em;
+    margin-left: 1em;
+}
+#crear-form #esAlbumContainer .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+#crear-form #esAlbumContainer .slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #ccc;
+    border-radius: 34px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: 0.4s;
+}
+#crear-form #esAlbumContainer .slider::before {
+    content: "";
+    position: absolute;
+    height: 1.7em;
+    width: 1.7em;
+    left: 0.3em;
+    bottom: 0.3em;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+#crear-form #esAlbumContainer input:checked + .slider {
+    background-color: var(--morado-color);
+}
+#crear-form #esAlbumContainer input:checked + .slider::before {
+    transform: translateX(2.7em);
+}
+#crear-form #esAlbumContainer .slider.round {
+    border-radius: 4em;
+}
+
+#crear-form #arcCan{
+    margin: 0 auto;
+    display: flex;
+    width: 90%;
+}
+#crear-form #arcCan input{
+    width: 100%;
+    bottom: 0;
+}
+
+#crear-form #subgenContainer{
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    flex-wrap: wrap;
+    margin-bottom: 1em;
+}
+#crear-form #subgenContainer label.check {
+    cursor: pointer;
+}
+#crear-form #subgenContainer label.check input {
+    position: absolute;
+    margin: 1em;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+#crear-form #subgenContainer label.check span {
+    width: 10em;
+    padding: 7px 14px;
+    border: 2px solid var(--morado-color);
+    display: inline-block;
+    color: var(--morado-color);
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+#crear-form #subgenContainer label.check input:checked + span {
+    border-color: var(--morado-color);
+    background-color: var(--morado-color);
+    color:  var(--blanco-color);
+}
+
+/* Estilos de deshabilitar elementos del formulario */
+#crear-form textarea:disabled,#crear-form input:disabled,#crear-form select:disabled{
+    background-color: var(--gris-azulOp-color) !important;
+    cursor: not-allowed; /* Cambia el cursor */
+}
+#crear-form .disabledLab{
+    cursor: not-allowed !important; /* Cambia el cursor */
+}
+
+#crear-form .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  #crear-form .modal-contenido {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  

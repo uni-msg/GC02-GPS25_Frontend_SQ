@@ -1,0 +1,289 @@
+#perfil * {
+    transition: all 0.5s linear !important;
+}
+#perfil .oculto {
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    transition: all 0s linear !important;
+}
+
+/*Estructura de la aprte superior del perfil*/
+#perfil #cardPerfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 0.3em solid var(--purpura-color);
+    background-color: var(--blanco-color);
+    position: absolute;
+    z-index: 10;
+    padding: 0.5em;
+}
+#perfil #cardPerfil div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--blanco-color);
+    border-radius: 0.3em;
+}
+#perfil #headerPerfil{
+    display: block;
+    justify-content: space-between;
+    padding: 1em;
+} 
+#perfil #headerPerfil #cardPerfil{
+    width: 25%;
+} 
+#perfil #headerPerfil>button{
+    height: 3em;
+    position: absolute;
+    right: 0;
+    margin-right:1em;
+} 
+#perfil #headerPerfil #cardPerfil img{
+    border-radius: 100%;
+    width: 7rem;
+    margin-left: 0.6em;
+} 
+#perfil #headerPerfil #fotoPerfilName button{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0.5em 1em 0 0;
+    background-color: var(--azul4-color);
+    color: var(--blanco-color);
+    border-radius: 0.2em;
+    border: 0;
+    height: auto;
+    box-shadow: 0.1em 0.1em 0.15em var( --gris-azul2-color);
+} 
+#perfil #headerPerfil #fotoPerfilName button:active{
+    box-shadow: none;
+    background-color: var(--blanco-color);
+    color: var(--azul4-color);
+    border: 0.1em solid var(--azul4-color);
+}
+
+/*Estilo para elementos del formulario*/
+#perfil #masInfo{
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    width: 100%;
+    border-radius: 0.2em;
+    margin-top: 0.6em;
+    height: auto !important;
+    padding: 0;
+    transition: all 0.5s ease-in-out !important;
+}
+#perfil .masInfoActivo i{
+    transform: rotate(180deg);
+}
+#perfil #cardPerfil label{
+    margin: 0 0 0 10%;
+    display: block;
+    position: absolute;
+    background-color: white;
+    padding: 0 0.4em;
+    border-radius: 0.2em;
+    background-color: var(--blanco-color);
+}
+#perfil #cardPerfil input,#perfil textarea{
+    margin: 1em auto 0 auto;
+    padding: 5%;
+    display: block;
+    width: 90%;
+    border: 0.2em solid var(--morado-color);
+    background-color: var(--blanco-color);
+    border-radius: 0.2em;
+}
+#perfil textarea{
+    height: 7em;
+    resize: none;
+    /* Efectos de colores en barras de desplazamiento */
+    scrollbar-width: thin; 
+    scrollbar-color: #8a2be2 #f1f1f100; /* Color de la barra y del fondo */
+}
+#perfil #cardPerfil #visaCont div{
+    width: 90% !important;
+    margin: 0 auto;
+    display: flex;
+}
+#perfil #cardPerfil #visaCont div input:nth-child(1){
+    border-right-width: 0;
+    border-radius: 0.2em 0 0 0.2em;
+    padding-right: 0;
+    width: 170%;
+}
+#perfil #cardPerfil #visaCont div input:nth-child(2){
+    border-left-width: 0;
+    border-radius: 0 0.2em 0.2em 0;
+    padding-left: 0;
+    width: 60%;
+}
+#perfil #cardPerfil #visaCont div input:nth-child(3){
+    padding-left: 3%;
+}
+
+/* Scrollbar personalizada para navegadores Webkit */
+#perfil::-webkit-scrollbar {
+    width: 0.5em;
+}
+#perfil::-webkit-scrollbar-track {
+    background: transparent; 
+    margin-top: 0.5em; 
+    margin-bottom: 0.5em;
+    border-radius: 1em;
+}
+#perfil::-webkit-scrollbar-thumb {
+    background: var(--morado-color); 
+    border-radius: 1em;
+}
+#perfil::-webkit-scrollbar-thumb:hover {
+    background: var(--purpura-color); 
+}
+
+/* Estilos de deshabilitar elementos del formulario */
+#perfil textarea:disabled,#perfil input:disabled{
+    background-color: var(--gris-azulOp-color) !important;
+    cursor: not-allowed; /* Cambia el cursor */
+}
+#perfil .disabled{
+    background-color: var(--gris-azulOp-color) !important;
+    cursor: not-allowed !important; /* Cambia el cursor */
+}
+
+/*Colocar elementos del formulario*/
+#perfil #fotoPerfilName label{
+    top: 2.2em !important;
+}
+#perfil #desc label{
+    top: 7.8em !important;
+}
+#perfil #correoCont label{
+    top: 15.8em !important;
+}
+#perfil #passCont label{
+    top: 20.6em !important;
+}
+#perfil #passCont i{
+    top: 22em !important;
+    display: block;
+    position: absolute;
+    right: 1.9em;
+    background-color: white;
+    padding: 0.8em;
+    border-radius: 0.4em;
+    cursor: pointer; /* Cambia el cursor */
+}
+#perfil #visaCont label{
+    top: 25.4em !important;
+}
+#perfil #visaCont i{
+    top: 26.7em !important;
+    display: block;
+    position: absolute;
+    right: 1.9em;
+    background-color: white;
+    padding: 0.8em;
+    border-radius: 0.4em;
+    cursor: pointer; /* Cambia el cursor */
+}
+
+#perfil #oyenCont label{
+    top: 30em !important;
+}
+
+#perfil #valoracion{
+    justify-content: center;
+}
+
+/*Estructura y estilo para menu y listas*/
+
+#perfil #menuPerfil{
+    margin-top: 10em;
+    padding-top: 5em;
+    background-color: var(--purpura-color) ;
+}
+
+#perfil .nav-link{
+    border-radius: 0.4em 0.4em 0px 0px;
+    animation-duration: 4s;
+    color: var(--blanco-color) !important;
+    cursor: context-menu;
+    font-weight: bold;
+}
+#perfil .nav-link:hover{
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+#perfil .menuPerfilActivo{
+    background-color: var(--gris-claro-color);
+}
+#perfil .menuPerfilActivo a{
+    color: black !important;
+}
+
+#perfil #listaElemen{
+    height: auto;
+    background-color: var(--gris-claro-color);
+}
+
+#perfil #crearElem{
+    padding: 2em;
+    background-color: var(--gris-claro-color);
+}
+
+/* ------------------------- Modal ----------------------------- */
+#perfil .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#perfil .modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    width: 90%;            /* Ocupa hasta el 90% del viewport, adaptable */
+    max-width: 500px;      /* No será más ancho que 500px */
+    max-height: 80vh;      /* Limita altura si hay mucho contenido */
+    overflow-y: auto;      /* Agrega scroll si se desborda */
+}
+
+#perfil .modal-botones {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#perfil .modal-botones button {
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    border: 0.2em solid var(--morado-color);
+    border-radius: 0.2em;
+    transition: all 0.3s ease-out !important;
+}
+
+#perfil .modal-botones button:active {
+    background-color:  var(--blanco-color);
+    color: var(--morado-color);
+    border: 0.2em solid var(--morado-color);
+}
+
+/*------------------------------------- ARTISTAS ----------------------------------------*/
+#perfil .bordeArt{
+    border: 0.2em solid var(--morado-color);
+}
+#perfil .bordeNovedad{
+    border: 0.2em solid var(--morado-color);
+    animation: 3s colorBorde linear infinite !important;
+}

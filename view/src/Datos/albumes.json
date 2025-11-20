@@ -1,0 +1,168 @@
+[
+    {
+    "id": 1,
+    "nombre": "Thriller",
+    "artistas": ["Michael Jackson"],
+    "genero": "Pop",
+    "subgeneros": ["Pop Rock", "R&B"],
+    "listaCanciones": ["Wanna Be Startin' Somethin'", "Thriller", "Beat It", "Billie Jean"],
+    "fechaRegistro": "1982-11-30",
+    "numVentas": 70000000,
+    "precio": 19.99
+    },
+    {
+    "id": 2,
+    "nombre": "The Dark Side of the Moon",
+    "artistas": ["Pink Floyd"],
+    "genero": "Rock",
+    "subgeneros": ["Progressive Rock", "Psychedelic Rock"],
+    "listaCanciones": ["Speak to Me", "Breathe", "Time", "Money"],
+    "fechaRegistro": "1973-03-01",
+    "numVentas": 45000000,
+    "precio": 39.99
+    },
+    {
+    "id": 3,
+    "nombre": "Back in Black",
+    "artistas": ["AC/DC"],
+    "genero": "Rock",
+    "subgeneros": ["Hard Rock"],
+    "listaCanciones": ["Hells Bells", "Shoot to Thrill", "Back in Black", "You Shook Me All Night Long"],
+    "fechaRegistro": "1980-07-25",
+    "numVentas": 50000000,
+    "precio": 99.99
+    },
+    {
+    "id": 4,
+    "nombre": "Abbey Road",
+    "artistas": ["The Beatles"],
+    "genero": "Rock",
+    "subgeneros": ["Classic Rock", "Psychedelic Rock"],
+    "listaCanciones": ["Come Together", "Something", "Here Comes the Sun", "Octopus's Garden"],
+    "fechaRegistro": "1969-09-26",
+    "numVentas": 31000000,
+    "precio": 12.99
+    },
+    {
+    "id": 5,
+    "nombre": "21",
+    "artistas": ["Adele"],
+    "genero": "Pop",
+    "subgeneros": ["Soul", "R&B"],
+    "listaCanciones": ["Rolling in the Deep", "Someone Like You", "Set Fire to the Rain", "Rumour Has It"],
+    "fechaRegistro": "2011-01-24",
+    "numVentas": 31000000,
+    "precio": 10.99
+    },
+    {
+    "id": 6,
+    "nombre": "Random Access Memories",
+    "artistas": ["Daft Punk"],
+    "genero": "Electronic",
+    "subgeneros": ["Disco", "Funk"],
+    "listaCanciones": ["Give Life Back to Music", "Get Lucky", "Instant Crush", "Lose Yourself to Dance"],
+    "fechaRegistro": "2013-05-17",
+    "numVentas": 9000000,
+    "precio": 32.99
+    },
+    {
+    "id": 7,
+    "nombre": "Nevermind",
+    "artistas": ["Nirvana"],
+    "genero": "Rock",
+    "subgeneros": ["Grunge", "Alternative Rock"],
+    "listaCanciones": ["Smells Like Teen Spirit", "In Bloom", "Come as You Are", "Lithium"],
+    "fechaRegistro": "1991-09-24",
+    "numVentas": 30000000,
+    "precio": 33.33
+    },
+    {
+    "id": 8,
+    "nombre": "Born to Die",
+    "artistas": ["Lana Del Rey"],
+    "genero": "Pop",
+    "subgeneros": ["Indie Pop", "Baroque Pop"],
+    "listaCanciones": ["Born to Die", "Blue Jeans", "Video Games", "Summertime Sadness"],
+    "fechaRegistro": "2012-01-27",
+    "numVentas": 7000000,
+    "precio": 12.99
+    },
+    {
+    "id": 9,
+    "nombre": "Good Kid, M.A.A.D City",
+    "artistas": ["Kendrick Lamar"],
+    "genero": "Hip-Hop",
+    "subgeneros": ["Conscious Hip-Hop", "West Coast Hip-Hop"],
+    "listaCanciones": ["Bitch, Don't Kill My Vibe", "Backseat Freestyle", "Money Trees", "Swimming Pools (Drank)"],
+    "fechaRegistro": "2012-10-22",
+    "numVentas": 3500000,
+    "precio": 12.99
+    },
+    {
+    "id": 10,
+    "nombre": "DAMN.",
+    "artistas": ["Kendrick Lamar"],
+    "genero": "Hip-Hop",
+    "subgeneros": ["Conscious Hip-Hop", "Trap"],
+    "listaCanciones": ["DNA.", "HUMBLE.", "LOYALTY.", "LOVE."],
+    "fechaRegistro": "2017-04-14",
+    "numVentas": 6000000,
+    "precio": 32.99
+    },
+    {
+    "id": 11,
+    "nombre": "Reputation",
+    "artistas": ["Taylor Swift"],
+    "genero": "Pop",
+    "subgeneros": ["Synth-Pop", "Electropop"],
+    "listaCanciones": ["...Ready for It?", "End Game", "Delicate", "Look What You Made Me Do"],
+    "fechaRegistro": "2017-11-10",
+    "numVentas": 4500000,
+    "precio": 32.99
+    },
+    {
+    "id": 12,
+    "nombre": "The Marshall Mathers LP",
+    "artistas": ["Eminem"],
+    "genero": "Hip-Hop",
+    "subgeneros": ["Hardcore Hip-Hop", "Rap Rock"],
+    "listaCanciones": ["Stan", "The Way I Am", "The Real Slim Shady", "Criminal"],
+    "fechaRegistro": "2000-05-23",
+    "numVentas": 25000000,
+    "precio": 99.99
+    },
+    {
+    "id": 13,
+    "nombre": "Californication",
+    "artistas": ["Red Hot Chili Peppers"],
+    "genero": "Rock",
+    "subgeneros": ["Alternative Rock", "Funk Rock"],
+    "listaCanciones": ["Scar Tissue", "Otherside", "Californication", "Around the World"],
+    "fechaRegistro": "1999-06-08",
+    "numVentas": 15000000,
+    "precio": 109.99
+    },
+    {
+    "id": 14,
+    "nombre": "Future Nostalgia",
+    "artistas": ["Dua Lipa"],
+    "genero": "Pop",
+    "subgeneros": ["Disco", "Electropop"],
+    "listaCanciones": ["Don't Start Now", "Physical", "Break My Heart", "Levitating"],
+    "fechaRegistro": "2020-03-27",
+    "numVentas": 4000000,
+    "precio": 1000.99
+    },
+    {
+    "id": 15,
+    "nombre": "AM",
+    "artistas": ["Arctic Monkeys"],
+    "genero": "Rock",
+    "subgeneros": ["Indie Rock", "Alternative Rock"],
+    "listaCanciones": ["Do I Wanna Know?", "R U Mine?", "Arabella", "Why'd You Only Call Me When You're High?"],
+    "fechaRegistro": "2013-09-09",
+    "numVentas": 3000000,
+    "precio": 5.99
+    }
+]
+  

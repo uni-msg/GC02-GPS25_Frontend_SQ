@@ -1,0 +1,165 @@
+#manejadorElem {
+    padding: 0.9em;
+    width: 70%;
+    margin: auto;
+}
+
+#manejadorElem #nuevoElem {
+    background-color: var(--azul4-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.6em 0.8em;
+    margin-bottom: 1em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    font-weight: bold;
+}
+
+#manejadorElem .volver-btn {
+    background-color: var(--gris-oscuro-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.6em 0.8em;
+    margin-bottom: 1em;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+#manejadorElem #listaElementos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+}
+
+#manejadorElem .elemento {
+    padding: 0.8em;
+    border: 0.1em solid #ccc;
+    border-radius: 0.5em;
+    background-color: var(--blanco-color);
+}
+
+#manejadorElem .cabeElem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.5em;
+}
+
+#manejadorElem .botonCanAlb{
+    background-color: var(--azul4-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4em 0.6em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+#manejadorElem .editarElem {
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4em 0.6em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+#manejadorElem .borrarElem {
+    background-color: #dc3545;
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4em 0.6em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+#manejadorElem .editarCanc {
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4em 0.6em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    font-size: 0.9em;
+} 
+#manejadorElem .borrarCanc {
+    background-color: #dc3545;
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4em 0.6em;
+    margin-left: 0.5em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    font-size: 0.9em;
+} 
+
+#manejadorElem .crear-formulario-contenido {
+    background-color: var(--blanco-color);
+    padding: 1em;
+    border-radius: 0.5em;
+}
+#manejadorElem .canciones {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    margin-left: 0.5em;
+    padding-left: 0.5em;
+}
+
+#manejadorElem .cardCancion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--blanco-color);
+    padding: 0.7em;
+    border-radius: 0.5em;
+    border: 0.1em solid var(--morado-color);
+} 
+
+/* ------------------------- Modal ----------------------------- */
+#manejadorElem .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#manejadorElem .modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    width: 90%;            /* Ocupa hasta el 90% del viewport, adaptable */
+    max-width: 500px;      /* No será más ancho que 500px */
+    max-height: 80vh;      /* Limita altura si hay mucho contenido */
+    overflow-y: auto;      /* Agrega scroll si se desborda */
+}
+
+#manejadorElem .modal-botones {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#manejadorElem .modal-botones button {
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    border: 0.2em solid var(--morado-color);
+    border-radius: 0.2em;
+    transition: all 0.3s ease-out !important;
+}
+
+#manejadorElem .modal-botones button:active {
+    background-color:  var(--blanco-color);
+    color: var(--morado-color);
+    border: 0.2em solid var(--morado-color);
+}

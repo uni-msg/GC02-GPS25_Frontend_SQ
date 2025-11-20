@@ -1,0 +1,385 @@
+#catalogo-container {
+    margin-top: 20px;
+    text-align: center;
+    padding: 20px;
+}
+/*----------------------------CARD----------------------------*/
+/* Tarjeta de Producto */
+#catalogo-container .card-catalogo {
+    flex-grow: 1;  /* Evita que los elementos se estiren */
+    width: 250px;  /* Aumenta el ancho */
+    border: 1px solid var(--gris-claro-color);
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px var(--gris-oscuro-color);
+    background: var(--blanco-color);
+    padding: 1%;
+    scroll-snap-align: start;
+}
+#catalogo-container .card-icons {
+    display: flex;
+    justify-content: space-between; /* Separa los íconos a los extremos */
+    align-items: center;
+    padding: 5px 10px; /* Espaciado interno */
+}
+
+#catalogo-container .card-icons i {
+    font-size: 1.2rem; /* Ajusta el tamaño de los íconos */
+    cursor: pointer; /* Hace que sean interactivos */
+    color: var(--gris-oscuro-color); /* Color de los íconos */
+}
+
+#catalogo-container .card-icons i:hover {
+    color: #000; /* Cambia el color al pasar el mouse */
+}
+
+#catalogo-container .share-popup {
+    position: absolute;
+    background-color: var(--blanco-color);
+    border: 1px solid var(--gris-medio-color);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 999;
+}
+
+#catalogo-container .share-link-input {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid var(--gris-claro-color);
+}
+
+#catalogo-container .card-img-top {
+    width: 100%;
+    height: 20vh; /* Relativo a la altura de la pantalla */
+    object-fit: cover;
+    text-align: center;
+}
+#catalogo-container .card-img-rounded{
+    border-radius: 10px; /* Álbum con bordes suaves */
+}
+#catalogo-container .card-img-square{
+    border-radius: 0%; /* Foto de perfil del artista */
+}
+#catalogo-container .card-img-circle {
+    width: 150px; /* O ajusta el tamaño deseado mirar en rem*/
+    height: 150px; /* Igual que el ancho para mantenerlo circular */
+    border-radius: 50%; /* Hace que la imagen sea un círculo perfecto */
+    object-fit: cover; /* Evita la distorsión manteniendo el encuadre */
+}
+/* Asegurar que el contenido interno se alinee correctamente */
+#catalogo-container .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    padding: 0 10px;
+}
+/* Ajustar el espaciado entre el título y el subgénero */
+#catalogo-container .card-body h5 {
+    min-height: 3rem; /* Espacio relativo para títulos más largos */
+    font-size: 1.2rem; /* Relativo al tamaño base de fuente */
+    font-weight: bold;
+    margin-top: 0.5em;
+}
+#catalogo-container .card-body h6 {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    padding: 0 15px;
+    font-size: 1rem; /* Tamaño adecuado en relación al título */
+    color: var(--blanco-color);
+}
+#catalogo-container .info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#catalogo-container .alineacion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+#catalogo-container .alineacion p,
+#catalogo-container .alineacion i{
+    flex: 1; /* Cada elemento ocupa el mismo espacio */
+    justify-content: center;
+}
+#catalogo-container .left-info {
+    flex: 1;
+    justify-content: center;
+}
+#catalogo-container .my-icon {
+    font-size: 2rem;
+    margin-right: 0.3rem;
+}
+
+#catalogo-container .precio {
+    flex: 1;
+    text-align: center;
+}
+
+#catalogo-container i {
+    flex: 0 0 auto;
+    margin: 0 auto; /* Centra el botón de play */
+    cursor: pointer;
+    text-align: center;
+}
+#catalogo-container .btn{
+    flex-direction: column;
+    background-color: var( --morado-color);
+    color: var(--blanco-color) ;
+}
+#catalogo-container .tags-genero {
+    font-size: 0.8rem;
+    /*margin-bottom:1.5em;*/
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/*----------------------------FIN CARD----------------------------*/
+/*----------------------------SLIDER----------------------------*/
+/* Contenedor del Slider */
+#catalogo-container .slider-container {
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gris-medio-color) transparent;
+    padding: 10px;
+}
+/* Ocultar la barra de scroll en algunos navegadores */
+#catalogo-container .slider-container::-webkit-scrollbar {
+    height: 8px;
+}
+#catalogo-container .slider-container::-webkit-scrollbar-thumb {
+    background: var(--azul4-color);
+    border-radius: 10px;
+}
+#catalogo-container .slider-container::-webkit-scrollbar-track {
+    background: var(--blanco-color);
+}
+/* Slider: Flexbox para alinear elementos en fila */
+#catalogo-container .slider {
+    display: flex;
+    gap: 15px;
+    padding: 10px;
+    scroll-snap-type: x mandatory;
+}
+/*----------------------------FIN SLIDER----------------------------*/
+/*----------------------------FILTROS----------------------------*/
+/* Filtros */
+#catalogo-container .filtro-btn {
+    background-color: var(--gris-azul-color) !important; 
+    color: var(--blanco-color) !important;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    min-width: 150px;
+    white-space: nowrap;
+}
+#catalogo-container .filtro-btn:hover {
+    background-color: var(--gris-azul-color) !important;
+}
+/*----------------------------FIN FILTROS----------------------------*/
+/*----------------------------SECCIONES----------------------------*/
+/* Secciones */
+#catalogo-container .categoria {
+    background: var(--blanco-color);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid var(--azul4-color);
+    box-shadow: 0 4px 6px var(--gris-azulOp-color);
+    margin-bottom: 30px;
+}
+#catalogo-container .categoria h2 {
+    
+    font-size: 26px;
+    color: #333;
+    border-bottom: 2px solid var(--azul4-color);
+    display: inline-block;
+    padding-bottom: 5px;
+}
+/*----------------------------FIN SECCIONES----------------------------*/
+/*----------------------------POPUP----------------------------*/
+#catalogo-container .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gris-azulOp-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Contenedor del modal */
+#catalogo-container .modal-content {
+    background: var(--blanco-color);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    position: relative;
+    width: 350px;
+    box-shadow: 0 0 10px var(--gris-azulOp-color);
+}
+
+/* Botón para cerrar el modal */
+#catalogo-container .close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+@keyframes rotar {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+/* Imagen del pop-up */
+#catalogo-container .modal-img {
+    max-width: 60vw;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    animation: rotar 7s linear infinite;
+}
+
+/* Controles de reproducción */
+#catalogo-container .player-controls button {
+    background: var(--azul4-color);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#catalogo-container .player-controls button:hover {
+    background: var(--azul3-color);
+}
+
+#catalogo-container .alineacion-botones{
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: baseline;
+}
+
+#catalogo-container .tiempo-Barra{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#catalogo-container .tiempoTranscurrido, .tiempoTotal {
+    width: 40px;
+    text-align: center;
+    font-size: 14px;
+}
+
+#catalogo-container .progress {
+    flex: 1;
+    height: 8px;
+    background: var(--gris-medio-color);
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+}
+
+#catalogo-container .progreso{
+    height: 100%;
+    background: var(--azul4-color);
+    border-radius: 4px;
+}
+
+/*----------------------------FIN POPUP----------------------------*/
+#catalogo-container #menuPerfil{
+    margin-top: 10em;
+    padding-top: 5em;
+    background-color: var(--purpura-color) ;
+}
+
+#catalogo-container .nav-link{
+    border-radius: 0.4em 0.4em 0.4em 0.4em;
+    animation-duration: 4s;
+    color: var(--gris-color) !important;
+    cursor: context-menu !important;
+    margin-bottom: 0.4em;
+}
+
+#catalogo-container .menuCatalogoActivo{
+    background-color: var(--gris-claro-color);
+}
+#catalogo-container .menuCatalogoActivo a{
+    color: var(--gris-azul2-color) !important;
+}
+
+#catalogo-container #listaElemen{
+    height: auto;
+}
+
+#catalogo-container .filtros-ocultos{
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    transition: all 0s linear !important;
+}
+
+#catalogo-container #menuCatalogo input[type="text"] {
+    width: 200px; /* O el valor que consideres necesario */
+    height: 40px; /* Asegura que tenga el mismo tamaño que otros campos */
+}
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    #catalogo-container .productos-grid {
+        gap: 10px; /* Reduce el espacio entre tarjetas */
+        padding: 5px;
+    }
+
+    #catalogo-container .card-catalogo {
+        min-width: 200px; /* Ajuste para móviles */
+        max-width: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    #catalogo-container .card-catalogo {
+        min-width: 150px; /* Se adapta a pantallas más pequeñas */
+        max-width: 180px;
+    }
+
+    #catalogo-container .card-img-top {
+        height: 150px; /* Reduce altura de la imagen en móviles */
+    }
+}
+
+@keyframes rotar-reverse {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }

@@ -1,0 +1,137 @@
+/* Estilos para el overlay del pop-up */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+  }
+  
+  /* Estilos para el contenido del pop-up */
+  .popup-content {
+    background-color: white;
+    padding: 3em;
+    border-radius: 1em;
+    text-align: center;
+    width: 35em;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .Metodos{
+    display: grid;
+    column-gap: 50px;
+    grid-template-columns: auto auto;
+    padding: 10px;
+  }
+
+  .Metodos button {
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    background-color: #572363;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 10em;
+    font-size: 16px;
+  }
+  
+  .pagoVisa label{
+    display: block;
+    text-align: left;
+    margin-top: 1em;
+  }
+
+  #numTarjeta {
+    display: flex;
+    width: 29rem;
+  }
+
+  #fila-doble {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .botonesSuperiroes {
+    display: flex;
+    justify-content: space-between;
+  }
+  .botonAtras {
+    display: flex;
+    font-size: xx-large;
+  }
+
+  .botonCerrar {
+    display: flex;
+    justify-content: flex-end;
+    font-size: xx-large;
+  }
+
+  .botonPagar {
+    margin-top: 1em;
+    background-color: #6AD9D9;
+    color:white;
+    padding-top: 0%;
+    font-size: x-large;
+  }
+
+  #logoVisa {
+    width: 50%;
+    height: 50%;
+  }
+
+  #logoPaypal {
+    width: 50%;
+    height: 50%;
+  }
+
+  #logoGpay{
+    width: 50%;
+    height: 50%;  
+  }
+  
+  #bizumLogo {
+    width: 50%;
+    height: 50%;  
+  }
+
+  .cuadroBizum {
+    display: flexbox;
+    justify-self: center;
+    border: solid rgb(134, 134, 134);
+    width: 25.5rem;
+  }
+
+  .etiquetaBizum {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    align-items: center;
+  }
+
+  #iconoMovil {
+    font-size: x-large;
+    margin-right: 1rem;
+    margin-left: 1rem;
+  }
+  
+  #numtelefono {
+    width: 75%;
+    height: 2.5rem; 
+  }
+
+  .cuadroBizum label {
+    padding-top: 4em;
+    font-size:small;
+  }
+
+  #detallePrecio {
+    margin-bottom: 5%;
+    padding-top: 10%;
+  }
+

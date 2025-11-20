@@ -1,0 +1,100 @@
+#listaElem{
+    padding: 1em;
+    background-color: var(--gris-claro-color);
+    gap: 1em;
+    font-size: 0.8em;
+}
+#listaElem div{
+    margin: 0 1em;
+}
+#listaElem .card{
+    width: 18em;
+}
+#listaElem .card .card-body{
+    margin: 0;
+}
+
+#listaElem .botonesAccion i{
+    color: var(--morado-color);
+    padding: 1em;
+}
+#listaElem .botonesAccion i:hover{
+    cursor: pointer;
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+}
+
+#listaElem .card-img-rounded{
+    border-radius: 10px; /* Álbum con bordes suaves */
+}
+#listaElem .card-img-square{
+    border-radius: 0%; /* Foto de perfil del artista */
+}
+#listaElem .card-img-circle {
+    margin: 0 auto;
+    width: 70%;
+    border-radius: 50%; /* Hace que la imagen sea un círculo perfecto */
+    object-fit: cover; /* Evita la distorsión manteniendo el encuadre */
+}
+
+#listaElem .etiquetas .tags {
+    font-size: 0.8rem;
+    margin-bottom:0.5em;
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+#listaElem .etiquetas, #listaElem p {
+    margin-bottom:0.5em;
+}
+
+#listaElem .puntuacionCont{
+    margin: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+}
+#listaElem .puntuacionCont p{
+    margin: 0;
+}
+#listaElem .puntuacion{
+    display: flex;
+    margin: 0;
+}
+#listaElem .puntuacion i{
+    margin: 0;
+    font-size: 1.8em;
+}
+
+/*     MODAL DE DESCARGA     */
+.modalDescarga {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--gris-claro-color);
+    border: 2px solid var(--morado-color);
+    padding: 1rem;
+    border-radius: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modalDescarga button {
+    background-color: var(--morado-color);
+    color: var(--blanco-color);
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.modalDescarga button:hover {
+    color: var(--morado-color);
+    background-color: var(--blanco-color);
+}

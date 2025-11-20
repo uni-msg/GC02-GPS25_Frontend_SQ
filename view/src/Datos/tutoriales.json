@@ -1,0 +1,45 @@
+[
+    {
+      "id": 1,
+      "nombreVista": "Catalogo",
+      "aclaraciones": [
+        "Explora una amplia variedad de productos.",
+        "Usa el filtro para encontrar lo que necesitas más rápido.",
+        "Haz clic en un producto para ver más detalles y opciones de compra."
+      ]
+    },
+    {
+      "id": 2,
+      "nombreVista": "Filtro",
+      "aclaraciones": [
+        "Filtra productos por genero, precio, nombre y más.",
+        "Puedes seleccionar múltiples filtros para resultados más precisos.",
+        "Borra los filtros en cualquier momento para ver todos los productos disponibles."
+      ]
+    },
+    {
+      "id": 3,
+      "nombreVista": "Perfil",
+      "aclaraciones": [
+        "Aquí puedes ver y editar tu información personal.",
+        "Actualiza tu dirección y métodos de pago para una mejor experiencia de compra.",
+        "Consulta tus lista de deseos y artistas favoritos."
+      ]
+    },
+    {
+      "id": 4,
+      "nombreVista": "Cesta",
+      "aclaraciones": [
+        "Revisa los productos que has añadido antes de realizar la compra.",
+        "Puedes eliminar artículos.",
+        "Haz clic en 'Finalizar compra' para proceder al pago."
+      ]
+    },
+    {
+      "id": 5,
+      "nombreVista": "Más Información",
+      "aclaraciones": [
+        "Encuentra detalles sobre las canciones que te gustan."
+      ]
+    }
+  ]
