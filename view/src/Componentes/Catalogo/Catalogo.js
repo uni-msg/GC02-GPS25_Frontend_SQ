@@ -19,20 +19,20 @@ function Catalogo({ elementos, isLoading, artistas }) {
 //    const [subgenerosCargados, setSubgenerosCargados] = useState(false);
 
     // 4. Filtrado corregido - versión definitiva
-    const subgenerosUnicos = [...new Set(elementos.map(item => item.subgenero))];
-    const generosUnicos = [...new Set(elementos.map(item => item.genero))];
+    //const subgenerosUnicos = [...new Set(elementos.map(item => item.subgenero.nombre))];
+    const generosUnicos = [...new Set(elementos.map(item => item.genero.nombre))];
     //console.log(elementos);
     const productosFiltrados = elementos.filter(item => {
-        const nombreGenero = item.genero;
+        // const nombreGenero = item.genero;
         const cumpleBusqueda = busqueda ? item.nombre.toLowerCase().includes(busqueda.toLowerCase()) : true;
         //const cumpleGenero = filtroGenero ? item.genero === filtroGenero : true;
-        const cumpleGenero = filtroGenero ? nombreGenero === filtroGenero : true;
-        const cumpleSubgenero = filtroSubgenero ? item.subgenero === filtroSubgenero : true;
+        // const cumpleGenero = filtroGenero ? nombreGenero === filtroGenero : true;
+        // const cumpleSubgenero = filtroSubgenero ? item.subgenero === filtroSubgenero : true;
         const cumplePrecio = (!filtroPrecioMin || item.precio >= filtroPrecioMin) &&
             (!filtroPrecioMax || item.precio <= filtroPrecioMax);
 
         // Convertir la fecha del producto a objeto Date
-        const fechaProducto = convertirFecha(item.fechaCrea);
+        const fechaProducto = convertirFecha(item.fechacrea);
 
         // Convertir las fechas de filtro a objeto Date (si están definidas)
         const fechaMin = filtroFechaMin ? new Date(filtroFechaMin) : null;
@@ -42,14 +42,14 @@ function Catalogo({ elementos, isLoading, artistas }) {
             (!fechaMax || (fechaProducto && fechaProducto <= fechaMax));
 
         const cumpleElemento = tipoPorMenu !== null ? item.tipo === tipoPorMenu : true;
-        return cumpleBusqueda && cumpleGenero && cumpleSubgenero && cumplePrecio && cumpleFecha && cumpleElemento;
+        return cumpleBusqueda && cumplePrecio && cumpleFecha && cumpleElemento; //&& cumpleGenero && cumpleSubgenero 
     });
 
     const categorias = [
         { title: "Novedades", items: productosFiltrados.filter(item => item.esNovedad === true), },
-        { title: "Artistas", items: productosFiltrados.filter(item => item.tipo === 3) },
-        { title: "Canciones", items: productosFiltrados.filter(item => item.tipo === 1) },
-        { title: "Álbumes", items: productosFiltrados.filter(item => item.tipo === 2) },
+        { title: "Artistas", items: productosFiltrados.filter(item => item.tipo === 0) },
+        { title: "Canciones", items: productosFiltrados.filter(item => item.tipo === 2) },
+        { title: "Álbumes", items: productosFiltrados.filter(item => item.tipo === 1) },
     ];
 
     return (
@@ -244,7 +244,7 @@ function ProductoCard({ item }) {
 
     // Función para abrir el pop-up de reproducción
     const handlePlayClick = () => {
-        if (item.esAlbum || !item.esAlbum) {
+        if (item.tipo === 1 || !item.tipo === 2) {
             setShowModal(true);
         }
     };
@@ -253,13 +253,13 @@ function ProductoCard({ item }) {
     const handleClick = () => {
         //console.log("item completo:", item);
 
-        if (item.tipo === 2) {
+        if (item.tipo === 1) {
             navigate("/masInfoAlbum", { state: item });
         }
-        else if (item.tipo === 1) {
+        else if (item.tipo === 2) {
             navigate("/masInfo", { state: item });
         }
-        else if (item.tipo === 3) {
+        else if (item.tipo === 0) {
             navigate("/masInfoPerfil", { state: item });
         }
     };
@@ -269,9 +269,9 @@ function ProductoCard({ item }) {
     const handleCopyLink = () => {
         let link = `${window.location.origin}`;
 
-        if (item.tipo === 1) {
+        if (item.tipo === 2) {
             link += "/masInfo";
-        } else if (item.tipo === 2) {
+        } else if (item.tipo === 1) {
             link += "/masInfoAlbum";
         }
         navigator.clipboard.writeText(link).then(() => {
@@ -311,9 +311,9 @@ function ProductoCard({ item }) {
                                 <input
                                     type="text"
                                     value={
-                                        item.tipo === 1
+                                        item.tipo === 2
                                             ? `${window.location.origin}/masInfo`
-                                            : item.tipo === 2
+                                            : item.tipo === 1
                                                 ? `${window.location.origin}/masInfoAlbum`
                                                 : window.location.origin
                                     }
@@ -329,8 +329,8 @@ function ProductoCard({ item }) {
                 </div>
                 {<img
                     src={
-                        item.fotoAmazon && item.fotoAmazon !== "null"
-                            ? `${AMAZON_URL_FOTO}${item.fotoAmazon}`
+                        item.fotoamazon && item.fotoamazon !== "null"
+                            ? `${AMAZON_URL_FOTO}${item.fotoamazon}`
                             : `${AMAZON_URL_DEFAULT}`
                     }
                     className={`card-img-top ${getImageClass()}`}
@@ -338,25 +338,25 @@ function ProductoCard({ item }) {
                 />}
                 <div className="card-body">
                     <h5>{item.nombre}</h5>
-                    {item.genero !== "" ? (
-                        <span className="tags-genero me-2 mb-3">{item.genero}</span>
+                    {item.genero?.nombre ? (
+                        <span className="tags-genero me-2 mb-3">{item.genero.nombre}</span>
                         ) : (
                         <h6 style={{ fontStyle: "italic", color: "gray" }}>Cargando género...</h6>)}
                     <div className="info-container">
-                        {item.tipo === 1 && (
+                        {item.tipo === 2 && (
                             <div>
                                 <p className="precio">{item.precio}€</p>
                                 <i className="fa-regular fa-circle-play fa-3x" onClick={handlePlayClick}></i>
                                 <div className="left-info">{renderStars(item.valoracion)}</div>
                             </div>
                         )}
-                        {item.tipo === 2 && (
+                        {item.tipo === 1 && (
                             <div>
                                 <p className="precio">{item.precio}€</p>
                                 <div className="left-info">{renderStars(item.valoracion)}</div>
                             </div>
                         )}
-                        {item.tipo === 3 && (
+                        {item.tipo === 0 && (
                             <div className="artista-info">
                                 <div className="left-info">{renderStars(item.valoracion)}</div>
                             </div>
@@ -462,8 +462,8 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
                 <span className="close-button" onClick={closeModal}>&times;</span>
                 <img
                     src={
-                        item.fotoAmazon && item.fotoAmazon !== "null"
-                            ? `${AMAZON_URL_FOTO}${item.fotoAmazon}`
+                        item.fotoamazon && item.fotoamazon !== "null"
+                            ? `${AMAZON_URL_FOTO}${item.fotoamazon}`
                             : `${AMAZON_URL_DEFAULT}`
                     }
                     className="modal-img"
@@ -477,9 +477,9 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
                 <h2>{item.nombre}</h2>
                 {/* <h3>{item.nombre}</h3> */}
 
-                {!item.esAlbum && (
+                {!item.tipo === 2 && ( //si es canción
                     <audio ref={audioRef}
-                        src={`${AMAZON_URL_MP3}${item.fotoAmazon}`} />
+                        src={`${AMAZON_URL_MP3}${item.fotoamazon}`} />
                 )}
 
                 {/* Controles de reproducción */}

@@ -1,4 +1,4 @@
-import { BASE_URL } from "../config"; // Empleado para la llamada a la API
+import { BASE_URL_CONTENIDO } from "../config"; // Empleado para la llamada a la API
 import axios from 'axios'; // Llamadas a la API sin emplear fetch
 
 /**
@@ -10,7 +10,7 @@ import axios from 'axios'; // Llamadas a la API sin emplear fetch
  */
 export async function getElementos(token) {
     try {
-      const response = await axios.get(`${BASE_URL}/getCatalago`, {
+      const response = await axios.get(`${BASE_URL_CONTENIDO}/contenidos`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -18,7 +18,7 @@ export async function getElementos(token) {
       });
   
       const rawJson = response.data;
-      //console.log("JSON crudo (string):", rawJson);
+      console.log("JSON crudo (string):", rawJson);
   
       // Parseo manual del JSON, si lo necesitás como objeto
       const parsed = JSON.parse(rawJson);
@@ -40,7 +40,7 @@ export async function getElementos(token) {
  */
 export async function getElementoById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL}/elementos?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -62,7 +62,7 @@ export async function getElementoById(token, id) {
  */
 export async function getElementosArtistas(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL}/getElementosArtista?idartista=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/getElementosArtista?idartista=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -84,7 +84,7 @@ export async function getElementosArtistas(token, id) {
  */
 export async function putElemento(token, elementoData) {
     try {
-        const response = await axios.put(`${BASE_URL}/elementos`,  
+        const response = await axios.put(`${BASE_URL_CONTENIDO}/elementos`,  
             null,
             {
                 params: elementoData ,
@@ -110,7 +110,7 @@ export async function putElemento(token, elementoData) {
  */
 export async function postElemento(token, elementoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/elementos`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`, 
             elementoData,
             {
                 headers: {
@@ -135,7 +135,7 @@ export async function postElemento(token, elementoData) {
  */
 export async function postElementoParam(token, elementoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/elementos`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`, 
             null,
             {
                 params: elementoData ,
@@ -161,7 +161,7 @@ export async function postElementoParam(token, elementoData) {
  */
 export async function deleteElemento(token, id) {
     try {
-        const response = await axios.delete(`${BASE_URL}/elementos?id=${id}`, {
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/elementos?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -183,7 +183,7 @@ export async function deleteElemento(token, id) {
  */
 export async function getElementosFiltra(token, filtro) {
     try {
-        const response = await axios.get(`${BASE_URL}/elementos`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -208,7 +208,7 @@ export async function getElementosFiltra(token, filtro) {
  */
 export async function getElementoPropios(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL}/usuario_tiene_elemento?idusuario=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_tiene_elemento?idusuario=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -231,7 +231,7 @@ export async function getElementoPropios(token, id) {
  */
 export async function getElementoPropiosFiltra(token,id, filtro) {
     try {
-        const response = await axios.get(`${BASE_URL}/usuario_tiene_elemento?idusuario=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_tiene_elemento?idusuario=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -269,7 +269,7 @@ export async function postElementosTiene(token,idusuario, idelemento) {
     try {
         
         const response = await axios.post(
-            `${BASE_URL}/usuario_tiene_elemento`, 
+            `${BASE_URL_CONTENIDO}/usuario_tiene_elemento`, 
             requestBody,
             {
                 headers: {
@@ -296,7 +296,7 @@ export async function postElementosTiene(token,idusuario, idelemento) {
  */
 export async function getDeseosById(token,id) {
     try {
-        const response = await axios.get(`${BASE_URL}/usuario_desea_elemento?idusuario=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_desea_elemento?idusuario=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },
@@ -318,7 +318,7 @@ export async function getDeseosById(token,id) {
  */
 export async function postDeseo(token,relacinoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/usuario_desea_elemento`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/usuario_desea_elemento`, 
             relacinoData,
             {
                 headers: {
@@ -344,7 +344,7 @@ export async function postDeseo(token,relacinoData) {
  */
 export async function deleteDeseo(token,id,idelem) {
     try {
-        const response = await axios.delete(`${BASE_URL}/usuario_desea_elemento?idusuario=${id}&&idelemento=${idelem}`,
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/usuario_desea_elemento?idusuario=${id}&&idelemento=${idelem}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Enviamos el token
@@ -369,7 +369,7 @@ export async function deleteDeseo(token,id,idelem) {
  */
 export async function getValoracionesById(token,id) {
     try {
-        const response = await axios.get(`${BASE_URL}/usuario_valora_elemento?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },
@@ -390,7 +390,7 @@ export async function getValoracionesById(token,id) {
  */
 export async function getValoracionesByIdelem(idelem) {
     try {
-      const response = await axios.get(`${BASE_URL}/usuario_valora_elemento?idelemento=${idelem}`);
+      const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?idelemento=${idelem}`);
       return response.data;
     } catch (error) {
       console.error("Error:", error);
@@ -408,7 +408,7 @@ export async function getValoracionesByIdelem(idelem) {
  */
 export async function postValora(token,relacinoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/usuario_valora_elemento`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/usuario_valora_elemento`, 
             relacinoData,
             {
                 headers: {
@@ -434,7 +434,7 @@ export async function postValora(token,relacinoData) {
  */
 export async function deleteValora(token,id,idelem) {
     try {
-        const response = await axios.delete(`${BASE_URL}/usuario_valora_elemento?id=${id}&&idelem=${idelem}`,
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?id=${id}&&idelem=${idelem}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Enviamos el token
@@ -458,7 +458,7 @@ export async function deleteValora(token,id,idelem) {
  */
 export async function getLetraById(id) {
     try {
-        const response = await axios.get(`${BASE_URL}/letra?id=${id}`);
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/letra?id=${id}`);
         return response.data;
     } catch (error) {
         console.error("Error:", error);

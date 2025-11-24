@@ -1,5 +1,7 @@
 export const BASE_URL = "";
 //export const BASE_URL = "http://localhost:8000"; // URL DE PRODUCCION
+export const BASE_URL_CONTENIDO = "http://localhost:8083/api";
+
 export const AMAZON_URL = "https://undersounds.s3.eu-north-1.amazonaws.com/"
 export const AMAZON_URL_FOTO = AMAZON_URL+"fotos/"
 export const AMAZON_URL_MP3 = AMAZON_URL+"mp3/"
