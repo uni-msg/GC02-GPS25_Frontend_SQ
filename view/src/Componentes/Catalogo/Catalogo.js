@@ -6,7 +6,7 @@ import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
 
 function Catalogo({ elementos, isLoading, artistas }) {
     const [menu, setMenu] = useState(0); // Utilizamos "menu" para gestionar el estado del menú
-    const tipoPorMenu = menu === 1 ? 1 : menu === 2 ? 3 : menu === 3 ? 2 : null;
+    const tipoPorMenu = menu === 1 ? 2 : menu === 2 ? 0 : menu === 3 ? 1 : null;
     const [busqueda, setBusqueda] = useState(''); // Estado para la búsqueda
     const [filtroGenero, setFiltroGenero] = useState('');
     const [filtroSubgenero, setFiltroSubgenero] = useState('');
