@@ -40,7 +40,7 @@ export async function getElementos(token) {
  */
 export async function getElementoById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

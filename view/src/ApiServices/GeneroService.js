@@ -114,22 +114,3 @@ export async function deleteGenero(token,id) {
         throw error;
     }
 }
-
-
-/**
- * Todos los subgeneros de un elemento
- * 
- * @param {string} idElemento - Identificador del genero.
- * @returns {Promise<Object>} Informacion de la accion formato JSON.
- * @throws {Error} Si ocurre un error en la solicitud HTTP.
- */
-export async function getSubgeneroByElementoId(idElemento) {
-    try {
-      const response = await axios.get(`${BASE_URL_CONTENIDO}/SubgeneroElemento?idelemento=${idElemento}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener el subgénero:", error);
-      throw error;
-    }
-  }
-  

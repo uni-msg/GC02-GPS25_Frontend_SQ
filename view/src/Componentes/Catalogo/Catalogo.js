@@ -1,8 +1,12 @@
 import './Catalogo.css';
 import { AMAZON_URL_MP3, AMAZON_URL_DEFAULT, AMAZON_URL_FOTO } from '../../config.js';
 import { useNavigate } from 'react-router-dom';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
+
+// --- NUEVOS IMPORTS ---
+import { UsuarioContext } from '../InicioSesion/UsuarioContext';
+import { getElementoById } from '../../ApiServices/ElementosService';
 
 function Catalogo({ elementos, isLoading, artistas }) {
     const [menu, setMenu] = useState(0); // Utilizamos "menu" para gestionar el estado del menú
@@ -238,9 +242,8 @@ function ProductoCard({ item }) {
     const [showSharePopup, setShowSharePopup] = useState(false);
     //const userState = useNavigate.state || {};
 
-    const togglePlay = () => {
-        setIsPlaying(prev => !prev);
-    };
+    const { token } = useContext(UsuarioContext);
+    const togglePlay = () => setIsPlaying(prev => !prev);
 
     // Función para abrir el pop-up de reproducción
     const handlePlayClick = () => {
@@ -249,15 +252,50 @@ function ProductoCard({ item }) {
         }
     };
 
-    // Esta función navega a /masInfo y pasa el objeto item a través del state (userState)
+    /*// Esta función navega a /masInfo y pasa el objeto item a través del state (userState)
     const handleClick = () => {
-        //console.log("item completo:", item);
+        console.log("item completo:", item);
 
         if (item.tipo === 1) {
             navigate("/masInfoAlbum", { state: item });
         }
         else if (item.tipo === 2) {
             navigate("/masInfo", { state: item });
+        }
+        else if (item.tipo === 0) {
+            navigate("/masInfoPerfil", { state: item });
+        }
+    };*/
+
+    // --- NUEVO HANDLECLICK ASÍNCRONO ---
+    const handleClick = async () => {
+        console.log("Iniciando carga de detalle para:", item.nombre);
+        
+        let itemCompleto = item; // Por defecto usamos lo que ya tenemos
+
+        // Si es Álbum (1) o Canción (2), pedimos el objeto completo a la BD
+        if (item.tipo === 1 || item.tipo === 2) {
+            try {
+                // Aquí hacemos la magia: Fetch antes de navegar
+                const dataDB = await getElementoById(token, item.id);
+                
+                if (dataDB) {
+                    console.log("¡Datos completos recuperados!", dataDB);
+                    itemCompleto = dataDB; // Sustituimos el item básico por el completo
+                    console.log("Dato enviado", itemCompleto);
+                }
+            } catch (error) {
+                console.error("Error al obtener detalles completos, usando básicos:", error);
+                // Si falla, seguimos usando 'item' original para no bloquear al usuario
+            }
+        }
+
+        // Navegamos con el itemCompleto (que ya trae artista, genero, etc.)
+        if (item.tipo === 1) {
+            navigate("/masInfoAlbum", { state: itemCompleto });
+        }
+        else if (item.tipo === 2) {
+            navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
             navigate("/masInfoPerfil", { state: item });

@@ -7,7 +7,7 @@ import { AMAZON_URL_FOTO, AMAZON_URL_MP3 } from '../../config.js';
 import { getCancionesByAlbum } from '../../ApiServices/CancionesService.js'; 
 import { getArtistaByElemento, getArtistaById} from '../../ApiServices/ArtistasService.js'; 
 import { getValoracionesByIdelem} from '../../ApiServices/ElementosService';
-import { getGeneroById, getSubgeneroByElementoId } from '../../ApiServices/GeneroService.js';
+import { getGeneroById} from '../../ApiServices/GeneroService.js';
 import { postElementoCesta } from "../../ApiServices/CestaService";
 import { getUsuarioById } from '../../ApiServices/UsuarioService.js';
 import { useContext } from "react";
@@ -238,7 +238,7 @@ function MasInfoPageAlbum() {
     fetchGenero();
   }
 }, [album.idGenero]);
-
+/*
 // Subgénero
 useEffect(() => {
   const fetchSubgenero = async () => {
@@ -270,7 +270,7 @@ useEffect(() => {
     fetchSubgenero();
   }
 }, [album.id]);
-  
+*/
 useEffect(() => {
   if (!audioUrl || !audioRef.current) return;
 

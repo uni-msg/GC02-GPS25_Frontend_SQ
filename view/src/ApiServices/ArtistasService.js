@@ -1,4 +1,4 @@
-import { BASE_URL } from "../config"; //empleado para la llamada a la api
+import { BASE_URL_USUARIOS } from "../config"; //empleado para la llamada a la api
 import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 /**
@@ -10,7 +10,7 @@ import axios from 'axios'; //llamadas a la api sin emplear el fetch
  */
 export async function getArtistas(token) {
     try {
-        const response = await axios.get(`${BASE_URL}/artistas`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/artistas`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },
@@ -18,7 +18,7 @@ export async function getArtistas(token) {
         return response.data;  // devuelve la respuesta del endpoint como Promise
     } catch (error) {
         console.error("Error:", error);
-        throw error;
+        throw error;    
     }
 }
 
@@ -31,7 +31,7 @@ export async function getArtistas(token) {
  */
 export async function getArtistaById(artista_id) {
     try {
-        const response = await axios.get(`${BASE_URL}/artistas?artista_id=${artista_id}`);
+        const response = await axios.get(`${BASE_URL_USUARIOS}/artistas/${artista_id}`);
         return response.data;  
     } catch (error) {
         console.error("Error:", error);
@@ -50,7 +50,7 @@ export async function getArtistaById(artista_id) {
  */
 export async function putArtista(token,id,generoData) {
     try {
-        const response = await axios.put(`${BASE_URL}/artistas?id=${id}`, 
+        const response = await axios.put(`${BASE_URL_USUARIOS}/artistas?id=${id}`, 
             generoData, 
             {
                 headers: {
@@ -75,7 +75,7 @@ export async function putArtista(token,id,generoData) {
  */
 export async function postArtista(token,generoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/artistas`, 
+        const response = await axios.post(`${BASE_URL_USUARIOS}/artistas`, 
             generoData, 
             {
                 headers: {
@@ -100,7 +100,7 @@ export async function postArtista(token,generoData) {
  */
 export async function deleteArtista(token,id) {
     try {
-        const response = await axios.delete(`${BASE_URL}/artistas?id=${id}`,
+        const response = await axios.delete(`${BASE_URL_USUARIOS}/artistas?id=${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Enviamos el token
@@ -124,7 +124,7 @@ export async function deleteArtista(token,id) {
  */
 export async function getArtistasFiltra(token, filtro) {
     try {
-        const response = await axios.get(`${BASE_URL}/artistas`, { //se usa get porque no es un filtro demasiado amplio
+        const response = await axios.get(`${BASE_URL_USUARIOS}/artistas`, { //se usa get porque no es un filtro demasiado amplio
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token en el encabezado de la solicitud
             },
@@ -146,7 +146,7 @@ export async function getArtistasFiltra(token, filtro) {
  */
 export async function getArtistaByElemento(artista_id) {
     try {
-      const response = await axios.get(`${BASE_URL}/getArtistaCreaElemento?idelemento=${artista_id}`);
+      const response = await axios.get(`${BASE_URL_USUARIOS}/artistas/${artista_id}`);
       return response.data;
     } catch (error) {
       console.error("Error:", error);

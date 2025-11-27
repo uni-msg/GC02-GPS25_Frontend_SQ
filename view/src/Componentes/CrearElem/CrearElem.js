@@ -57,8 +57,7 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
       try {
         const [genTmp, dataTmp, subgenero] = await Promise.all([
           getGeneros(token),
-          getElementoById(token, datos),
-          getSubgeneroByElementoId(datos)
+          getElementoById(token, datos)
         ]);
 
         const subgenerosIds = Array.isArray(subgenero)
