@@ -17,7 +17,7 @@ import Carga from '../Utiles/PantallaCarga/PantallaCarga.js';
 
 function MasInfoPageAlbum() {
   const location = useLocation();
-  const album = useMemo(() => location.state, [location.state]);
+  const album = useMemo(() => location.state || {}, [location.state]);
 
   const audioRef = useRef(null);
   // Si no hay album, o no tiene al menos un audioUrl, evitamos romper todo
@@ -52,23 +52,26 @@ function MasInfoPageAlbum() {
 
         const canciones = await getCancionesByAlbum(album.id);
         console.log("Canciones obtenidas:", canciones);
-         
+        
+        console.log("❓ Album actual:", album);
         const primerTrack = {
           nombre: album.nombre,
-          fechacrea: album.fechaCrea,
+          fechacrea: album.fechacrea,
           descripcion: album.descripcion,
-          numventas: album.numVentas,
+          numventas: album.numventas,
           valoracion: album.valoracion,
           precio: album.precio,
-          esnovedad: album.esNovedad,
-          fotoamazon: album.fotoAmazon,
-          esalbum: album.esAlbum,
-          idgenero: album.idGenero,
+          esnovedad: album.esnovedad,
+          fotoamazon: album.urlFoto,
+          esalbum: album.esalbum,
+          idgenero: album.genero.id,
           idelemento: album.id,
           numrep: 0,
           idalbum: album.id,
-          nombreamazon: album.fotoAmazon,
+          nombreamazon: album.urlFoto,
         };
+
+        console.log("🎵 Primer track simulado:", primerTrack);
       // Obtener los comentarios de primerTrack
       let valoracionesPrimerTrack = [];
       try {
@@ -107,7 +110,7 @@ function MasInfoPageAlbum() {
         ...primerTrack,
         comentarios: valoracionesPrimerTrackConNombres,
       });
-
+        //Procesar canciones 
         const tracklistCompleto = [...canciones];
         const artistasRaw = await getArtistaById(null); // esto trae todos no sé por qué no filtra por id xdd pero bueno
 
@@ -217,13 +220,13 @@ function MasInfoPageAlbum() {
   useEffect(() => {
     const fetchGenero = async () => {
     try {
-      const data = await getGeneroById(album.idGenero);
+      const data = await getGeneroById(album.genero.id);
       console.log("🎼 Género principal:", data);
 
       if (Array.isArray(data)) {
-        setGeneroNombre(data[0]?.name || "Desconocido");
+        setGeneroNombre(data[0]?.nombre || "Desconocido");
       } else {
-        setGeneroNombre(data?.name || "Desconocido");
+        setGeneroNombre(data?.nombre || "Desconocido");
       }
     } catch (err) {
       console.warn("⚠️ Error al obtener el género principal", err);
