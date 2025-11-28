@@ -6,7 +6,7 @@ export default function UploadMini() {
   const [audio, setAudio] = useState(null);
 
   const handleUpload = async () => {
-    const nombreBase = "amazo2n"; // O el ID que quieras usar como nombre
+    //const nombreBase = "amazo2n"; // O el ID que quieras usar como nombre
 
     // =========================
     //     SUBIR FOTO
@@ -27,9 +27,7 @@ export default function UploadMini() {
       if (extension === "wav") carpetaAudio = "wav/";
       if (extension === "flac") carpetaAudio = "flac/";
 
-      const publicIdAudio = nombreBase; // Sin extensión
-
-      await subirArchivo(audio, carpetaAudio, publicIdAudio);
+      await subirArchivo(audio, carpetaAudio, audio.name);
       alert("Canción subida");
     }
   };
