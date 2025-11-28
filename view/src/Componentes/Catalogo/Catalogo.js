@@ -1,5 +1,5 @@
 import './Catalogo.css';
-import { AMAZON_URL_MP3, AMAZON_URL_DEFAULT, AMAZON_URL_FOTO } from '../../config.js';
+import { URL_MP3, CLOUD_URL_DEFAULT, URL_FOTO} from '../../config.js';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
@@ -19,24 +19,24 @@ function Catalogo({ elementos, isLoading, artistas }) {
     const [filtroFechaMin, setFiltroFechaMin] = useState('');
     const [filtroFechaMax, setFiltroFechaMax] = useState('');
     const [mostrarFiltros, setMostrarFiltros] = useState(false);//Para mostrar los filtros o no.
-//    const [subgenerosMap, setSubgenerosMap] = useState({});
-//    const [subgenerosCargados, setSubgenerosCargados] = useState(false);
+    // const [subgenerosMap, setSubgenerosMap] = useState({});
+    // const [subgenerosCargados, setSubgenerosCargados] = useState(false);
 
     // 4. Filtrado corregido - versión definitiva
     //const subgenerosUnicos = [...new Set(elementos.map(item => item.subgenero.nombre))];
     const generosUnicos = [...new Set(elementos.map(item => item.genero.nombre))];
     //console.log(elementos);
     const productosFiltrados = elementos.filter(item => {
-        // const nombreGenero = item.genero;
+        const nombreGenero = item.genero.nombre;
         const cumpleBusqueda = busqueda ? item.nombre.toLowerCase().includes(busqueda.toLowerCase()) : true;
         //const cumpleGenero = filtroGenero ? item.genero === filtroGenero : true;
-        // const cumpleGenero = filtroGenero ? nombreGenero === filtroGenero : true;
-        // const cumpleSubgenero = filtroSubgenero ? item.subgenero === filtroSubgenero : true;
+        const cumpleGenero = filtroGenero ? nombreGenero === filtroGenero : true;
+        //const cumpleSubgenero = filtroSubgenero ? item.subgenero === filtroSubgenero : true;
         const cumplePrecio = (!filtroPrecioMin || item.precio >= filtroPrecioMin) &&
             (!filtroPrecioMax || item.precio <= filtroPrecioMax);
 
         // Convertir la fecha del producto a objeto Date
-        const fechaProducto = convertirFecha(item.fechacrea);
+        const fechaProducto = convertirFechaISO(item.fechacrea);
 
         // Convertir las fechas de filtro a objeto Date (si están definidas)
         const fechaMin = filtroFechaMin ? new Date(filtroFechaMin) : null;
@@ -46,7 +46,7 @@ function Catalogo({ elementos, isLoading, artistas }) {
             (!fechaMax || (fechaProducto && fechaProducto <= fechaMax));
 
         const cumpleElemento = tipoPorMenu !== null ? item.tipo === tipoPorMenu : true;
-        return cumpleBusqueda && cumplePrecio && cumpleFecha && cumpleElemento; //&& cumpleGenero && cumpleSubgenero 
+        return cumpleBusqueda && cumplePrecio && cumpleFecha && cumpleElemento && cumpleGenero; // && cumpleSubgenero;
     });
 
     const categorias = [
@@ -211,11 +211,11 @@ const renderStars = (rating) => {
     ));
 };
 
-const convertirFecha = (fechaStr) => {
-    if (!fechaStr) return null; // Evita errores con valores nulos
-    const [dia, mes, anio] = fechaStr.split("/").map(Number);
-    return new Date(anio, mes - 1, dia); // Mes se ajusta porque en JS los meses van de 0-11
+const convertirFechaISO = (fechaISO) => {
+  if (!fechaISO) return null;
+  return new Date(fechaISO);
 };
+
 
 // Sección con Slider Horizontal
 function Section({ title, items }) {
@@ -247,7 +247,7 @@ function ProductoCard({ item }) {
 
     // Función para abrir el pop-up de reproducción
     const handlePlayClick = () => {
-        if (item.tipo === 1 || !item.tipo === 2) {
+        if (item.tipo === 1 || item.tipo === 2) {
             setShowModal(true);
         }
     };
@@ -368,8 +368,8 @@ function ProductoCard({ item }) {
                 {<img
                     src={
                         item.fotoamazon && item.fotoamazon !== "null"
-                            ? `${AMAZON_URL_FOTO}${item.fotoamazon}`
-                            : `${AMAZON_URL_DEFAULT}`
+                            ? `${URL_FOTO}${item.fotoamazon}`
+                            : `${CLOUD_URL_DEFAULT}`
                     }
                     className={`card-img-top ${getImageClass()}`}
                     alt={item.nombre}
@@ -501,8 +501,8 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
                 <img
                     src={
                         item.fotoamazon && item.fotoamazon !== "null"
-                            ? `${AMAZON_URL_FOTO}${item.fotoamazon}`
-                            : `${AMAZON_URL_DEFAULT}`
+                            ? `${URL_FOTO}${item.fotoamazon}`
+                            : `${CLOUD_URL_DEFAULT}`
                     }
                     className="modal-img"
                     alt={item.nombre}
@@ -515,9 +515,10 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
                 <h2>{item.nombre}</h2>
                 {/* <h3>{item.nombre}</h3> */}
 
-                {!item.tipo === 2 && ( //si es canción
+                {item.tipo === 2 && ( //si es canción
                     <audio ref={audioRef}
-                        src={`${AMAZON_URL_MP3}${item.fotoamazon}`} />
+                        
+                        src={`${URL_MP3}${item.fotoamazon.replace(/\.[^/.]+$/, "")}.mp3`}/>
                 )}
 
                 {/* Controles de reproducción */}

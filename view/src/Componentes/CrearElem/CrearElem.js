@@ -5,10 +5,10 @@ import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
 import logo from './../../Recursos/elementoDefecto.png';
 
 import { getGeneros } from "./../../ApiServices/GeneroService"; 
-import { postArchivo } from "./../../ApiServices/FileSerive";
+import { subirArchivo } from "./../../ApiServices/FileSerive";
 import { postElementoParam, getElementoById, putElemento } from "./../../ApiServices/ElementosService";
 import { getGeneroById, getSubgeneroByElementoId } from '../../ApiServices/GeneroService.js';
-import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
+import { URL_FOTO  } from '../../config.js';
 import PantallaCarga from "../Utiles/PantallaCarga/PantallaCarga.js";
 
 const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
@@ -102,7 +102,7 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
 
   useEffect(() => {
     if (formData.fotoAmazon && !crearModo) {
-      setPreview(`${AMAZON_URL_FOTO}${formData.fotoAmazon}`);
+      setPreview(`${URL_FOTO}${formData.fotoAmazon}`);
     }
   }, [formData.fotoAmazon]);
 
@@ -154,7 +154,8 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
           return;
         }
 
-        const urlAmazon = formData.nombre.toLowerCase().replace(/\s+/g, '') + '_' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const urlCloud = formData.nombre.toLowerCase().replace(/\s+/g, '') + '_' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
+        const extensionFoto = formData.fotoFile.name.split('.').pop().toLowerCase();
         // Prepara datos para el elemento (sin archivos, solo metadata)
         const elementoData = {
           idartista: idLoggedIn,
@@ -163,7 +164,7 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
           precio: formData.precio,
           esalbum: formData.esAlbum,
           idgenero: formData.idgenero,  // O idGenero si es con G mayúscula
-          fotoamazon: urlAmazon, //sin la extension
+          fotoamazon: `${urlCloud}.${extensionFoto}`, //con la extension para el cloudinary de la foto
           subgenero: formData.subgeneros
         };
 
@@ -185,12 +186,32 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
           if (!originalFile) continue;
 
           const extension = originalFile.name.split('.').pop();
-          const renamedFile = new File([originalFile], `${urlAmazon}.${extension}`, {
+          const renamedFile = new File([originalFile], `${urlCloud}.${extension}`, {
             type: originalFile.type,
           });
 
-          const subidaArchivo = await postArchivo(token, renamedFile);
-          //console.log(`Archivo ${archivoInfo.tipo} subido:`, subidaArchivo);
+          let carpeta = "";
+          
+          switch (extension) {
+            case "mp3":
+              carpeta = "mp3/";
+              break;
+            case "flac":
+              carpeta = "flac/";
+              break;
+            case "wav":
+              carpeta = "wav/";
+              break;
+            case "jpg":
+            case "jpeg":
+            case "png":
+              carpeta = "fotos/";
+              break;
+            default:
+              carpeta = "default/";
+          }
+          
+          const subidaArchivo = await subirArchivo(renamedFile, carpeta, urlCloud); // se suben con el nombre renombrado sin espacios y sin la extension
         }
         manejarResultado?.({ codigo: 1, mensaje: "Elemento creado exitosamente." });
       } else { //actualizar informacion del usuario
