@@ -158,13 +158,13 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
         const extensionFoto = formData.fotoFile.name.split('.').pop().toLowerCase();
         // Prepara datos para el elemento (sin archivos, solo metadata)
         const elementoData = {
-          idartista: idLoggedIn,
+          artista: idLoggedIn,
           nombre: formData.nombre,
           descripcion: formData.descripcion,
           precio: formData.precio,
           esalbum: formData.esAlbum,
-          idgenero: formData.idgenero,  // O idGenero si es con G mayúscula
-          fotoamazon: `${urlCloud}.${extensionFoto}`, //con la extension para el cloudinary de la foto
+          genero: formData.genero,  // O idGenero si es con G mayúscula
+          urlFoto: `${urlCloud}.${extensionFoto}`, //con la extension para el cloudinary de la foto
           subgenero: formData.subgeneros
         };
 
