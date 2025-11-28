@@ -1,4 +1,4 @@
-import { BASE_URL } from "../config"; // Empleado para la llamada a la API
+import { BASE_URL_CONTENIDO } from "../config"; // Empleado para la llamada a la API
 import axios from 'axios'; // Llamadas a la API sin emplear fetch
 
 /**
@@ -10,7 +10,7 @@ import axios from 'axios'; // Llamadas a la API sin emplear fetch
  */
 export async function getCanciones(token) {
     try {
-        const response = await axios.get(`${BASE_URL}/canciones`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/canciones`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -32,7 +32,7 @@ export async function getCanciones(token) {
  */
 export async function getCancionById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL}/canciones?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/canciones/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -55,7 +55,7 @@ export async function getCancionById(token, id) {
  */
 export async function putCancion(token, id, cancionData) {
     try {
-        const response = await axios.put(`${BASE_URL}/canciones?id=${id}`,
+        const response = await axios.put(`${BASE_URL_CONTENIDO}/canciones/${id}`,
             cancionData,
             {
                 headers: {
@@ -80,7 +80,7 @@ export async function putCancion(token, id, cancionData) {
  */
 export async function postCancion(token, cancionData) {
     try {
-        const response = await axios.post(`${BASE_URL}/canciones`,
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/canciones`,
             cancionData,
             {
                 headers: {
@@ -105,7 +105,7 @@ export async function postCancion(token, cancionData) {
  */
 export async function deleteCancion(token, id) {
     try {
-        const response = await axios.delete(`${BASE_URL}/canciones?id=${id}`, {
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/canciones/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -127,7 +127,7 @@ export async function deleteCancion(token, id) {
  */
 export async function getCancionesFiltra(token, filtro) {
     try {
-        const response = await axios.get(`${BASE_URL}/canciones`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/canciones`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -149,7 +149,7 @@ export async function getCancionesFiltra(token, filtro) {
  */
 export async function getCancionesByAlbum(idAlbum) {
     try {
-      const response = await axios.get(`${BASE_URL}/getCancionesAlbum?idalbum=${idAlbum}`);
+      const response = await axios.get(`${BASE_URL_CONTENIDO}/canciones/album/${idAlbum}`);
       return response.data;
     } catch (error) {
       console.error("Error:", error);
