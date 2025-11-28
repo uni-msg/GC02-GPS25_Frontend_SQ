@@ -7,8 +7,7 @@ import paypalLogo from "../../Recursos/paypal.png";
 import payLogo from "../../Recursos/Google_Pay_Logo.png";
 import bizumLogo from "../../Recursos/Logo-Bizum.png"
 import { VaciarCestaContext,  } from './VaciarCestaContext.js';
-import { postElementosTiene } from '../../ApiServices/ElementosService.js';
-import { deleteElementosCesta } from '../../ApiServices/CestaService.js';
+import { postTiene } from '../../ApiServices/CestaService.js';
 
 function Popup({ closePopup, productos, precio, idUsuario, tokenUsuario }) {
   const [metodoSeleccionado, setMetodoSeleccionado] = useState(null);
@@ -35,15 +34,12 @@ function Popup({ closePopup, productos, precio, idUsuario, tokenUsuario }) {
         return;
       }
       else{
-        vaciarCesta();  // Vacía la cesta desde el contexto
-        alert("Pago realizado con éxito")
-        //Llamar al método post
-        for(const producto of productos){
-          try{
-            await postElementosTiene(tokenUsuario, idUsuario, producto.id);
-          } catch(error) {
-            console.error("Error al agregar el producto:", error);
-          }
+        try{
+          await postTiene(tokenUsuario, idUsuario);
+          vaciarCesta();  // Vacía la cesta desde el contexto
+          alert("Pago realizado con éxito")
+        } catch(error) {
+          console.error("Error al agregar el producto:", error);
         }
         closePopup();
       }
@@ -54,15 +50,12 @@ function Popup({ closePopup, productos, precio, idUsuario, tokenUsuario }) {
         return;
       }
       else{
-        vaciarCesta();  // Vacía la cesta desde el contexto
-        alert("Pago realizado con éxito")
-        //llamar al método post
-        for (const producto of productos) {
-          try {
-            await postElementosTiene(tokenUsuario, idUsuario, producto.id);
-          }catch (error) {
-            console.error("Error al agregar el producto:", error);
-          }
+        try{
+          await postTiene(tokenUsuario, idUsuario);
+          vaciarCesta();  // Vacía la cesta desde el contexto
+          alert("Pago realizado con éxito")
+        } catch(error) {
+          console.error("Error al agregar el producto:", error);
         }
         closePopup();
       }
@@ -229,7 +222,7 @@ function Popup({ closePopup, productos, precio, idUsuario, tokenUsuario }) {
         </div>
         {/*Pago con Bizum*/}
         <div>
-          {metodoSeleccionado == 'bizum' && (
+          {metodoSeleccionado === 'bizum' && (
             <form id="formBizum" onSubmit={(e) => e.preventDefault()}>
               <div className="botonesSuperiroes">
                 <i className="fa-solid fa-circle-chevron-left botonAtras" onClick={handleBackClick}></i>

@@ -39,12 +39,16 @@ function ListaFiltro({ elementosDatos = [], titulo = "Deseos", descarga = false 
                         ) : (
                             <>
                                 {
-                                    (Array.isArray(datos[0]) ? datos.flat() : datos).map((itemPeq, index) => (
-                                        itemPeq.tipo == 3 ?
-                                        <ElementoPer key={index} item={itemPeq} />
-                                        :
-                                        <Elemento key={index} item={itemPeq} descarga={descarga} />
-                                    ))
+                                    (Array.isArray(datos[0]) ? datos.flat() : datos).map((itemPeq, index) => {
+                                        const esArtista = itemPeq.esartista === true;
+                                        const esAlbum = itemPeq.esalbum === true;
+
+                                        if (esArtista) {
+                                            return <ElementoPer key={index} item={itemPeq} />;
+                                        }
+
+                                        return <Elemento key={index} item={itemPeq} descarga={descarga} esAlbum={esAlbum} />;
+                                    })
                                 }
                             </>
                         )}
@@ -81,41 +85,38 @@ const descargarArchivo = (nombre,tipo = "mp3") => {
     document.body.removeChild(link);
 };
 
-function Elemento({ item, descarga = false }) {
+const getFoto = (item) => {
+    return item.fotoAmazon || item.rutafoto || item.urlFoto
+        ? `${AMAZON_URL_FOTO}${item.fotoAmazon || item.rutafoto || item.urlFoto}`
+        : AMAZON_URL_DEFAULT;
+};
+
+function Elemento({ item, descarga = false, esAlbum }) {
     const navigate = useNavigate();
     const [mostrarModal, setMostrarModal] = useState(false);
 
-    const handleClick = (tipo = 1) => {
-        tipo == 1 ?
-            navigate("/masInfo", { state: item })
-            :
-            navigate("/masInfoAlbum", { state: item });
-    };
+    const handleClick = () => navigate(item.esalbum ? "/masInfoAlbum" : "/masInfo", { state: item });
     
 return (
     <div className="card" >
         <div className="botonesAccion d-flex justify-content-between">
-            <i className="fa-solid fa-plus" onClick={() => handleClick(item.tipo)}></i>
-            {descarga && item.tipo===1 && <i className="fa-solid fa-download" onClick={() => setMostrarModal(true)}></i>}
+            <i className="fa-solid fa-plus" onClick={handleClick}></i>
+            {descarga && !esAlbum && <i className="fa-solid fa-download" onClick={() => setMostrarModal(true)}></i>}
             <i className="fa-solid fa-share-nodes"></i>
         </div>
         <img 
-            src={
-                item.fotoAmazon && item.fotoAmazon !== "null"
-                    ? `${AMAZON_URL_FOTO}${item.fotoAmazon}`
-                    : `${AMAZON_URL_DEFAULT}`
-            }
-            className={`card-img-top ${item.tipo==1?"card-img-rounded":"card-img-square"}`} 
+            src={getFoto(item)}
+            className={`card-img-top ${!esAlbum ?"card-img-rounded":"card-img-square"}`} 
             alt={item.nombre} 
         />
         <div className="card-body">
             <h5 className="card-title ">{item.nombre} </h5>
             <div className="etiquetas">
-                <span className="tags me-2"> {item.genero} </span>
-                {/* <span className="tags me-2" > {item.subgenero} </span> */}
+                <span className="tags me-2"> {item.genero?.nombre ?? "Sin género"} </span>
+                {item.subgenero?.nombre && (<span className="tags me-2" > {item.subgenero.nombre} </span> )}
             </div>
             {
-                item.tipo===1 &&
+                !esAlbum &&
                 <>
                     <div className='d-flex'>
                         <p className='fw-semibold pe-1'> Album: </p>
@@ -128,11 +129,11 @@ return (
                 </>
             }
             {
-                item.tipo===2 &&
+                esAlbum &&
                 <>
                     <div className='d-flex'>
-                        <p className='fw-semibold pe-1'> Vetas: </p>
-                        <p > {item.numVentas} </p>
+                        <p className='fw-semibold pe-1'> Ventas: </p>
+                        <p > {item.numventas} </p>
                     </div>
                 </>
             }
@@ -166,18 +167,14 @@ return (
             <i className="fa-solid fa-share-nodes"></i>
         </div>
         <img 
-            src={
-                item.fotoAmazon && item.fotoAmazon !== "null"
-                    ? `${AMAZON_URL_FOTO}${item.fotoAmazon}`
-                    : `${AMAZON_URL_DEFAULT}`
-            }
+            src={getFoto(item)}
             className={`card-img-top card-img-circle`} 
             alt={item.nombre} 
         />
         <div className="card-body">
-            <h5 className="card-title ">{item.nombre} </h5>
+            <h5 className="card-title "> {item.nombreusuario} </h5>
             <div className="etiquetas">
-                <span className="tags me-2"> {item.genero} </span>
+                <span className="tags me-2"> {item.genero?.nombre ?? "Sin género"} </span>
                 {/* <span className="tags me-2">{item.subgenero}</span> */}
             </div>
             <div className='d-flex flex-wrap align-items-center'>
@@ -190,6 +187,9 @@ return (
                 <p className='pe-1'> {item.oyentes} </p>
                 <i className="fa-solid fa-headphones-simple"></i>
             </div>   
+            <div className='d-flex puntuacionCont'>
+                <div className='puntuacion'>{renderStars(item.valoracion)}</div>
+            </div>  
         </div>  
     </div>
 );}

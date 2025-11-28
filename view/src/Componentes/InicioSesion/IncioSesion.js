@@ -2,7 +2,7 @@ import './InicioSesion.css';
 import React, { useState, useEffect,useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, } from "firebase/auth";
+import { signInWithEmailAndPassword, } from "firebase/auth"; //signInWithPopup, GoogleAuthProvider,
 
 import './firebaseConfig.js';
 import { auth } from './firebaseConfig.js';
@@ -11,7 +11,6 @@ import { UsuarioContext } from './UsuarioContext.js';
 
 const InicioSesion = () => {
     const [userData, setUserData] = useState({});
-    const [artData, setArtData] = useState({});
     const [aceptaPolitica, setAceptaPolitica] = useState(false);
     const [error, setError] = useState('');
     const {
@@ -70,28 +69,21 @@ const InicioSesion = () => {
             }
         }
     }, [userData]);
-
-
-    useEffect(() => { //al actualizar los user data se actualiza el contexto
-        setEsNovedad(artData.esNovedad);
-        setOyentes(artData.oyentes);
-        setValoracion(artData.valoracion);
-        setIdGenero(artData.idGenero);
-    }, [artData]);
       
     // Inicializar proveedor de Google
-    const googleProvider = new GoogleAuthProvider();
+    //const googleProvider = new GoogleAuthProvider();
 
     /* ============================================================
     HELPERS
     ============================================================ */
 
     // Login en Firebase con correo y contraseña fija (para Google)
+    /*
     const firebaseLoginFixed = async (email) => {
         const result = await signInWithEmailAndPassword(auth, email, "123123123");
         const user = result.user;
         return await user.getIdToken();
-    };
+    };*/
 
     // Login genérico en tu backend
     const loginBackendWithToken = async (idToken) => {
@@ -114,7 +106,7 @@ const InicioSesion = () => {
     /* ============================================================
     REGISTRO CON GOOGLE
     ============================================================ */
-
+/* 
     const registerWithGoogle = async () => {
         try {
             if (!validarPoliticaYCaptcha()) return;
@@ -144,12 +136,12 @@ const InicioSesion = () => {
             setError("Hubo un problema con el registro mediante Google.");
         }
     };
-
+*/
 
     /* ============================================================
     INICIAR SESIÓN CON GOOGLE
     ============================================================ */
-
+/* 
     const loginWithGoogle = async () => {
         try {
             if (!validarPoliticaYCaptcha()) return;
@@ -163,7 +155,7 @@ const InicioSesion = () => {
             setError("No se pudo iniciar sesión con Google.");
         }
     };
-
+*/
 
     /* ============================================================
     REGISTRO CON EMAIL
@@ -277,7 +269,7 @@ const InicioSesion = () => {
                                     <ReCAPTCHA sitekey="6Lcr3_wqAAAAAIPpuYG5vzuhCCTbbCAXihK-EdAk" onChange={handleCaptchaChange} className="captcha-small" />
                                     <div className="checkbox-politica">
                                         <input type="checkbox" id="politica" checked={aceptaPolitica} onChange={(e) => setAceptaPolitica(e.target.checked)} />
-                                        <label htmlFor="politica"> Acepto la <a href="https://adaxiang.github.io/politica-privacidad/" target="_blank">Política de Privacidad.</a> </label>
+                                        <label htmlFor="politica"> Acepto la <a href="https://adaxiang.github.io/politica-privacidad/" target="_blank" rel="noopener noreferrer">Política de Privacidad.</a> </label>
                                     </div>
                                     
                                     <button className="button1" type="submit"> Crear cuenta </button>
@@ -296,7 +288,7 @@ const InicioSesion = () => {
                                     <ReCAPTCHA sitekey="6Lcr3_wqAAAAAIPpuYG5vzuhCCTbbCAXihK-EdAk" onChange={handleCaptchaChange} className="captcha-small" />
                                     <div className="checkbox-politica">
                                         <input type="checkbox" id="politica" checked={aceptaPolitica} onChange={(e) => setAceptaPolitica(e.target.checked)} />
-                                        <label htmlFor="politica"> Acepto la <a href="https://github.com/AdaXiang/politica-privacidad.git" target="_blank">Política de Privacidad.</a> </label>
+                                        <label htmlFor="politica"> Acepto la <a href="https://github.com/AdaXiang/politica-privacidad.git" target="_blank" rel="noopener noreferrer">Política de Privacidad.</a> </label>
                                     </div>
 
                                     <button className="button1" type="submit">Ingresar</button>
