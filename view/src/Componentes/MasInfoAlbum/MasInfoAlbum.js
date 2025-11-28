@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, useMemo, useContext } from 'react';
 import './MasInfoAlbum.css';
 import Popup from '../MetodoPago/MetodoPago.js'; 
 import { useLocation } from 'react-router-dom';
-import { AMAZON_URL_FOTO, AMAZON_URL_MP3 } from '../../config.js';
+import { URL_FOTO, URL_MP3 } from '../../config.js';
 import { getCancionesByAlbum } from '../../ApiServices/CancionesService.js'; 
 import { getArtistaByElemento, getArtistaById} from '../../ApiServices/ArtistasService.js'; 
 import { getValoracionesByIdelem} from '../../ApiServices/ElementosService';
@@ -37,7 +37,7 @@ function MasInfoPageAlbum() {
   const [subgeneroNombre, setSubgeneroNombre] = useState("");
 
   const currentTrack = tracklist[currentTrackIndex] || null;
-  const audioUrl = currentTrack ? `${AMAZON_URL_MP3}${currentTrack.fotoamazon}` : null;
+  const audioUrl = currentTrack ? `${URL_MP3}${currentTrack.urlFoto.replace(/\.[^/.]+$/, "")}.mp3` : null;
   
   const { idLoggedIn, token } = useContext(UsuarioContext);
 
@@ -92,16 +92,29 @@ function MasInfoPageAlbum() {
         } catch (e) { console.warn("Error artista", e); }
 
         // Buscar Comentarios
+        
         try {
             const vals = await getValoracionesByIdelem(album.id);
-            const valsEnriched = await Promise.all((vals||[]).map(async v => {
+            const valsOnlyAlbum = (vals || []).filter(v => v.idelem === album.id);
+            const valsEnriched = await Promise.all((valsOnlyAlbum || []).map(async v => {
                 try {
-                    const u = await getUsuarioById(token, v.idusuario);
-                    return { ...v, usuario: u?.nombreusuario || "Anónimo" };
-                } catch { return v; }
+                    const u = await getUsuarioById(token, v.iduser);
+                    return { 
+                        ...v, 
+                        usuario: u?.nombreusuario || `Usuario ${v.iduser}` 
+                    };
+                } catch {
+                    return { 
+                        ...v,
+                        usuario: `Usuario ${v.iduser}`
+                    };
+                }
             }));
+
             setPrimerTrack(prev => ({ ...prev, comentarios: valsEnriched }));
-        } catch (e) { console.warn("Error comentarios", e); }
+        } catch (e) { 
+            console.warn("Error comentarios", e); 
+        }
 
         // Procesar la lista de canciones
         try {
@@ -116,11 +129,11 @@ function MasInfoPageAlbum() {
                 setTracklist(tracksEnriched);
             }
         } catch (err) {
-            console.error("❌ Error cargando canciones:", err);
+            console.error("Error cargando canciones:", err);
         }
 
       } catch (err) {
-        console.error("❌ Error crítico:", err);
+        console.error("Error crítico:", err);
       } finally {
         setLoading(false);
       }
@@ -233,7 +246,7 @@ useEffect(() => {
 
   useEffect(() => {
       if (token && idLoggedIn && currentTrack?.id) {
-        getValoracionesByIdelem(currentTrack.id).then(r => { if(Array.isArray(r)) setUsuariovalorado(r.some(v => v.idusuario === idLoggedIn)); });
+        getValoracionesByIdelem(currentTrack.id).then(r => { if(Array.isArray(r)) setUsuariovalorado(r.some(v => v.iduser === idLoggedIn)); });
         getUsuarioTieneElementoById(token, idLoggedIn).then(r => { if(Array.isArray(r)) setPuedeComentar(r.some(e => e.id === currentTrack.id)); });
       }
   }, [token, idLoggedIn, currentTrack?.id]);
@@ -246,7 +259,7 @@ useEffect(() => {
         {/* IZQUIERDA */}
         <div id="colIzquierdaMasInfo" className="me-3">
           <div className="vinilo-wrapper" style={{ animation: `rotar 3s linear infinite`, animationPlayState: girar ? 'running' : 'paused' }}>
-            <img className="portada" src={`${AMAZON_URL_FOTO}${primerTrack.fotoamazon}`} alt="Portada" onError={(e) => e.target.src = 'https://via.placeholder.com/300'} />
+            <img className="portada" src={`${URL_FOTO}${primerTrack.fotoamazon}`} alt="Portada" onError={(e) => e.target.src = 'https://via.placeholder.com/300'} />
             <i className="fa-solid fa-record-vinyl vinilo-icon"></i>
           </div>
           

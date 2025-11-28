@@ -1,4 +1,4 @@
-import { BASE_URL } from "../config"; //empleado para la llamada a la api
+import { BASE_URL, BASE_URL_USUARIOS } from "../config"; //empleado para la llamada a la api
 import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 /**
@@ -51,9 +51,9 @@ export async function login(token) {
  * @returns {Promise<Object>} Lista de géneros en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function getUsuarioById(token,id) {
+export async function getUsuarioById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL}/usuarios?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },

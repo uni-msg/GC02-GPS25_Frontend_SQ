@@ -10,7 +10,7 @@ import { postElementoCesta } from "../../ApiServices/CestaService";
 
 import Popup from '../MetodoPago/MetodoPago.js';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
-import { AMAZON_URL_FOTO, AMAZON_URL_MP3 } from '../../config.js';
+import { URL_FOTO, URL_MP3 } from '../../config.js';
 import { UsuarioContext } from "../InicioSesion/UsuarioContext";
 
 
@@ -30,8 +30,9 @@ function MasInfo() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const audioUrl = `${AMAZON_URL_MP3}${song.fotoAmazon}`;
+  const audioUrl = `${URL_MP3}${song.urlFoto.replace(/\.[^/.]+$/, "")}.mp3`;
   const audioRef = useRef(new Audio(audioUrl));
+  const [comentarios, setComentarios] = useState([]);
 
   // Función para alternar reproducción/pausa
   const togglePlay = () => {
@@ -46,7 +47,7 @@ function MasInfo() {
   };
 
   useEffect(() => {
-    const newAudio = new Audio(`${AMAZON_URL_MP3}${song.fotoAmazon}`);
+    const newAudio = new Audio(`${URL_MP3}${song.urlFoto.replace(/\.[^/.]+$/, "")}.mp3`);
     
     if (audioRef.current) {
       audioRef.current.pause(); // Para parar la anterior
@@ -131,7 +132,7 @@ function MasInfo() {
           await deleteDeseo(token, idLoggedIn, song.id);
         }
       } catch (error) {
-        console.error("❌ Error al actualizar favorito:", error);
+        console.error("Error al actualizar favorito:", error);
       }
     }
   };
@@ -190,9 +191,7 @@ function MasInfo() {
     }
   };
 
-  //COMENTARIOS 
-  const [comentarios, setComentarios] = useState([]);
-
+  
   //LETRA DE CANCION 
   const [letra, setLetra] = useState();
  
@@ -319,24 +318,24 @@ function MasInfo() {
           const letraCan = await getLetraById(song.id);
           setLetra(letraCan);
   
-          const comentariosAPI = await getValoracionesByIdelem(song.id);
-          const comentariosConNombres = await Promise.all(
-            (comentariosAPI || []).map(async (valoracion) => {
-              try {
-                const usuario = await getUsuarioById(token, valoracion.idusuario);
-                return {
-                  ...valoracion,
-                  usuario: usuario.nombreusuario || `Usuario ${valoracion.idusuario}`,
-                };
-              } catch {
-                return {
-                  ...valoracion,
-                  usuario: `Usuario ${valoracion.idusuario}`,
-                };
-              }
-            })
-          );
-          setComentarios(comentariosConNombres);
+          // const comentariosAPI = await getValoracionesByIdelem(song.id);
+          // const comentariosConNombres = await Promise.all(
+          //   (comentariosAPI || []).map(async (valoracion) => {
+          //     try {
+          //       const usuario = await getUsuarioById(token, valoracion.idusuario);
+          //       return {
+          //         ...valoracion,
+          //         usuario: usuario.nombreusuario || `Usuario ${valoracion.idusuario}`,
+          //       };
+          //     } catch {
+          //       return {
+          //         ...valoracion,
+          //         usuario: `Usuario ${valoracion.idusuario}`,
+          //       };
+          //     }
+          //   })
+          // );
+          // setComentarios(comentariosConNombres);
   
           const todos = await getElementos(token);
           const filtradas = todos.filter(
@@ -355,6 +354,48 @@ function MasInfo() {
   
     cargarDatos();
   }, [song, token]);
+
+  useEffect(() => {
+    setComentarios([]);   
+  }, [song.id]);        
+  //COMENTARIOS 
+  useEffect(() => {
+  const cargarComentarios = async () => {
+    try {
+      if (!song?.id) return;
+
+      const comentariosAPI = await getValoracionesByIdelem(song.id);
+
+      const comentariosFiltrados = (comentariosAPI || []).filter(
+      (c) => c.idelem === song.id
+    );
+
+      const comentariosConNombres = await Promise.all(
+        (comentariosFiltrados || []).map(async (valoracion) => {
+          try {
+            const usuario = await getUsuarioById(token, valoracion.iduser);
+            return {
+              ...valoracion,
+              usuario: usuario?.nombreusuario || `Usuario ${valoracion.iduser}`,
+            };
+          } catch (err) {
+            return {
+              ...valoracion,
+              usuario: `Usuario ${valoracion.iduser}`,
+            };
+          }
+        })
+      );
+
+      setComentarios(comentariosConNombres);
+    } catch (err) {
+      console.error("Error cargando comentarios:", err);
+    }
+  };
+
+  cargarComentarios();
+}, [song?.id, token]);
+
 
   useEffect(() => {
     console.log("objeto letra es: ", letra)
@@ -380,7 +421,7 @@ function MasInfo() {
           >
             <img
               className="portada"
-              src={`${AMAZON_URL_FOTO}${song.fotoAmazon}`}
+              src={`${URL_FOTO}${song.urlFoto}`}
               alt="Portada del álbum"
             />
             <i className="fa-solid fa-record-vinyl vinilo-icon"></i>
@@ -537,7 +578,7 @@ function MasInfo() {
                       className="vinilo-wrapperelacionadas"
                     >
                       <img
-                        src={`${AMAZON_URL_FOTO}${cancion.fotoAmazon}`}
+                        src={`${URL_FOTO}${cancion.urlFoto}`}
                         className="cardCancionRelacionada"
                         alt={cancion.nombre}
                       />

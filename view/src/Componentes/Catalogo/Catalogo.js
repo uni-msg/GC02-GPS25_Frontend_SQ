@@ -517,7 +517,6 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
 
                 {item.tipo === 2 && ( //si es canción
                     <audio ref={audioRef}
-                        
                         src={`${URL_MP3}${item.fotoamazon.replace(/\.[^/.]+$/, "")}.mp3`}/>
                 )}
 
