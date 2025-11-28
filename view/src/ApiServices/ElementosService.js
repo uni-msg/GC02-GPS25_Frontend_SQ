@@ -40,7 +40,7 @@ export async function getElementos(token) {
  */
 export async function getElementoById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -390,7 +390,7 @@ export async function getValoracionesById(token,id) {
  */
 export async function getValoracionesByIdelem(idelem) {
     try {
-      const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?idelemento=${idelem}`);
+      const response = await axios.get(`${BASE_URL_CONTENIDO}/usuarioValoraElem?idelemento=${idelem}`);
       return response.data;
     } catch (error) {
       console.error("Error:", error);

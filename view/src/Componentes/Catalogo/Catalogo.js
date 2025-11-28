@@ -1,45 +1,46 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Catalogo.css';
-import { AMAZON_URL_MP3, AMAZON_URL_DEFAULT, AMAZON_URL_FOTO } from '../../config.js';
+import { URL_MP3, CLOUD_URL_DEFAULT, URL_FOTO} from '../../config.js';
+import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
 
-
-const PantallaCarga = () => (
-    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh', color: '#572363'}}>
-        <div className="spinner-border text-primary" role="status">
-            <span className="visually-hidden">Cargando...</span>
-        </div>
-    </div>
-);
-
-// --------------------------------------------------------------------------
-// 🚀 COMPONENTE CATALOGO
-// --------------------------------------------------------------------------
+// --- NUEVOS IMPORTS ---
+import { UsuarioContext } from '../InicioSesion/UsuarioContext';
+import { getElementoById } from '../../ApiServices/ElementosService';
 
 function Catalogo({ elementos, isLoading, artistas }) {
-    const navigate = useNavigate(); 
-    const [menu, setMenu] = useState(0); 
-    const tipoPorMenu = menu === 1 ? 1 : menu === 2 ? 3 : menu === 3 ? 2 : null;
-    const [busqueda, setBusqueda] = useState(''); 
+    const [menu, setMenu] = useState(0); // Utilizamos "menu" para gestionar el estado del menú
+    const tipoPorMenu = menu === 1 ? 2 : menu === 2 ? 0 : menu === 3 ? 1 : null;
+    const [busqueda, setBusqueda] = useState(''); // Estado para la búsqueda
     const [filtroGenero, setFiltroGenero] = useState('');
     const [filtroSubgenero, setFiltroSubgenero] = useState('');
     const [filtroPrecioMin, setFiltroPrecioMin] = useState('');
     const [filtroPrecioMax, setFiltroPrecioMax] = useState('');
     const [filtroFechaMin, setFiltroFechaMin] = useState('');
     const [filtroFechaMax, setFiltroFechaMax] = useState('');
-    const [mostrarFiltros, setMostrarFiltros] = useState(false);
+    const [mostrarFiltros, setMostrarFiltros] = useState(false);//Para mostrar los filtros o no.
+    // const [subgenerosMap, setSubgenerosMap] = useState({});
+    // const [subgenerosCargados, setSubgenerosCargados] = useState(false);
 
-    // Mock de datos si no llegan props (para demo)
-    const datosElementos = elementos || [];
-
-    const generosUnicos = [...new Set(datosElementos.map(item => item.genero?.nombre || "Sin género"))];
-    
-    const productosFiltrados = datosElementos.filter(item => {
+    // 4. Filtrado corregido - versión definitiva
+    //const subgenerosUnicos = [...new Set(elementos.map(item => item.subgenero.nombre))];
+    const generosUnicos = [...new Set(elementos.map(item => item.genero.nombre))];
+    //console.log(elementos);
+    const productosFiltrados = elementos.filter(item => {
+        const nombreGenero = item.genero.nombre;
         const cumpleBusqueda = busqueda ? item.nombre.toLowerCase().includes(busqueda.toLowerCase()) : true;
+        //const cumpleGenero = filtroGenero ? item.genero === filtroGenero : true;
+        const cumpleGenero = filtroGenero ? nombreGenero === filtroGenero : true;
+        //const cumpleSubgenero = filtroSubgenero ? item.subgenero === filtroSubgenero : true;
         const cumplePrecio = (!filtroPrecioMin || item.precio >= filtroPrecioMin) &&
             (!filtroPrecioMax || item.precio <= filtroPrecioMax);
 
-        const fechaProducto = convertirFecha(item.fechacrea);
+        // Convertir la fecha del producto a objeto Date
+        const fechaProducto = convertirFechaISO(item.fechacrea);
+
+        // Convertir las fechas de filtro a objeto Date (si están definidas)
         const fechaMin = filtroFechaMin ? new Date(filtroFechaMin) : null;
         const fechaMax = filtroFechaMax ? new Date(filtroFechaMax) : null;
 
@@ -47,7 +48,7 @@ function Catalogo({ elementos, isLoading, artistas }) {
             (!fechaMax || (fechaProducto && fechaProducto <= fechaMax));
 
         const cumpleElemento = tipoPorMenu !== null ? item.tipo === tipoPorMenu : true;
-        return cumpleBusqueda && cumplePrecio && cumpleFecha && cumpleElemento; 
+        return cumpleBusqueda && cumplePrecio && cumpleFecha && cumpleElemento && cumpleGenero; // && cumpleSubgenero;
     });
 
     const categorias = [
@@ -163,13 +164,13 @@ const renderStars = (rating) => {
     ));
 };
 
-const convertirFecha = (fechaStr) => {
-    if (!fechaStr) return null; 
-    const [dia, mes, anio] = fechaStr.split("/").map(Number);
-    return new Date(anio, mes - 1, dia); 
+const convertirFechaISO = (fechaISO) => {
+  if (!fechaISO) return null;
+  return new Date(fechaISO);
 };
 
-// Sección Modificada: Añadido el contenedor con clase 'seccion-gris'
+
+// Sección con Slider Horizontal
 function Section({ title, items }) {
     if (items.length === 0) return null;
     return (
@@ -192,12 +193,64 @@ function ProductoCard({ item }) {
     const [showModal, setShowModal] = useState(false); 
     const [showSharePopup, setShowSharePopup] = useState(false);
 
+    const { token } = useContext(UsuarioContext);
     const togglePlay = () => setIsPlaying(prev => !prev);
-    const handlePlayClick = () => { if (item.tipo === 1 || !item.tipo === 2) setShowModal(true); };
+
+    // Función para abrir el pop-up de reproducción
+    const handlePlayClick = () => {
+        if (item.tipo === 1 || item.tipo === 2) {
+            setShowModal(true);
+        }
+    };
+
+    /*// Esta función navega a /masInfo y pasa el objeto item a través del state (userState)
     const handleClick = () => {
-        if (item.tipo === 1) navigate("/masInfoAlbum", { state: item });
-        else if (item.tipo === 2) navigate("/masInfo", { state: item });
-        else if (item.tipo === 0) navigate("/masInfoPerfil", { state: item });
+        console.log("item completo:", item);
+
+        if (item.tipo === 1) {
+            navigate("/masInfoAlbum", { state: item });
+        }
+        else if (item.tipo === 2) {
+            navigate("/masInfo", { state: item });
+        }
+        else if (item.tipo === 0) {
+            navigate("/masInfoPerfil", { state: item });
+        }
+    };*/
+
+    // --- NUEVO HANDLECLICK ASÍNCRONO ---
+    const handleClick = async () => {
+        console.log("Iniciando carga de detalle para:", item.nombre);
+        
+        let itemCompleto = item; // Por defecto usamos lo que ya tenemos
+
+        // Si es Álbum (1) o Canción (2), pedimos el objeto completo a la BD
+        if (item.tipo === 1 || item.tipo === 2) {
+            try {
+                // Aquí hacemos la magia: Fetch antes de navegar
+                const dataDB = await getElementoById(token, item.id);
+                
+                if (dataDB) {
+                    console.log("¡Datos completos recuperados!", dataDB);
+                    itemCompleto = dataDB; // Sustituimos el item básico por el completo
+                    console.log("Dato enviado", itemCompleto);
+                }
+            } catch (error) {
+                console.error("Error al obtener detalles completos, usando básicos:", error);
+                // Si falla, seguimos usando 'item' original para no bloquear al usuario
+            }
+        }
+
+        // Navegamos con el itemCompleto (que ya trae artista, genero, etc.)
+        if (item.tipo === 1) {
+            navigate("/masInfoAlbum", { state: itemCompleto });
+        }
+        else if (item.tipo === 2) {
+            navigate("/masInfo", { state: itemCompleto });
+        }
+        else if (item.tipo === 0) {
+            navigate("/masInfoPerfil", { state: item });
+        }
     };
     const shareWith = () => { setShowSharePopup(true); };
     const handleCopyLink = () => {
@@ -233,7 +286,15 @@ function ProductoCard({ item }) {
                     )}
                     <i className="fa-solid fa-share-nodes" onClick={shareWith}></i>
                 </div>
-                <img src={item.fotoamazon && item.fotoamazon !== "null" ? `${AMAZON_URL_FOTO}${item.fotoamazon}` : `${AMAZON_URL_DEFAULT}`} className={`card-img-top ${getImageClass()}`} alt={item.nombre} />
+                {<img
+                    src={
+                        item.fotoamazon && item.fotoamazon !== "null"
+                            ? `${URL_FOTO}${item.fotoamazon}`
+                            : `${CLOUD_URL_DEFAULT}`
+                    }
+                    className={`card-img-top ${getImageClass()}`}
+                    alt={item.nombre}
+                />}
                 <div className="card-body">
                     <h5>{item.nombre}</h5>
                     {item.genero?.nombre ? <span className="tags-genero me-2 mb-3">{item.genero.nombre}</span> : <h6 style={{ fontStyle: "italic", color: "gray", fontSize: '0.8rem' }}>Sin género</h6>}
@@ -286,9 +347,29 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
         <div className="modal-overlay">
             <div className="modal-content">
                 <span className="close-button" onClick={closeModal}>&times;</span>
-                <img src={item.fotoamazon && item.fotoamazon !== "null" ? `${AMAZON_URL_FOTO}${item.fotoamazon}` : `${AMAZON_URL_DEFAULT}`} className="modal-img" alt={item.nombre} style={{ animation: "rotar 7s linear infinite", animationPlayState: girar ? "running" : "paused" }} />
-                <h2 style={{color: '#572363', marginTop: '10px'}}>{item.nombre}</h2>
-                {!item.tipo === 2 && <audio ref={audioRef} src={`${AMAZON_URL_MP3}${item.fotoamazon}`} />}
+                <img
+                    src={
+                        item.fotoamazon && item.fotoamazon !== "null"
+                            ? `${URL_FOTO}${item.fotoamazon}`
+                            : `${CLOUD_URL_DEFAULT}`
+                    }
+                    className="modal-img"
+                    alt={item.nombre}
+                    style={{
+                        animation: "rotar 7s linear infinite",
+                        animationPlayState: girar ? "running" : "paused"
+                    }}
+                />
+
+                <h2>{item.nombre}</h2>
+                {/* <h3>{item.nombre}</h3> */}
+
+                {item.tipo === 2 && ( //si es canción
+                    <audio ref={audioRef}
+                        src={`${URL_MP3}${item.fotoamazon.replace(/\.[^/.]+$/, "")}.mp3`}/>
+                )}
+
+                {/* Controles de reproducción */}
                 <div className="player-controls">
                     <div className='alineacion-botones'>
                         <i className="fa-solid fa-backward" onClick={handleBackwardClick}></i>

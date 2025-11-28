@@ -22,6 +22,7 @@ import Cabecera from './Componentes/Cabecera/Header.js';
 import Pie from './Componentes/Pie/Footer.js';
 import Soporte from './Componentes/Soporte/Soporte.js';
 import Estadisticas from './Componentes/Estadisticas/Estadisticas.js';
+import Prueba from './Componentes/prueba.js';
 
 const Layout = () => {
   const [usuario, setUsuario] = useState("a");
@@ -68,6 +69,7 @@ function AppRoutes() {
         <Route path="masInfoAlbum" element={<MasInfoAlbum />} />
         <Route path="masInfoPerfil" element={<MasInfoPerfil />} />
         <Route path="estadisticas" element={<Estadisticas />} />
+        <Route path='prueba' element={<Prueba />} />
         {/* Rutas protegidas, sin sesion nada */}
         {isLoggedIn ? (
           <>

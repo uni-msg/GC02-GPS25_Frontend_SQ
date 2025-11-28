@@ -1,4 +1,4 @@
-import { BASE_URL } from "../config"; //empleado para la llamada a la api
+import { BASE_URL_CONTENIDO } from "../config"; //empleado para la llamada a la api
 import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 /**
@@ -10,7 +10,7 @@ import axios from 'axios'; //llamadas a la api sin emplear el fetch
  */
 export async function getGeneros(token) {
     try {
-        const response = await axios.get(`${BASE_URL}/musicgenres`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/generos`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },
@@ -31,7 +31,7 @@ export async function getGeneros(token) {
  */
 export async function getGeneroById(id) {
     try {
-      const response = await axios.get(`${BASE_URL}/musicgenres?id=${id}`);
+      const response = await axios.get(`${BASE_URL_CONTENIDO}/generos/${id}`);
       return response.data;
     } catch (error) {
       console.error("Error:", error);
@@ -51,7 +51,7 @@ export async function getGeneroById(id) {
  */
 export async function putGenero(token,id,generoData) {
     try {
-        const response = await axios.put(`${BASE_URL}/musicgenres?id=${id}`, 
+        const response = await axios.put(`${BASE_URL_CONTENIDO}/generos/${id}`, 
             generoData,  // Datos del genero
             {
                 headers: {
@@ -76,7 +76,7 @@ export async function putGenero(token,id,generoData) {
  */
 export async function postGenero(token,generoData) {
     try {
-        const response = await axios.post(`${BASE_URL}/musicgenres`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/generos`, 
             generoData,  // Datos del genero
             {
                 headers: {
@@ -101,7 +101,7 @@ export async function postGenero(token,generoData) {
  */
 export async function deleteGenero(token,id) {
     try {
-        const response = await axios.delete(`${BASE_URL}/musicgenres?id=${id}`,
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/generos/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Enviamos el token
@@ -114,22 +114,3 @@ export async function deleteGenero(token,id) {
         throw error;
     }
 }
-
-
-/**
- * Todos los subgeneros de un elemento
- * 
- * @param {string} idElemento - Identificador del genero.
- * @returns {Promise<Object>} Informacion de la accion formato JSON.
- * @throws {Error} Si ocurre un error en la solicitud HTTP.
- */
-export async function getSubgeneroByElementoId(idElemento) {
-    try {
-      const response = await axios.get(`${BASE_URL}/SubgeneroElemento?idelemento=${idElemento}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener el subgénero:", error);
-      throw error;
-    }
-  }
-  
