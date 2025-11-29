@@ -1,19 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
-import datos from '../../Datos/cesta.json';
 import './Cesta.css';
 import Popup from '../MetodoPago/MetodoPago.js';
 import { VaciarCestaProvider } from '../MetodoPago/VaciarCestaContext.js';
-import { getCesta, deleteElementosCesta, deleteElementoCestaById, getCestaId, getPrecioCesta } from "../../ApiServices/CestaService.js";
+import { deleteElementoCestaById, getCestaId,  } from "../../ApiServices/CestaService.js";
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
-import { getElementoById } from '../../ApiServices/ElementosService.js';
-
 
 function Cesta() {
 
-    const {
-        idLoggedIn,
-        token,
-    } = useContext(UsuarioContext);
+    const {idLoggedIn, token,} = useContext(UsuarioContext);
 
     // Manejar la cesta de forma dinámica. 
     const [productos, setProductos] = useState([]);
@@ -26,28 +20,9 @@ function Cesta() {
             if (idLoggedIn && token) {
                 try {
                     const cestaData = await getCestaId(token, idLoggedIn);
-                    const total = await getPrecioCesta(token, idLoggedIn);
 
-
-                    // Obtener todos los productos a partir de los idElemento
-                    const productosData = await Promise.all(
-                        cestaData.map(async (item) => {
-                            try {
-
-                                const producto = await getElementoById(token, item.idelemento);
-                                return producto;
-                            } catch (error) {
-                                console.error(`Error al obtener el producto con id ${item.idelemento}:`, error);
-                                return null; // Devuelve null si falla un producto
-                            }
-                        })
-                    );
-
-                    // Filtrar productos nulos (errores en la petición)
-                    const productosFiltrados = productosData.filter(p => p !== null);
-
-                    setProductos(productosFiltrados.flat());
-                    setPrecioTotal(total);
+                    setProductos(cestaData.items);
+                    setPrecioTotal(cestaData.total);
 
                 } catch (error) {
                     console.error("Error al cargar la cesta:", error);
@@ -58,6 +33,19 @@ function Cesta() {
         fetchCesta();
     }, [idLoggedIn, token]);
 
+    const deleteElementosCesta = async () => {
+        if (productos.length <= 0) return;
+
+        await Promise.all(
+            productos.map(async (item) => {
+                try {
+                    await deleteElementoCestaById(token,idLoggedIn, item.idelemento);
+                } catch (error) {
+                    console.error(`Error al obtener el producto con id ${item.idelemento}:`, error);
+                }
+            })
+        );
+    }
 
     //Función para abrir el popUp
     const abrirPopup = () => {
@@ -71,35 +59,25 @@ function Cesta() {
 
     //Función para vaciar la cesta
     const vaciarCesta = async () => {
-        //setProductos([]);
-        setPrecioTotal(0);
         try{
-            await deleteElementosCesta(token, idLoggedIn);
+            await deleteElementosCesta();
+            setProductos([]);
+            setPrecioTotal(0);
         } catch (error) {   
             console.error("Error al borrar la cesta:", error);
         }
     };
     //Función para eliminar un elemento de la cesta.
 
-    const eliminarElemento = async (idElemento) => {
+    const eliminarElemento = async (elem) => {
         try {
-
-            // 1. Eliminar en el backend
-            await deleteElementoCestaById(token, idLoggedIn, idElemento);
-
-            // 2. Actualizar productos
-            const productosActualizados = productos.filter((producto) => producto.id !== idElemento);
-            setProductos(productosActualizados);
-
-            // 3. Obtener nuevo total desde backend
-            const nuevoTotal = await getPrecioCesta(token, idLoggedIn);
-            setPrecioTotal(nuevoTotal);
+            await deleteElementoCestaById(token, idLoggedIn, elem.idelemento);
+            setPrecioTotal(precioTotal-elem.precio);
         } catch (error) {
             console.error("Error eliminando el elemento:", error);
             alert("No se pudo eliminar el elemento de la cesta.");
         }
     };
-
 
     const [numero, setNumero] = useState("");
     const [donativo, setDonativo] = useState(0);
@@ -114,7 +92,6 @@ function Cesta() {
         }
 
         setNumero(valor);
-
         const donativoNuevo = parseFloat(valor) || 0;
         setDonativo(donativoNuevo); // Guardamos el donativo como número
     };
@@ -127,9 +104,7 @@ function Cesta() {
                 <h1> {"Cesta de productos"} </h1>
             </div>
             <div id='datosCesta'
-                style={{
-                    display:
-                        Array.isArray(productos) &&
+                style={{ display: Array.isArray(productos) &&
                             productos.flat().length === 0
                             ? 'none'  // mostrar si está vacía
                             : 'block'   // ocultar si hay productos
@@ -141,7 +116,7 @@ function Cesta() {
                             <p>{item.nombre}</p>
                             <p>{item.precio}&euro;
                                 <i className="fa-solid fa-trash botonPapelera"
-                                    onClick={() => eliminarElemento(item.id)}>
+                                    onClick={() => eliminarElemento(item)}>
                                 </i>
                             </p>
                         </li>)}

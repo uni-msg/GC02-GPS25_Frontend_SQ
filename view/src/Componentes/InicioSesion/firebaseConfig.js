@@ -2,28 +2,20 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth"; // Importar funciones de autenticación
 import { getFirestore } from "firebase/firestore"; // Importar Firestore
 
-// Tu configuración de Firebase (proporcionada por Firebase)
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: "AIzaSyC3lRQH26bzWY3FkMwh0Rg4DIYGASICHwo",
-    authDomain: "undersounds-69aa7.firebaseapp.com",
-    projectId: "undersounds-69aa7",
-    storageBucket: "undersounds-69aa7.firebasestorage.app",
-    messagingSenderId: "838128349104",
-    appId: "1:838128349104:web:d8d78ea8b5e31bd0beb075",
-    measurementId: "G-VD7DXSFHCM"
+    apiKey: "AIzaSyDRCNjFqKPOz3E1YgdW0hSrq4OyD7pVglE",
+    authDomain: "undersounds-dc0dd.firebaseapp.com",
+    projectId: "undersounds-dc0dd",
+    storageBucket: "undersounds-dc0dd.firebasestorage.app",
+    messagingSenderId: "455905178097",
+    appId: "1:455905178097:web:2da69bd7280fd745dd1450",
+    measurementId: "G-XJ2GVHPNV0"
 };
 
-// Inicializar Firebase
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);// Inicializar Firebase
+const auth = getAuth(app);// Inicializar la autenticación
+const db = getFirestore(app);// Inicializar Firestore
 
-// Inicializar la autenticación
-const auth = getAuth(app);
-
-// Inicializar Firestore
-const db = getFirestore(app);
-
-// Exportar Firebase para usar en otros archivos
-export { app, auth, db };
-
-// Exportar la configuración de Firebase
-export default firebaseConfig;
+export { app, auth, db }; // Exportar Firebase para usarse para login, logout y registro
+export default firebaseConfig;// Exportar la configuración de Firebase

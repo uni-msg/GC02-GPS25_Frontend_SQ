@@ -1,10 +1,7 @@
-// Componentes/UsuarioContext.js
 import React, { createContext, useState } from "react";
+export const UsuarioContext = createContext(); // Crear el contexto
 
-// Crear el contexto
-export const UsuarioContext = createContext();
-
-// Proveedor del contexto
+// DATOS UTILES EN LA WEB
 export const UsuarioProvider = ({ children }) => {
   const [idLoggedIn, setIdLoggedIn] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -26,6 +23,7 @@ export const UsuarioProvider = ({ children }) => {
   const [oyentes, setOyentes] = useState(0);
   const [valoracion, setValoracion] = useState(0);
   const [idGenero, setIdGenero] = useState(null);
+  const [nombreGenero, setNombreGenero] = useState('');
 
   return (
     <UsuarioContext.Provider value={{
@@ -40,7 +38,6 @@ export const UsuarioProvider = ({ children }) => {
       contrasenia, setContrasenia,
       nombreUsuario, setNombreUsuario,
       nombreReal, setNombreReal,
-      fotoAmazon, setFotoAmazon,
       correo, setCorreo,
       descripcion, setDescripcion,
       esArtista, setEsArtista,
@@ -52,6 +49,7 @@ export const UsuarioProvider = ({ children }) => {
       oyentes, setOyentes,
       valoracion, setValoracion,
       idGenero, setIdGenero,
+      nombreGenero, setNombreGenero,
     }}>
       {children}
     </UsuarioContext.Provider>
