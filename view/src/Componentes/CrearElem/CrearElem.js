@@ -6,8 +6,9 @@ import logo from './../../Recursos/elementoDefecto.png';
 
 import { getGeneros } from "./../../ApiServices/GeneroService"; 
 import { subirArchivo } from "./../../ApiServices/FileSerive";
-import { postElementoParam, getElementoById, putElemento } from "./../../ApiServices/ElementosService";
-import { getGeneroById, getSubgeneroByElementoId } from '../../ApiServices/GeneroService.js';
+import { postElemento, getElementoById, putElemento } from "./../../ApiServices/ElementosService";
+import { postCancion, putCancion } from "../../ApiServices/CancionesService.js";  
+import { getGeneroById, getSubgeneroByElementoId, getGenerosPublic } from '../../ApiServices/GeneroService.js';
 import { URL_FOTO  } from '../../config.js';
 import PantallaCarga from "../Utiles/PantallaCarga/PantallaCarga.js";
 
@@ -22,17 +23,18 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
     token,
     idLoggedIn,
   } = useContext(UsuarioContext);
-
+  // let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdjNzQ5NTFmNjBhMDE0NzE3ZjFlMzA4ZDZiMjgwZjQ4ZjFlODhmZGEiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiUHJ1ZWJhQXJ0aXN0YTIiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdW5kZXJzb3VuZHMtZGMwZGQiLCJhdWQiOiJ1bmRlcnNvdW5kcy1kYzBkZCIsImF1dGhfdGltZSI6MTc2NDQwOTU2MSwidXNlcl9pZCI6IjkiLCJzdWIiOiI5IiwiaWF0IjoxNzY0NDA5NTYxLCJleHAiOjE3NjQ0MTMxNjEsImVtYWlsIjoicHJ1ZWJhYXJ0aXN0YTJAZXhhbXBsZS5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsicHJ1ZWJhYXJ0aXN0YTJAZXhhbXBsZS5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.ZFZA7ZoRcPD9db_rcGGrKAyjulab6Ufui0quYGTNaKhkiTDnlWhTaMZUUkrB0i8UBJyAYyVtK3Ap7bWU5K358126GG9Li53nEGhz04TPM5WZAhkrl6Q-VrTZbHTGwMYza2Muv05f6t6ng3j1lU88iN4kVW3T9-DA_gqPWnwAxOlQxOD7X3ex0y_KZ2QmbTlukpEXaRnAOGgs3yltAdlR0zRePbE8TFika4l_GMi9rG3g3zbekFuagJPkMrSv8ODJ7cX4hR3EPZBHC3VTW6a_3nrHG6D2lDvaNV1vFmRqcvTbFwnxVZAVeOAu0MRnHj9LjftJwlFGgi5690W7ZAdv5w";
+  // let idLoggedIn = 1; // PARA PRUEBAS
   const [formData, setFormData] = useState({
     id: null,
     nombre: "",
     descripcion: "",
     precio: 0,
     esAlbum: false,
-    idgenero: 6,
+    idGenero: null,
     fotoFile: null,
     fotoAmazon: null,
-    subgeneros: [],
+    subgenero: null,
     idAlbum: null,
     archivoMp3: null,
     archivoWav: null,
@@ -57,17 +59,21 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
       try {
         const [genTmp, dataTmp, subgenero] = await Promise.all([
           getGeneros(token),
-          getElementoById(token, datos)
+          getGeneroById(datos)
         ]);
 
-        const subgenerosIds = Array.isArray(subgenero)
-          ? subgenero.map((s) => s.idgenero)
-          : subgenero?.idgenero ? [subgenero.idgenero] : [];
+        // Ajuste para cargar subgenero en modo edición si viene como array u objeto
+        let subgeneroId = null;
+        if (Array.isArray(subgenero) && subgenero.length > 0) {
+           subgeneroId = subgenero[0].idgenero;
+        } else if (subgenero?.idgenero) {
+           subgeneroId = subgenero.idgenero;
+        }
 
         setGeneros(genTmp);
         setFormData({
           ...dataTmp[0],
-          subgeneros: subgenerosIds
+          subgenero: subgeneroId // Guardamos el ID único
         });
 
       } catch (error) {
@@ -158,20 +164,31 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
         const extensionFoto = formData.fotoFile.name.split('.').pop().toLowerCase();
         // Prepara datos para el elemento (sin archivos, solo metadata)
         const elementoData = {
-          artista: idLoggedIn,
-          nombre: formData.nombre,
-          descripcion: formData.descripcion,
-          precio: formData.precio,
-          esalbum: formData.esAlbum,
-          genero: formData.genero,  // O idGenero si es con G mayúscula
-          urlFoto: `${urlCloud}.${extensionFoto}`, //con la extension para el cloudinary de la foto
-          subgenero: formData.subgeneros
-        };
+        artista: Number(idLoggedIn),
+        nombre: formData.nombre,
+        descripcion: formData.descripcion,
+        precio: Number(formData.precio),
+        esalbum: Boolean(formData.esAlbum),
+        genero: Number(formData.idGenero),
+        urlFoto: `${urlCloud}.${extensionFoto}`,
+        subgenero: Number(formData.subgenero),
+        idAlbum: formData.esAlbum ? null : (
+          formData.idAlbum ? Number(formData.idAlbum) : null
+        ),
+        nombreAudio: urlCloud 
+      };
 
-        // Subir los datos del elemento como parámetros (query params)
-        //console.log("Subiendo elemento:", elementoData);
-        const subidaElemento = await postElementoParam(token, elementoData);
-        //console.log("Elemento subido:", subidaElemento);
+
+        // Subir los datos del elemento como parámetros (body)
+        if(elementoData.esalbum) {
+            const subidaElemento = await postElemento(token, elementoData);
+            console.log("Elemento subido:", subidaElemento);
+        }
+        else {
+            const subidaElemento = await postCancion(token, elementoData);
+            console.log("Elemento subido:", subidaElemento);
+        }
+        
 
         // Lista de archivos a subir con sus claves
         const archivos = [
@@ -222,8 +239,14 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
           descripcion: formData.descripcion,
         };
         //console.log("elemento act:", elementoData)
-        const putEle = await putElemento(token, elementoData);
-        //console.log(`Archivo actualizado`, putEle);
+        if (formData.esAlbum) {
+          const putEle = await putElemento(token, elementoData);
+          console.log(`Archivo actualizado`, putEle);
+        } else {
+          const putEle = await putCancion(token, elementoData);
+          console.log(`Archivo actualizado`, putEle);
+        }
+        
         //se emplea para las notificaciones
         manejarResultado?.({ codigo: 2, mensaje: "Elemento actualizado correctamente." });
       }
@@ -272,35 +295,36 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
         <textarea name="descripcion" value={formData.descripcion} onChange={cambios} required />
 
         <label>Género *</label>
-        <select name="idGenero" value={formData.idGenero} onChange={cambios} required disabled={!crearModo}>
+        <select name="idGenero" value={formData.idGenero || ""} onChange={cambios} required disabled={!crearModo}>
+          <option value="" disabled>Selecciona un género</option>
           {generos.map((g) => (
             <option key={g.id} value={g.id}>
-              {g.name}
+              {g.nombre}
             </option>
           ))}
         </select>
 
         <div id="subgenContainer" className="card-body text-center">
           {generos.map((g) => (
-            <label key={g.id} className="check">
+            <label key={g.id || g.idgenero} className="check">
               <input
-                type="checkbox"
-                name="subgeneros"
-                value={g.id}
-                checked={formData.subgeneros?.includes(g.id) || false}
+                type="radio"                
+                name="subgenero"            
+                value={g.id || g.idgenero}
+                
+                // Verifica si el ID coincide con el seleccionado en el estado
+                checked={formData.subgenero === (g.id || g.idgenero)}
+                
                 onChange={(e) => {
-                  const checked = e.target.checked;
                   const value = parseInt(e.target.value);
-                  setFormData((prev) => {
-                    const nuevosSubgeneros = checked
-                      ? [...(prev.subgeneros || []), value]
-                      : (prev.subgeneros || []).filter((id) => id !== value);
-                    return { ...prev, subgeneros: nuevosSubgeneros };
-                  });
+                  setFormData((prev) => ({
+                    ...prev,
+                    subgenero: value // CORREGIDO: Actualiza la propiedad singular, no un array 'subgeneros'
+                  }));
                 }}
                 disabled={!crearModo}
               />
-              <span className={`${(!crearModo) ? "disabledLab" : ""}`}>{g.name}</span>
+              <span className={`${(!crearModo) ? "disabledLab" : ""}`}>{g.name || g.nombre}</span>
             </label>
           ))}
         </div>

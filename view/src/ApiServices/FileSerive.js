@@ -29,7 +29,6 @@ export async function postArchivo(token, archivo) {
 }
 
 export async function subirArchivo(archivo, folder, nombre) {
-  const url = "https://api.cloudinary.com/v1_1/dfwjm0jwx/raw/upload";
 
   const formData = new FormData();
   formData.append("file", archivo);
@@ -37,7 +36,7 @@ export async function subirArchivo(archivo, folder, nombre) {
   formData.append("folder", folder);         // ejemplo: "fotos/" o "audios/mp3/"
   formData.append("public_id", nombre);      // sin extensión, ej: "ger"
 
-  const res = await fetch(url, {
+  const res = await fetch(CLOUD_URL, {
     method: "POST",
     body: formData
   });
@@ -45,49 +44,6 @@ export async function subirArchivo(archivo, folder, nombre) {
   if (!res.ok) throw new Error("Error subiendo archivo");
 
   return await res.json();
-}
-
-
-/**
- * Sube un archivo al servidor.
- * @param {File} archivo - Archivo a subir.
- * @returns {Promise<Object>} Respuesta del servidor en formato JSON.
- * @throws {Error} Si ocurre un error durante la subida del archivo.
- */
-export async function subirImagen(archivo, folder, publicId) {
-    const formData = new FormData();
-    formData.append("file", archivo);
-    formData.append("upload_preset", "unsigned_upload");
-    formData.append("folder", folder);
-    formData.append("public_id", publicId); 
-
-    const res = await fetch(CLOUD_URL, {
-        method: "POST",
-        body: formData
-    });
-
-    if (!res.ok) throw new Error("Error al subir imagen");
-
-    return await res.json();
-}
-
-
-export async function subirCancion(archivo, folder, publicId) {
-
-    const formData = new FormData();
-    formData.append("file", archivo);
-    formData.append("upload_preset", "unsigned_upload");
-    formData.append("folder", folder);
-    formData.append("public_id", publicId);
-
-    const res = await fetch(CLOUD_URL, {
-        method: "POST",
-        body: formData
-    });
-
-    if (!res.ok) throw new Error("Error al subir archivo");
-
-    return await res.json();
 }
 
 

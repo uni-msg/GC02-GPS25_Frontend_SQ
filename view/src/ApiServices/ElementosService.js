@@ -87,7 +87,7 @@ export async function putElemento(token, elementoData) {
         const response = await axios.put(`${BASE_URL_CONTENIDO}/elementos`,  
             null,
             {
-                params: elementoData ,
+                elementoData ,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

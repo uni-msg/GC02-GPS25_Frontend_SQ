@@ -22,6 +22,16 @@ export async function getGeneros(token) {
     }
 }
 
+export async function getGenerosPublic() {
+    try {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/generos`);
+        return response.data;  // devuelve la respuesta del endpoint como Promise
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+}
+
 /**
  * Obtiene el género musical según el ID dado.
  * 
