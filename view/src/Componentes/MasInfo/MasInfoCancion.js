@@ -1,27 +1,25 @@
 import './MasInfoCancion.css';
 
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect, useContext, useMemo} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 import { getElementos, getValoracionesByIdelem, postDeseo, postValora, deleteDeseo, getDeseosById, getLetraById} from '../../ApiServices/ElementosService';
-import { getGeneroById, getSubgeneroByElementoId } from '../../ApiServices/GeneroService.js';
+import { getGeneroById} from '../../ApiServices/GeneroService.js';
 import { getUsuarioById, getUsuarioTieneElementoById } from '../../ApiServices/UsuarioService.js';
 import { postElementoCesta } from "../../ApiServices/CestaService";
 
 import Popup from '../MetodoPago/MetodoPago.js';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
-import { AMAZON_URL_FOTO, AMAZON_URL_MP3 } from '../../config.js';
+import { URL_FOTO, URL_MP3 } from '../../config.js';
 import { UsuarioContext } from "../InicioSesion/UsuarioContext";
-
 
 
 function MasInfo() {
   // Obtenemos el objeto pasado por la navegación
-
-  
   const navigate = useNavigate();
   const location = useLocation();
-  const song = location.state || {};
+  //const song = location.state || {};
+  const song = useMemo(() => location.state || {}, [location.state]);
   const { idLoggedIn, token } = useContext(UsuarioContext);
 
 
@@ -32,8 +30,9 @@ function MasInfo() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const audioUrl = `${AMAZON_URL_MP3}${song.fotoAmazon}`;
+  const audioUrl = `${URL_MP3}${song.urlFoto.replace(/\.[^/.]+$/, "")}.mp3`;
   const audioRef = useRef(new Audio(audioUrl));
+  const [comentarios, setComentarios] = useState([]);
 
   // Función para alternar reproducción/pausa
   const togglePlay = () => {
@@ -48,7 +47,7 @@ function MasInfo() {
   };
 
   useEffect(() => {
-    const newAudio = new Audio(`${AMAZON_URL_MP3}${song.fotoAmazon}`);
+    const newAudio = new Audio(`${URL_MP3}${song.urlFoto.replace(/\.[^/.]+$/, "")}.mp3`);
     
     if (audioRef.current) {
       audioRef.current.pause(); // Para parar la anterior
@@ -133,7 +132,7 @@ function MasInfo() {
           await deleteDeseo(token, idLoggedIn, song.id);
         }
       } catch (error) {
-        console.error("❌ Error al actualizar favorito:", error);
+        console.error("Error al actualizar favorito:", error);
       }
     }
   };
@@ -163,6 +162,8 @@ function MasInfo() {
   const [subgeneroNombre, setSubgeneroNombre] = useState('');
   const [productos, setProductos] = useState([{id:null}]);
 
+  const [nombreArtista, setNombreArtista] = useState("Cargando...");  //nuevo
+
   //AÑADIR A CESTA
 
   const handleAnadirACesta = async () => {
@@ -190,9 +191,7 @@ function MasInfo() {
     }
   };
 
-  //COMENTARIOS 
-  const [comentarios, setComentarios] = useState([]);
-
+  
   //LETRA DE CANCION 
   const [letra, setLetra] = useState();
  
@@ -287,41 +286,56 @@ function MasInfo() {
           const genero = await getGeneroById(song.idGenero);
           setGeneroNombre(Array.isArray(genero) ? genero[0]?.name : genero.name);
         }
-  
+        //Obtener subgenero
+        if (song.genero?.nombre) {
+             setGeneroNombre(song.genero.nombre);
+        } else if (song.genero?.name) {
+             setGeneroNombre(song.genero.name);
+        }
+
+        if (song.subgenero?.nombre) {
+             setSubgeneroNombre(song.subgenero.nombre);
+        } else if (song.subgenero?.name) {
+             setSubgeneroNombre(song.subgenero.name);
+        }
+
         if (song?.id) {
           setProductos(prevProductos => [
             { id: song.id } 
           ]);
-          
-          const relacion = await getSubgeneroByElementoId(song.id);
-          if (relacion?.idgenero) {
-            const subgenero = await getGeneroById(relacion.idgenero);
-            setSubgeneroNombre(Array.isArray(subgenero) ? subgenero[0]?.name : subgenero.name);
-          }
+        //ARTISTA
+        if (song.artista) {
+            // Probamos las propiedades que suelen tener el nombre
+            const nombre = song.artista.nombreusuario || song.artista.nombrereal || "Artista Desconocido";
+            setNombreArtista(nombre);
+        } else {
+            // Si el objeto artista viene null, entonces (opcionalmente) podrías intentar buscarlo o dejarlo así
+            setNombreArtista("Artista Desconocido");
+        }
 
           // si es correcto tenemos el id de la cancion y con el obtendremos la letra de la cancion 
           // si no tiene letra devolvera letra null
           const letraCan = await getLetraById(song.id);
           setLetra(letraCan);
   
-          const comentariosAPI = await getValoracionesByIdelem(song.id);
-          const comentariosConNombres = await Promise.all(
-            (comentariosAPI || []).map(async (valoracion) => {
-              try {
-                const usuario = await getUsuarioById(token, valoracion.idusuario);
-                return {
-                  ...valoracion,
-                  usuario: usuario.nombreusuario || `Usuario ${valoracion.idusuario}`,
-                };
-              } catch {
-                return {
-                  ...valoracion,
-                  usuario: `Usuario ${valoracion.idusuario}`,
-                };
-              }
-            })
-          );
-          setComentarios(comentariosConNombres);
+          // const comentariosAPI = await getValoracionesByIdelem(song.id);
+          // const comentariosConNombres = await Promise.all(
+          //   (comentariosAPI || []).map(async (valoracion) => {
+          //     try {
+          //       const usuario = await getUsuarioById(token, valoracion.idusuario);
+          //       return {
+          //         ...valoracion,
+          //         usuario: usuario.nombreusuario || `Usuario ${valoracion.idusuario}`,
+          //       };
+          //     } catch {
+          //       return {
+          //         ...valoracion,
+          //         usuario: `Usuario ${valoracion.idusuario}`,
+          //       };
+          //     }
+          //   })
+          // );
+          // setComentarios(comentariosConNombres);
   
           const todos = await getElementos(token);
           const filtradas = todos.filter(
@@ -340,6 +354,48 @@ function MasInfo() {
   
     cargarDatos();
   }, [song, token]);
+
+  useEffect(() => {
+    setComentarios([]);   
+  }, [song.id]);        
+  //COMENTARIOS 
+  useEffect(() => {
+  const cargarComentarios = async () => {
+    try {
+      if (!song?.id) return;
+
+      const comentariosAPI = await getValoracionesByIdelem(song.id);
+
+      const comentariosFiltrados = (comentariosAPI || []).filter(
+      (c) => c.idelem === song.id
+    );
+
+      const comentariosConNombres = await Promise.all(
+        (comentariosFiltrados || []).map(async (valoracion) => {
+          try {
+            const usuario = await getUsuarioById(token, valoracion.iduser);
+            return {
+              ...valoracion,
+              usuario: usuario?.nombreusuario || `Usuario ${valoracion.iduser}`,
+            };
+          } catch (err) {
+            return {
+              ...valoracion,
+              usuario: `Usuario ${valoracion.iduser}`,
+            };
+          }
+        })
+      );
+
+      setComentarios(comentariosConNombres);
+    } catch (err) {
+      console.error("Error cargando comentarios:", err);
+    }
+  };
+
+  cargarComentarios();
+}, [song?.id, token]);
+
 
   useEffect(() => {
     console.log("objeto letra es: ", letra)
@@ -365,7 +421,7 @@ function MasInfo() {
           >
             <img
               className="portada"
-              src={`${AMAZON_URL_FOTO}${song.fotoAmazon}`}
+              src={`${URL_FOTO}${song.urlFoto}`}
               alt="Portada del álbum"
             />
             <i className="fa-solid fa-record-vinyl vinilo-icon"></i>
@@ -484,16 +540,18 @@ function MasInfo() {
             <h1>{song.nombre}</h1>
           </div>
           <div className="nombreArtista">
-            {song.artista}
+            {/*{song.artista}*/}
+            {/*song.artista?.nombreusuario || song.artista?.nombrereal || (typeof song.artista === 'string' ? song.artista : "Artista Desconocido")^*/}
+            {nombreArtista}
           </div>
           <div className="descripcionCancion">
             <p>{song.descripcion}</p>
           </div>
           <div className="anio">
-            <p>Año de lanzamiento: {new Date(song.fechaCrea).getFullYear()}</p>
+            <p>Año de lanzamiento: {song.fechacrea ? new Date(song.fechacrea).getFullYear() : 'Desconocido'}</p>
           </div>
           <div className="numVentas">
-            <p>Número de ventas: {song.numVentas}</p>
+            <p>Número de ventas: {song.numventas}</p>
           </div>
           <div id="etiquetas">
             {generoNombre && <span className="tags me-2">{generoNombre}</span>}
@@ -503,7 +561,7 @@ function MasInfo() {
           {/* LETRA DE LA CANCION */ }
           <div id="letraCancion" className=" mb-3">
             <h3> Letra: </h3>
-            {letra.letra != null ? ( // necesario emplear la etiqueta PRE ya que trabaja respetando los saltos de linea
+            {letra?.letra ? ( // necesario emplear la etiqueta PRE ya que trabaja respetando los saltos de linea
               <pre id="letra-texto">{letra.letra}</pre> 
             ) : (
               <p className="text-muted">Esta canción actualmente no cuenta con su letra.</p>
@@ -520,7 +578,7 @@ function MasInfo() {
                       className="vinilo-wrapperelacionadas"
                     >
                       <img
-                        src={`${AMAZON_URL_FOTO}${cancion.fotoAmazon}`}
+                        src={`${URL_FOTO}${cancion.urlFoto}`}
                         className="cardCancionRelacionada"
                         alt={cancion.nombre}
                       />

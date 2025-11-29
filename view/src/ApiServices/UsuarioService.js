@@ -1,5 +1,5 @@
-import { BASE_URL_USUARIO } from "../config";
-import axios from 'axios';
+import { BASE_URL, BASE_URL_USUARIOS , BASE_URL_USUARIO} from "../config"; //empleado para la llamada a la api
+import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 // ======================================================================
 // LOGIN
