@@ -3,7 +3,7 @@ import { URL_MP3, CLOUD_URL_DEFAULT, URL_FOTO} from '../../config.js';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
-
+import Estadisticas from '../Estadisticas/Estadisticas';
 // --- NUEVOS IMPORTS ---
 import { UsuarioContext } from '../InicioSesion/UsuarioContext';
 import { getElementoById } from '../../ApiServices/ElementosService';
@@ -111,6 +111,9 @@ function Catalogo({ elementos, isLoading, artistas }) {
                                 >
                                     <a className="nav-link">Álbumes</a>
                                 </li>
+                                <li className={`nav-link ${menu === 4 ? "menuCatalogoActivo" : ""}`} onClick={() => setMenu(4)}>
+                                    <a className="nav-link">Estadísticas</a>
+                                </li>
                             </ul>
                             <div className="text-end pe-3">
                                 <i className="fa-solid fa-bars-staggered" onClick={() => setMostrarFiltros(!mostrarFiltros)}></i>
@@ -173,10 +176,16 @@ function Catalogo({ elementos, isLoading, artistas }) {
                 />
             </div>
 
-            {/* Secciones con Slider Horizontal */}
-            {categorias.map((categoria, index) => (
-                <Section key={index} title={categoria.title} items={categoria.items} />
-            ))}
+            {menu === 4 ? (
+                <div className="seccion-estadisticas mt-4">
+                    <Estadisticas />
+                </div>
+            ) : (
+                categorias.map((categoria, index) => (
+                    <Section key={index} title={categoria.title} items={categoria.items} />
+                ))
+            )}
+
         </div>
     );
 }
@@ -553,6 +562,3 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
 };
 
 export default Catalogo;
-
-
-

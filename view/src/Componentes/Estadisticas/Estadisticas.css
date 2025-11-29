@@ -1,0 +1,330 @@
+/* Contenedor Principal */
+.estadisticas-container {
+    padding: 2rem 4rem;
+    background-color: #ffffff; /* Fondo blanco puro para limpieza */
+    min-height: 100vh;
+    color: var(--gris-azul2-color); /* Texto oscuro global */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Animación de Entrada */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Título Principal */
+.main-title {
+    font-size: 3rem;
+    font-weight: 800;
+    /* Degradado usando tus variables globales: Morado a Azul */
+    background: linear-gradient(135deg, var(--morado-color) 0%, var(--azul3-color) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.subtitle {
+    color: var(--gris-azul-color);
+    margin-bottom: 3rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+}
+
+/* Grid Layout */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+/* --- TARJETAS LIMPIAS (ESTILO "CLEAN UI") --- */
+.stat-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    /* Sombra suave tintada con tu morado */
+    box-shadow: 0 10px 25px rgba(87, 35, 99, 0.1); 
+    border: 1px solid var(--gris-claro-color);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    /* Sombra más pronunciada al hover */
+    box-shadow: 0 15px 35px rgba(87, 35, 99, 0.2);
+    border-color: var(--lavanda-color);
+}
+
+.card-header-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--blanco-color); /* Línea muy sutil usando el gris muy claro */
+    padding-bottom: 1rem;
+}
+
+.card-header-stats h2 {
+    font-size: 1.4rem;
+    margin: 0;
+    color: var(--gris-azul2-color);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.card-header-stats h2 i {
+    color: var(--morado-color); /* Iconos en morado corporativo */
+}
+
+.badge-stats {
+    background-color: var(--blanco-color); /* Fondo gris muy claro */
+    color: var(--morado-color);
+    padding: 0.35rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Lista de Ranking */
+.ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.rank-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background-color: #ffffff;
+    border-radius: 12px;
+    transition: background-color 0.2s, transform 0.2s;
+    border: 1px solid transparent;
+}
+
+/* Hover sutil */
+.rank-item:hover {
+    background-color: var(--blanco-color); 
+    border-color: var(--gris-claro-color);
+    transform: translateX(3px);
+}
+
+/* Trofeo y Posición */
+.rank-pos {
+    width: 45px;
+    text-align: center;
+    font-size: 1.3rem;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Colores metálicos limpios */
+.rank-gold { color: #f1c40f; }
+.rank-silver { color: #bdc3c7; }
+.rank-bronze { color: #e67e22; }
+.rank-number { color: var(--gris-azul-color); font-weight: 700; font-size: 1.1rem; }
+
+.rank-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--gris-azul2-color);
+    margin-bottom: 0.2rem;
+}
+
+.item-sub {
+    font-size: 0.9rem;
+    color: var(--gris-azul-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.rank-score {
+    font-weight: 700;
+    color: var(--gris-azul2-color);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 1.1rem;
+}
+
+.rank-score i { color: #f1c40f; }
+
+.rank-metric {
+    font-size: 1rem;
+    color: var(--morado-color); /* Métrica en morado */
+    font-weight: 700;
+}
+
+.type-badge {
+    background-color: var(--blanco-color);
+    color: var(--gris-azul-color);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: inline-block;
+    width: fit-content;
+    font-weight: 600;
+}
+
+/* Género Tags (Nube de etiquetas) */
+.genre-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+.genre-tag {
+    /* Degradado morado a lavanda */
+    background: linear-gradient(135deg, var(--morado-color), var(--purpura-color));
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: white;
+    box-shadow: 0 4px 10px rgba(87, 35, 99, 0.3);
+    transition: transform 0.2s;
+}
+
+.genre-tag:hover {
+    transform: scale(1.05);
+}
+
+.genre-count {
+    background-color: rgba(255,255,255,0.2);
+    padding: 2px 8px;
+    border-radius: 50%;
+    font-size: 0.8em;
+    min-width: 24px;
+    text-align: center;
+    font-weight: 700;
+}
+
+/* Comunidad Lista */
+.community-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.community-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0.5rem;
+    border-bottom: 1px solid var(--blanco-color);
+    transition: background-color 0.2s;
+}
+
+.community-item:hover {
+    background-color: var(--blanco-color);
+}
+
+.community-item:last-child {
+    border-bottom: none;
+}
+
+.com-rank {
+    font-weight: 800;
+    color: var(--azul2-color); /* Azul para variar un poco en comunidades */
+    margin-right: 1.2rem;
+    width: 30px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.com-details strong {
+    display: block;
+    color: var(--gris-azul2-color);
+    font-size: 1.05rem;
+    margin-bottom: 0.2rem;
+}
+
+.com-details small {
+    color: var(--gris-azul-color);
+}
+
+/* Barras de Progreso (Mejor Valorados) */
+.rank-pos-circle {
+    width: 36px;
+    height: 36px;
+    background-color: var(--blanco-color);
+    color: var(--gris-azul2-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.progress-bar-bg {
+    height: 8px;
+    width: 100%;
+    background-color: var(--blanco-color);
+    border-radius: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    /* Degradado de Morado a Azul Chillón para la barra */
+    background: linear-gradient(90deg, var(--morado-color), var(--azul-color));
+    border-radius: 4px;
+}
+
+.rank-score-big {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--morado-color);
+    margin-left: 1.2rem;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .estadisticas-container {
+        padding: 1.5rem;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .stat-card {
+        padding: 1.2rem;
+    }
+}
