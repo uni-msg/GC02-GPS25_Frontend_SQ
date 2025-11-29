@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
 import Estadisticas from '../Estadisticas/Estadisticas';
+import Comunidades from '../Comunidad/Comunidad';
 // --- NUEVOS IMPORTS ---
 import { UsuarioContext } from '../InicioSesion/UsuarioContext';
 import { getElementoById } from '../../ApiServices/ElementosService';
@@ -114,6 +115,9 @@ function Catalogo({ elementos, isLoading, artistas }) {
                                 <li className={`nav-link ${menu === 4 ? "menuCatalogoActivo" : ""}`} onClick={() => setMenu(4)}>
                                     <a className="nav-link">Estadísticas</a>
                                 </li>
+                                <li className={`nav-link ${menu === 5 ? "menuCatalogoActivo" : ""}`} onClick={() => setMenu(5)}>
+                                    <a className="nav-link">Comunidades</a>
+                                </li>
                             </ul>
                             <div className="text-end pe-3">
                                 <i className="fa-solid fa-bars-staggered" onClick={() => setMostrarFiltros(!mostrarFiltros)}></i>
@@ -179,6 +183,16 @@ function Catalogo({ elementos, isLoading, artistas }) {
             {menu === 4 ? (
                 <div className="seccion-estadisticas mt-4">
                     <Estadisticas />
+                </div>
+            ) : (
+                categorias.map((categoria, index) => (
+                    <Section key={index} title={categoria.title} items={categoria.items} />
+                ))
+            )}
+
+            {menu === 5 ? (
+                <div className="seccion-comunidades mt-5">
+                    <Comunidades />
                 </div>
             ) : (
                 categorias.map((categoria, index) => (

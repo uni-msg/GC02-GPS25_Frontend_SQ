@@ -1,0 +1,91 @@
+/* Comunidad.css */
+
+.comunidad-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.titulo-principal {
+  text-align: center;
+  color: var(--morado-color);
+  margin-bottom: 30px;
+}
+
+/* Grid para las tarjetas */
+.comunidad-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Estilo de cada tarjeta */
+.comunidad-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.comunidad-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Imagen de la comunidad */
+.comunidad-imagen {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  background-color: #eee; /* Color de fondo si no carga la imagen */
+}
+
+/* Contenido de la tarjeta */
+.comunidad-info {
+  padding: 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.comunidad-info h3 {
+  margin: 0 0 10px 0;
+  color: var(--morado-color);
+}
+
+.artista-badge {
+  background-color: #f3ebff;
+  color: var(--morado-color);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.descripcion {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+/* Pie de la tarjeta (contadores) */
+.comunidad-stats {
+  display: flex;
+  justify-content: space-around;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-top: 1px solid #eee;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.stat-item span {
+  font-weight: bold;
+  color: #333;
+}
