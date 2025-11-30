@@ -330,9 +330,8 @@ function ProductoCard({ item }) {
             navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
-            registrarBusquedaArtista(token, item.id, idUsuarioActual)
-                .catch(err => console.error("Error registrando visita (background):", err));
-            navigate("/masInfoPerfil", { state: item });
+            navigate("/masInfoPerfil", { state: item.id });
+            console.log("Dato enviado", {state: item.id});
         }
     };
 

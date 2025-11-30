@@ -2,7 +2,7 @@ import "./ManejadorElem.css";
 import React, { useContext, useEffect, useState } from "react";
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
 
-import { deleteElemento, getElementosArtistas  } from "./../../ApiServices/ElementosService.js"
+import { deleteElemento, getElementos  } from "./../../ApiServices/ElementosService.js"
 import { getCancionesByAlbum } from "./../../ApiServices/CancionesService.js"
 
 import CrearElem from "../CrearElem/CrearElem.js";
@@ -29,15 +29,17 @@ const ManejadorElem = ({}) => {
   // Función para cargar los elementos desde la API
   const fetchData = async () => {
     try {
-      setCargando(true); // Activamos la pantalla de carga
-      const [creados] = await Promise.all([ 
-        getElementosArtistas(token, idLoggedIn)
-      ]);
-      setElementosCreados(creados);
+      setCargando(true);
+      // 1. Traemos TODO
+      const todos = await getElementos(token);
+      // 2. Filtramos los MÍOS (del usuario logueado)
+      const misElementos = todos.filter(e => e.artista && e.artista.id === idLoggedIn);
+      
+      setElementosCreados(misElementos);
     } catch (error) {
       console.error("Error al cargar datos:", error);
     } finally {
-      setCargando(false); // Apagamos la pantalla de carga
+      setCargando(false);
     }
   };
 

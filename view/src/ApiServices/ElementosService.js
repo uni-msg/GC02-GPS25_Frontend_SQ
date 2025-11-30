@@ -60,9 +60,9 @@ export async function getElementoById(token, id) {
  * @returns {Promise<Object>} Elemento en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function getElementosArtistas(token, id) {
+export async function getCancionesArtistas(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/{id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/canciones/artista/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -76,7 +76,7 @@ export async function getElementosArtistas(token, id) {
 
 export async function getElementosArtistasP(id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/{id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/${id}`, {
             params: { id: id }
         });
         return response.data;
@@ -88,7 +88,7 @@ export async function getElementosArtistasP(id) {
 
 export async function getElementosGeneroP(id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/genero/{id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/genero/${id}`, {
             params: { id: id }
         });
         return response.data;
