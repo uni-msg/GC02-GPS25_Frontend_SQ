@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
 
-import { getElementos } from '../../ApiServices/ElementosService';
+import { getElementosByID } from '../../ApiServices/ElementosService';
 import { getCancionesByAlbum } from "./../../ApiServices/CancionesService.js"
 import { postFavorito, deleteFavorito, getFavoritosByIds } from "./../../ApiServices/UsuarioService.js"
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
