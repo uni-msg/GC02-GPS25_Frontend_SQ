@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
+import { URL_FOTO, CLOUD_URL_DEFAULT } from '../../config.js';
 
 // 1. IMPORTANTE: Añadimos getArtistaById
 import { getElementosArtistasP } from '../../ApiServices/ElementosService';
@@ -173,8 +173,8 @@ const MasInfoPerfil = () => {
                 </h1>
                 <img
                     src={artista.fotoAmazon && artista.fotoAmazon !== "null"
-                        ? `${AMAZON_URL_FOTO}${artista.fotoAmazon}`
-                        : AMAZON_URL_DEFAULT}
+                        ? `${URL_FOTO}${artista.fotoAmazon}`
+                        : CLOUD_URL_DEFAULT}
                     alt="Foto del artista"
                     className="card-img-top card-img-circle"
                 />
