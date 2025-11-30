@@ -156,6 +156,7 @@ const MasInfoPerfil = () => {
     if (cargando) return <PantallaCarga />;
     if (!artista) return <div>No se ha encontrado el artista.</div>;
 
+<<<<<<< Updated upstream
     return (
         <div id="masInfoPerfil">
             <div className="perfil-info">
@@ -168,6 +169,62 @@ const MasInfoPerfil = () => {
                             ) : (
                                 <i className="fa-regular fa-heart"></i>
                             )}
+=======
+  return (
+    <div id="masInfoPerfil">
+      <div className="perfil-info">
+        <h1 className={artista.esNovedad?"text-esNovedad":""}>
+            {artista.nombre}
+            {isLoggedIn &&(
+                <button type="button" className="btnFavoritePer" onClick={toggleFavorite}>
+                  {isFavorite ? (
+                    <i className="fa-solid fa-heart"></i>
+                  ) : (
+                    <i className="fa-regular fa-heart"></i>
+                  )}
+                </button>
+            )}    
+        </h1>
+        <img
+          src={artista.fotoAmazon && artista.fotoAmazon !== "null"
+            ? `${AMAZON_URL_FOTO}${artista.fotoAmazon}`
+            : AMAZON_URL_DEFAULT}
+          alt="Foto del artista"
+          className="card-img-top card-img-circle"
+        />
+        <div className='puntuacion mb-1'>{renderStars(artista.valoracion)}</div>
+        <div className="desc">
+            <p>{artista.descripcion}</p>
+        </div>
+        <div className="anio">
+            <p className="mb-0">Inicio de la Carrera: {new Date(artista.fechaCrea).toLocaleDateString()}</p>
+        </div>
+        <div className="oye">
+            <p>Número de Oyentes: {artista.oyentes}</p>
+        </div>
+        <div id="etiquetas">
+             <span className="tags me-2">{artista.genero?.nombre || "Sin género"}</span>
+        </div>
+      </div>
+
+      <div id="listaElementos">
+        <h3>Elementos del artista:</h3>
+        {cargando ? (
+          <PantallaCarga />
+        ) : (
+          <div className="canciones-listado">
+            {elementosCreados.length === 0 ? (
+              <p className="text-muted">Este artista aún no creo ningún elemento.</p>
+            ) : (
+                <div id="listaElementos">
+                {elementosCreados.filter(elem => elem.esAlbum).map((elem) => (
+                  <div key={elem.id} className="elemento">
+                    <div className="cabeElem">
+                      <h4><i className="fa-solid fa-rectangle-list"></i> {elem.nombre}</h4>
+                      <div>
+                        <button className="botonCanAlb" onClick={() => verCancionesAlbum(elem.id)}>
+                          {expandido[elem.id] ? "Ocultar canciones" : "Ver canciones"}
+>>>>>>> Stashed changes
                         </button>
                     )}
                 </h1>
