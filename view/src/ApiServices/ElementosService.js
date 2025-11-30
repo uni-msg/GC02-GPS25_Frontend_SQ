@@ -62,10 +62,34 @@ export async function getElementoById(token, id) {
  */
 export async function getElementosArtistas(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/getElementosArtista?idartista=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/{id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+}
+
+export async function getElementosArtistasP(id) {
+    try {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/{id}`, {
+            params: { id: id }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error:", error);
+        throw error;
+    }
+}
+
+export async function getElementosGeneroP(id) {
+    try {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/genero/{id}`, {
+            params: { id: id }
         });
         return response.data;
     } catch (error) {
