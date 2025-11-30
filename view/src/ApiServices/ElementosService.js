@@ -76,7 +76,7 @@ export async function getCancionesArtistas(token, id) {
 
 export async function getElementosArtistasP(id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/{id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/artista/${id}`, {
             params: { id: id }
         });
         return response.data;
@@ -88,7 +88,7 @@ export async function getElementosArtistasP(id) {
 
 export async function getElementosGeneroP(id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/genero/{id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/elementos/genero/${id}`, {
             params: { id: id }
         });
         return response.data;
