@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
 
-import { getElementosArtistas } from '../../ApiServices/ElementosService';
+import { getElementos } from '../../ApiServices/ElementosService';
 import { getCancionesByAlbum } from "./../../ApiServices/CancionesService.js"
 import { postFavorito, deleteFavorito, getFavoritosByIds } from "./../../ApiServices/UsuarioService.js"
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
@@ -26,10 +26,15 @@ const MasInfoPerfil = () => {
     const fetchData = async () => {
         try {
             setCargando(true);
-            const [creados] = await Promise.all([
-                getElementosArtistas(null, artista.id)
-            ]);
-            setElementosCreados(creados);
+            //Todos los elementos
+            const todosLosElementos = await getElementos(null);
+            console.log("Todos los elementos cargados:", todosLosElementos);
+            //Obtener los elementos del artista
+            const filtrados = todosLosElementos.filter(e => e.artista && e.artista.id === artista.id);
+            
+            setElementosCreados(filtrados);
+
+            console.log("Elementos del artista cargados:", filtrados);
         } catch (error) {
             console.error("Error al cargar elementos del artista:", error);
         } finally {
@@ -160,7 +165,8 @@ const MasInfoPerfil = () => {
             <p>Número de Oyentes: {artista.oyentes}</p>
         </div>
         <div id="etiquetas">
-            <span className="tags me-2">{artista.genero}</span>
+        {/* Accedemos a la propiedad .nombre del objeto género */}
+          <span className="tags me-2">{artista.genero?.nombre || "Sin género"}</span>
         </div>
       </div>
 

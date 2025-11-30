@@ -321,7 +321,8 @@ function ProductoCard({ item }) {
             navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
-            navigate("/masInfoPerfil", { state: item });
+            navigate("/masInfoPerfil", { state: item.id });
+            console.log("Dato enviado", itemCompleto);
         }
     };
 
