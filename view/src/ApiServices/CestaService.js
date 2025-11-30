@@ -53,21 +53,22 @@ export async function exitElementoCesta(token,idusuario, idelemento) {
  * @returns {Promise<Object>} Información de la acción en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function postElementoCesta(token) {
+export async function postElementoCesta(token, cestaData) {
     try {
-      const response = await axios.post(
-        `${BASE_URL_USUARIO}/cesta/`,
-        null, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      return response.data;
+        console.log("Enviando a cesta:", cestaData); // Descomenta para depurar si hace falta
+        const response = await axios.post(`${BASE_URL_USUARIO}/cesta`, 
+            cestaData, 
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Content-Type': 'application/json' // <--- ESTO ES CRUCIAL
+                },
+            }
+        );
+        return response.data;
     } catch (error) {
-      console.error("Error:", error);
-      throw error;
+        console.error("Error:", error);
+        throw error;
     }
 }
 

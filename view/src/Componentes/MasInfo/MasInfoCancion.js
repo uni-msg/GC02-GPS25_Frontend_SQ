@@ -173,14 +173,22 @@ function MasInfo() {
         return;
       }
 
+
+      console.log("en song:", song);
+      console.log("usuario id:", idLoggedIn);
+      console.log("elemento id:", song.id);
+
       await postElementoCesta(token, {
         idusuario: idLoggedIn,
         idelemento: song.id,
       });
 
+
+
       alert("¡Producto añadido a la cesta! 🛒");
     } catch (error) {
       console.error("Error al añadir el producto a la cesta:", error);
+      console.log("El token es:", token);
 
       if (error.response) {
         console.error("Respuesta del backend:", error.response.data);
