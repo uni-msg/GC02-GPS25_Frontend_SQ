@@ -25,6 +25,31 @@ export const UsuarioProvider = ({ children }) => {
   const [idGenero, setIdGenero] = useState(null);
   const [nombreGenero, setNombreGenero] = useState('');
 
+    // 🔹 FUNCION LOGOUT PARA RESETEAR TODOS LOS DATOS
+  const logoutData = () => {
+    setIdLoggedIn(null);
+    setIsLoggedIn(false);
+    setEmail('');
+    setPassword('');
+    setActivoArtista(false);
+    setToken(null);
+
+    setContrasenia(null);
+    setNombreUsuario(null);
+    setNombreReal('');
+    setCorreo('');
+    setDescripcion('');
+    setEsArtista(false);
+    setFechaRegistro('');
+    setFotoAmazon(null);
+
+    setEsNovedad(false);
+    setOyentes(0);
+    setValoracion(0);
+    setIdGenero(null);
+    setNombreGenero('');
+  };
+
   return (
     <UsuarioContext.Provider value={{
       idLoggedIn, setIdLoggedIn,

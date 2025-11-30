@@ -94,13 +94,13 @@ const InicioSesion = () => {
     };
 
     // Validación de política y captcha
-    const validarPoliticaYCaptcha = () => {
+ /*    const validarPoliticaYCaptcha = () => {
         if (!aceptaPolitica || !captchaValue) {
             alert("Debes aceptar la política de privacidad y completar el CAPTCHA");
             return false;
         }
         return true;
-    };
+    };*/
 
 
     /* ============================================================
@@ -163,31 +163,33 @@ const InicioSesion = () => {
 
     const registerWithEmail = async (e) => {
         e.preventDefault();
-        if (!validarPoliticaYCaptcha()) return;
+        if (aceptaPolitica || captchaValue) {
+            try {
+                const userData = {
+                    nombreusuario: nombreUsuario,
+                    nombrereal: nombreReal,
+                    contrasenia: password,
+                    correo: email,
+                    esartista: !!esArtista,
+                    ...(esArtista && {
+                        esnovedad: true,
+                        oyentes: 0,
+                        valoracion: 0,
+                        genero: { id: 1 }
+                    })
+                };
+                await postUsuario(userData);
 
-        try {
-            const userData = {
-                nombreusuario: nombreUsuario,
-                nombrereal: nombreReal,
-                contrasenia: password,
-                correo: email,
-                esartista: !!esArtista,
-                ...(esArtista && {
-                    esnovedad: true,
-                    oyentes: 0,
-                    valoracion: 0,
-                    genero: { id: 1 }
-                })
-            };
-            await postUsuario(userData);
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                const idToken = await result.user.getIdToken();
+                await loginBackendWithToken(idToken);
 
-            const result = await signInWithEmailAndPassword(auth, email, password);
-            const idToken = await result.user.getIdToken();
-            await loginBackendWithToken(idToken);
-
-        } catch (error) {
-            console.error("Error al registrar:", error.message);
-            setError(error.message);
+            } catch (error) {
+                console.error("Error al registrar:", error.message);
+                setError(error.message);
+            }
+        }else{
+            alert("Debes aceptar la política de privacidad y completar el CAPTCHA");
         }
     };
 
@@ -198,17 +200,19 @@ const InicioSesion = () => {
 
     const loginWithEmail = async (e) => {
         e.preventDefault();
-        if (!validarPoliticaYCaptcha()) return;
+        if (aceptaPolitica || captchaValue) {
+            try {
+                const result = await signInWithEmailAndPassword(auth, email, password);
+                const idToken = await result.user.getIdToken();
 
-        try {
-            const result = await signInWithEmailAndPassword(auth, email, password);
-            const idToken = await result.user.getIdToken();
+                await loginBackendWithToken(idToken);
 
-            await loginBackendWithToken(idToken);
-
-        } catch (error) {
-            console.error("Error en inicio de sesión:", error);
-            setError(error.message);
+            } catch (error) {
+                console.error("Error en inicio de sesión:", error);
+                setError(error.message);
+            }
+        }else{
+            alert("Debes aceptar la política de privacidad y completar el CAPTCHA");
         }
     };
 
