@@ -98,8 +98,8 @@ function Perfil({ idMenu }) {
             try {
                 // llamaremos de manera asincrona (ya que es con promesas) a los endpoint del fastapi de los datos
                 const [tiene, desea, art] = await Promise.all([ //LLAMADAS EN PARALELO, LA RESPUESTA MAS TARDIA QUITA EL SINCRONO
-                    getElementoPropios(token, idLoggedIn),
-                    getDeseosById(token, idLoggedIn),
+                    getUsuarioTieneElementoById(token, idLoggedIn),
+                    getUsuarioDeseaElementoById(token, idLoggedIn),
                     getFavoritosById(token, idLoggedIn),
                 ]);
                 setElementosTiene(tiene);
@@ -114,10 +114,6 @@ function Perfil({ idMenu }) {
         };
         fetchData();
     }, [idLoggedIn, token]); //antes cualquier cambio se revisa, la base de dato se actualiza cualquier momento
-
-    /*useEffect(() => {
-        console.log("Elementos cargados", { elementosTiene, elementosDeseo, artFav });
-    }, [elementosTiene, elementosDeseo, artFav]);*/
 
     return (
         <div id='perfil'>
@@ -236,7 +232,7 @@ function Perfil({ idMenu }) {
                         <div id={`${menuPerfilActivo === 4 ? "crearElem" : "listaElemen"}`}>
                             {menuPerfilActivo === 1 && <Lista elementosDatos={elementosTiene} titulo='Tiene' descarga={true} />}
                             {menuPerfilActivo === 2 && <Lista elementosDatos={elementosDeseo} titulo='Deseos' />}
-                            {menuPerfilActivo === 3 && <Lista elementosDatos={artFav} titulo='Artistas Favortitos' />}
+                            {menuPerfilActivo === 3 && <Lista elementosDatos={artFav} titulo='Favortitos' />}
                             {menuPerfilActivo === 4 && <ManejadorElem />}
                         </div>
                 }
