@@ -1,85 +1,181 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { UsuarioContext } from "../InicioSesion/UsuarioContext";
 import { 
     getRankingArtistasOyentes, 
     getTopContenidosVentas, 
     getTopGeneros, 
     getRankingComunidadesMiembros,
-    getTopContenidosValoracion
+    getTopContenidosValoracion,
+    getTopContenidosComentarios,
+    getRankingComunidadesPublicaciones
 } from '../../ApiServices/EstadisticasService';
+
+import { getArtistaById } from '../../ApiServices/ArtistasService';
+import { getElementoById } from '../../ApiServices/ElementosService';
+import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService';
+
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga';
 import './Estadisticas.css';
 
 function Estadisticas() {
-    const { token } = useContext(UsuarioContext);
+    const { token, idLoggedIn } = useContext(UsuarioContext);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); 
     
     // Estados para los distintos rankings
     const [topArtistas, setTopArtistas] = useState([]);
     const [topVentas, setTopVentas] = useState([]);
     const [topGeneros, setTopGeneros] = useState([]);
-    const [topComunidades, setTopComunidades] = useState([]);
+    const [topComunidades, setTopComunidades] = useState([]);      
+    const [topComunidadesPublis, setTopComunidadesPublis] = useState([]); 
     const [topValoracion, setTopValoracion] = useState([]);
-    
+    const [topComentados, setTopComentados] = useState([]);        
 
-useEffect(() => {
+    useEffect(() => {
         const cargarDatos = async () => {
-            console.log("--- 1. INICIANDO CARGA (SIN TOKEN) ---");
+            console.log("--- 1. INICIANDO CARGA ---");
             setLoading(true);
 
             try {
-                // Hacemos las llamadas SIN .catch individual. Si una falla, queremos que explote aquí.
-                
-                // 1. Probamos solo UNA llamada primero para ver si hay vida
-                console.log("--- 2. Intentando obtener artistas... ---");
+                // 1. Artistas
                 const artistasData = await getRankingArtistasOyentes(); 
-                console.log("--- 3. Artistas recibidos: ", artistasData);
+                console.log("--- 1. DATOS ARTISTAS CARGADOS ---");
+                console.log(artistasData);
 
-                // 2. Si la de arriba pasa, intentamos el resto
-                const [ventasData, generosData, comunidadesData, valoracionData] = await Promise.all([
-                    getTopContenidosVentas(5),
-                    getTopGeneros(5),
+                // 2. Resto de llamadas
+                const [
+                    ventasData, generosData, comunidadesMiembrosData, 
+                    valoracionData, comentariosData, comunidadesPublisData 
+                ] = await Promise.all([
+                    getTopContenidosVentas(),
+                    getTopGeneros(),
                     getRankingComunidadesMiembros(),
-                    getTopContenidosValoracion(5)
+                    getTopContenidosValoracion(),
+                    getTopContenidosComentarios(),      
+                    getRankingComunidadesPublicaciones() 
                 ]);
-                console.log("👀 ESTRUCTURA DE COMUNIDADES:", comunidadesData);
 
-                // Versión segura si todo tu backend usa ese formato de respuesta {status, data}:
-                setTopArtistas(artistasData || []); // Este ya vimos que es un array directo
-                setTopVentas(ventasData.data || ventasData || []);
+
+                    // --- PROCESAR ARTISTAS (BLOQUE CORREGIDO) ---
+                    if (artistasData.length > 0) {
+                        const promesas = artistasData.map(async (artistaBD) => {
+
+                    // Convertimos el ID con un nombre claro
+                    const artistId = Number(artistaBD.idArtista);
+
+                    // Llamamos al backend
+                    try {
+                        console.log(`🔍 Consultando detalles para el artista con ID: ${artistId}`);
+
+                        const detalles = await getArtistaById(artistId);
+
+                        return {
+                            ...artistaBD,
+                            nombreArtistico:
+                                detalles.nombreusuario ||
+                                detalles.nombre ||
+                                `Artista ${artistId}`
+                        };
+
+                    } catch (error) {
+                        console.error(`❌ Error consultando ID ${artistId}`, error);
+
+                        return {
+                            ...artistaBD,
+                            nombreArtistico: `Artista ${artistId}`
+                        };
+                    }
+                });
+
+                    setTopArtistas(await Promise.all(promesas));
+                }
+
+                // --- HELPER PARA ENRIQUECER CONTENIDOS ---
+                const enriquecerContenido = async (lista) => {
+                    if (!lista || lista.length === 0) return [];
+                    const promesas = lista.map(async (item) => {
+                        try {
+                            const detalle = await getElementoById(token, item.idContenido);
+                            
+                            // --- CORRECCIÓN AQUÍ ---
+                            // Verificamos si 'detalle.artista' es un objeto y sacamos el nombre
+                            let nombreDelArtista = null;
+
+                            if (detalle.nombreArtista) {
+                                nombreDelArtista = detalle.nombreArtista; // Si ya viene el texto plano
+                            } else if (detalle.artista && typeof detalle.artista === 'object') {
+                                // Si es un objeto, sacamos el nombreusuario o nombreArtistico
+                                nombreDelArtista = detalle.artista.nombreArtistico || detalle.artista.nombreusuario || "Artista Desconocido";
+                            } else if (typeof detalle.artista === 'string') {
+                                nombreDelArtista = detalle.artista;
+                            }
+                            // -----------------------
+
+                            return {
+                                ...item,
+                                titulo: detalle.nombre || detalle.nombreAudio || detalle.titulo || `Elemento ${item.idContenido}`,
+                                artista: nombreDelArtista // Ahora seguro que es un texto o null
+                            };
+                        } catch (error) {
+                            return { ...item, titulo: `Contenido ID ${item.idContenido} (Sin info)` };
+                        }
+                    });
+                    return await Promise.all(promesas);
+                };
+                // --- PROCESAR RESTO DE LISTAS ---
+                setTopVentas(await enriquecerContenido(ventasData));
+                setTopValoracion(await enriquecerContenido(valoracionData));
+                setTopComentados(await enriquecerContenido(comentariosData));
+
+                // --- GUARDAR DATOS SIMPLES ---
                 setTopGeneros(generosData.data || generosData || []);
-                setTopComunidades(comunidadesData.data || comunidadesData || []);
-                setTopValoracion(valoracionData.data || valoracionData || []);
+                setTopComunidades(comunidadesMiembrosData.data || comunidadesMiembrosData || []);
+                setTopComunidadesPublis(comunidadesPublisData.data || comunidadesPublisData || []);
 
             } catch (error) {
-                // AQUI ES DONDE VEREMOS POR QUÉ NO LLAMA
-                console.error("💀 ERROR FATAL EN EL COMPONENTE:", error);
-                
-                if (error.code === "ERR_NETWORK") {
-                    console.error("POSIBLE CAUSA: El Backend está apagado o es un problema de CORS.");
-                }
-                if (error.response && error.response.status === 404) {
-                    console.error("POSIBLE CAUSA: La URL está mal escrita en EstadisticasService.");
-                }
+                console.error("ERROR EN ESTADÍSTICAS:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         cargarDatos();
-    }, []); // Array vacío, solo se ejecuta al montar
+    }, [token]);
 
-    if (loading) {
-        return <PantallaCarga mensaje="Analizando el mercado musical..." />;
-    }
+    // ---------------------------------------------------------
+    //  AQUÍ ESTÁ LA MAGIA DE LA NAVEGACIÓN SEGÚN TUS RUTAS
+    // ---------------------------------------------------------
+    const handleNavigation = (tipo, id) => {
+        console.log(`Navegando a ${tipo} con ID: ${id}`);
+        
+        if (tipo === 'artista') {
+            // Ruta definida en tu index.js: <Route path="masInfoPerfil" ... />
+            console.log(`Registrando visita estadísticas: Artista ${id}, Usuario ${idLoggedIn}`);
+            registrarBusquedaArtista(token, id, idLoggedIn)
+                .catch(err => console.error("Error background stats:", err));
+            navigate('/masInfoPerfil', { state: { id: id, idArtista: id } }); 
+        } 
+        else if (tipo === 'album') {
+            // Ruta definida en tu index.js: <Route path="masInfoAlbum" ... />
+            navigate('/masInfoAlbum', { state: { id: id } });
+        } 
+        else if (tipo === 'cancion') {
+            // Ruta definida en tu index.js: <Route path="masInfo" ... />
+            navigate('/masInfo', { state: { id: id } });
+        }
+    };
 
-    // Iconos para el podio (Oro, Plata, Bronce)
+    if (loading) return <PantallaCarga mensaje="Analizando el mercado musical..." />;
+
     const renderRankIcon = (index) => {
         if (index === 0) return <i className="fa-solid fa-trophy rank-gold"></i>;
         if (index === 1) return <i className="fa-solid fa-trophy rank-silver"></i>;
         if (index === 2) return <i className="fa-solid fa-trophy rank-bronze"></i>;
         return <span className="rank-number">#{index + 1}</span>;
     };
+
+    const clickableStyle = { cursor: 'pointer', transition: 'transform 0.2s' };
 
     return (
         <div className="estadisticas-container fade-in">
@@ -91,7 +187,7 @@ useEffect(() => {
 
             <div className="stats-grid">
                 
-                {/* TARJETA 1: Top Artistas */}
+                {/* 1. ARTISTAS */}
                 <div className="stat-card artist-card">
                     <div className="card-header-stats">
                         <h2><i className="fa-solid fa-microphone-lines"></i> Artistas Top</h2>
@@ -99,24 +195,32 @@ useEffect(() => {
                     </div>
                     <div className="ranking-list">
                         {topArtistas.slice(0, 5).map((artista, idx) => (
-                            <div key={idx} className={`rank-item rank-${idx + 1}`}>
+                            <div 
+                                key={idx} 
+                                className={`rank-item rank-${idx + 1}`}
+                                onClick={() => handleNavigation('artista', artista.nombreArtistico)}
+                                style={clickableStyle}
+                                title="Ver Perfil"
+                            >
                                 <div className="rank-pos">{renderRankIcon(idx)}</div>
                                 <div className="rank-info">
-                                    <span className="item-name">Artista ID: {artista.idArtista}</span>
+                                    <span className="item-name">
+                                        {artista.nombreArtistico || `Artista ${artista.idArtista}`}
+                                    </span>
                                     <span className="item-sub">
-                                        <i className="fa-solid fa-headphones"></i> {artista.numOyentes ? artista.numOyentes.toLocaleString() : 0} Oyentes
+                                        <i className="fa-solid fa-headphones"></i> 
+                                        {(artista.numOyentes || 0).toLocaleString()} Oyentes
                                     </span>
                                 </div>
                                 <div className="rank-score">
-                                    <i className="fa-solid fa-star text-warning"></i> {artista.valoracionMedia}
+                                    <i className="fa-solid fa-star text-warning"></i> {artista.valoracionMedia || 0}
                                 </div>
                             </div>
                         ))}
-                        {topArtistas.length === 0 && <p className="text-muted text-center mt-3">No hay datos disponibles.</p>}
                     </div>
                 </div>
 
-                {/* TARJETA 2: Más Vendidos */}
+                {/* 2. VENTAS */}
                 <div className="stat-card sales-card">
                     <div className="card-header-stats">
                         <h2><i className="fa-solid fa-cart-shopping"></i> Top Ventas</h2>
@@ -124,20 +228,29 @@ useEffect(() => {
                     </div>
                     <div className="ranking-list">
                         {topVentas.map((item, idx) => (
-                            <div key={idx} className="rank-item">
+                            <div 
+                                key={idx} 
+                                className="rank-item"
+                                onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                style={clickableStyle}
+                            >
                                 <div className="rank-pos">{renderRankIcon(idx)}</div>
                                 <div className="rank-info">
-                                    <span className="item-name">Contenido ID: {item.idContenido}</span>
+                                    <span className="item-name">
+                                        {item.titulo || `Contenido ${item.idContenido}`}
+                                    </span>
+                                    {item.artista && (
+                                        <span className="item-artist-sub"><small>{item.artista}</small></span>
+                                    )}
                                     <span className="item-sub type-badge">
-                                        {item.esAlbum ? 'Álbum' : 'Single'}
+                                        {item.esAlbum ? 'Álbum' : 'Canción'}
                                     </span>
                                 </div>
                                 <div className="rank-metric">
-                                    {item.numVentas} <small>Ventas</small>
+                                    {(item.numVentas || 0).toLocaleString()} <small>Ventas</small>
                                 </div>
                             </div>
                         ))}
-                        {topVentas.length === 0 && <p className="text-muted text-center mt-3">No hay datos disponibles.</p>}
                     </div>
                 </div>
 
@@ -147,65 +260,126 @@ useEffect(() => {
                     {/* Géneros */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
-                            <h2><i className="fa-solid fa-music"></i> Géneros Tendencia</h2>
+                            <h2><i className="fa-solid fa-music"></i> Géneros</h2>
                         </div>
                         <div className="genre-cloud">
                             {topGeneros.map((gen, idx) => (
                                 <div key={idx} className="genre-tag" style={{fontSize: `${1 + (5-idx)*0.1}rem`}}>
                                     {gen.genero}
-                                    <span className="genre-count">{gen.totalVentas}</span>
+                                    <span className="genre-count">{gen.totalVentas || 0}</span>
                                 </div>
                             ))}
-                            {topGeneros.length === 0 && <p className="text-muted text-center">Sin datos.</p>}
                         </div>
                     </div>
 
-                    {/* Comunidades */}
+                    {/* Comunidades (Miembros) */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
-                            <h2><i className="fa-solid fa-users"></i> Comunidades Activas</h2>
+                            <h2><i className="fa-solid fa-users"></i> Más Populares</h2>
                         </div>
                         <ul className="community-list">
-                            {topComunidades.slice(0, 5).map((com, idx) => (
+                            {topComunidades.slice(0, 3).map((com, idx) => (
                                 <li key={idx} className="community-item">
                                     <div className="com-rank">#{idx + 1}</div>
                                     <div className="com-details">
-                                        <strong>Comunidad ID: {com.idComunidad}</strong>
-                                        <small>{com.numMiembros} Miembros • {com.numPublicaciones} Posts</small>
+                                        <strong>ID: {com.idComunidad}</strong>
+                                        <small>{(com.numMiembros || 0).toLocaleString()} Miembros</small>
                                     </div>
                                 </li>
                             ))}
-                            {topComunidades.length === 0 && <p className="text-muted text-center">Sin datos.</p>}
+                        </ul>
+                    </div>
+
+                    {/* Comunidades (Publicaciones) */}
+                    <div className="stat-card small-card">
+                        <div className="card-header-stats">
+                            <h2><i className="fa-solid fa-pen-to-square"></i> Más Activas</h2>
+                        </div>
+                        <ul className="community-list">
+                            {topComunidadesPublis.slice(0, 3).map((com, idx) => (
+                                <li key={idx} className="community-item">
+                                    <div className="com-rank">#{idx + 1}</div>
+                                    <div className="com-details">
+                                        <strong>ID: {com.idComunidad}</strong>
+                                        <small>
+                                            {(com.numPublicaciones || com.totalPublicaciones || 0).toLocaleString()} Publicaciones
+                                        </small> 
+                                    </div>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
 
-                {/* TARJETA 4: Top Valoración */}
-                <div className="stat-card rating-card">
-                    <div className="card-header-stats">
-                        <h2><i className="fa-solid fa-thumbs-up"></i> Mejor Valorados</h2>
-                    </div>
-                    <div className="ranking-list">
-                        {topValoracion.map((item, idx) => (
-                            <div key={idx} className="rank-item">
-                                <div className="rank-pos-circle">{idx + 1}</div>
-                                <div className="rank-info">
-                                    <span className="item-name">ID: {item.idContenido}</span>
-                                    <div className="progress-bar-bg">
-                                        {/* Barra de progreso visual */}
-                                        <div 
-                                            className="progress-fill" 
-                                            style={{width: `${(item.sumaValoraciones / 50) * 100}%`, maxWidth: '100%'}} 
-                                        ></div>
+                {/* COLUMNA 4: Valoraciones y Comentarios */}
+                <div className="stat-column d-flex flex-column gap-4">
+
+                    {/* 4. VALORACIÓN */}
+                    <div className="stat-card rating-card">
+                        <div className="card-header-stats">
+                            <h2><i className="fa-solid fa-thumbs-up"></i> Mejor Valorados</h2>
+                        </div>
+                        <div className="ranking-list">
+                            {topValoracion.map((item, idx) => (
+                                <div 
+                                    key={idx} 
+                                    className="rank-item"
+                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                    style={clickableStyle}
+                                >
+                                    <div className="rank-pos-circle">{idx + 1}</div>
+                                    <div className="rank-info">
+                                        <span className="item-name">{item.titulo}</span>
+                                        <span className="item-sub">
+                                            {item.esAlbum ? 'Álbum' : 'Canción'}
+                                        </span>
+                                        <div className="progress-bar-bg">
+                                            <div 
+                                                className="progress-fill" 
+                                                style={{
+                                                    width: `${((item.sumaValoraciones || 0) / 5) * 100}%`,
+                                                    maxWidth: '100%'
+                                                }} 
+                                            ></div>
+                                        </div>
+                                    </div>
+                                    <div className="rank-score-big">
+                                        {item.sumaValoraciones || 0}
                                     </div>
                                 </div>
-                                <div className="rank-score-big">
-                                    {item.sumaValoraciones}
-                                </div>
-                            </div>
-                        ))}
-                        {topValoracion.length === 0 && <p className="text-muted text-center mt-3">No hay datos disponibles.</p>}
+                            ))}
+                        </div>
                     </div>
+
+                    {/* 5. MÁS COMENTADOS */}
+                    <div className="stat-card rating-card">
+                        <div className="card-header-stats">
+                            <h2><i className="fa-solid fa-comments"></i> Más Debatidos</h2>
+                        </div>
+                        <div className="ranking-list">
+                            {topComentados.map((item, idx) => (
+                                <div 
+                                    key={idx} 
+                                    className="rank-item"
+                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                    style={clickableStyle}
+                                >
+                                    <div className="rank-pos-circle orange">{idx + 1}</div>
+                                    <div className="rank-info">
+                                        <span className="item-name">{item.titulo}</span>
+                                        <span className="item-sub">
+                                            {item.esAlbum ? 'Álbum' : 'Canción'}
+                                        </span>
+                                    </div>
+                                    <div className="rank-metric">
+                                        <i className="fa-regular fa-comment-dots me-2"></i>
+                                        {(item.numComentarios || item.totalComentarios || 0).toLocaleString()}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
                 </div>
 
             </div>

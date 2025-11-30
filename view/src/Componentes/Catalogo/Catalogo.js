@@ -7,9 +7,16 @@ import Estadisticas from '../Estadisticas/Estadisticas';
 // --- NUEVOS IMPORTS ---
 import { UsuarioContext } from '../InicioSesion/UsuarioContext';
 import { getElementoById } from '../../ApiServices/ElementosService';
+import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService.js';
 
 function Catalogo({ elementos, isLoading, artistas }) {
-    const [menu, setMenu] = useState(0); // Utilizamos "menu" para gestionar el estado del menú
+    const [menu, setMenu] = useState(() => {
+        const menuGuardado = sessionStorage.getItem('catalogo_menu_activo');
+        return menuGuardado !== null ? Number(menuGuardado) : 0;
+    });
+    useEffect(() => {
+        sessionStorage.setItem('catalogo_menu_activo', menu);
+    }, [menu]);
     const tipoPorMenu = menu === 1 ? 2 : menu === 2 ? 0 : menu === 3 ? 1 : null;
     const [busqueda, setBusqueda] = useState(''); // Estado para la búsqueda
     const [filtroGenero, setFiltroGenero] = useState('');
@@ -246,12 +253,14 @@ function Section({ title, items }) {
 // Tarjeta de Producto
 function ProductoCard({ item }) {
     const navigate = useNavigate();
+    
     const [isPlaying, setIsPlaying] = useState(false); // Estado para simular play/pause
     const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
     const [showSharePopup, setShowSharePopup] = useState(false);
     //const userState = useNavigate.state || {};
 
-    const { token } = useContext(UsuarioContext);
+    const { token, idLoggedIn } = useContext(UsuarioContext);
+    const idUsuarioActual = idLoggedIn;
     const togglePlay = () => setIsPlaying(prev => !prev);
 
     // Función para abrir el pop-up de reproducción
@@ -307,6 +316,8 @@ function ProductoCard({ item }) {
             navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
+            registrarBusquedaArtista(token, item.id, idUsuarioActual)
+                .catch(err => console.error("Error registrando visita (background):", err));
             navigate("/masInfoPerfil", { state: item });
         }
     };

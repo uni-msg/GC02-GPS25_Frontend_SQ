@@ -1,6 +1,8 @@
 export const BASE_URL = "";
 //export const BASE_URL = "http://localhost:8000"; // URL DE PRODUCCION
 export const BASE_URL_CONTENIDO = "http://localhost:8083/api";
+export const BASE_URL_ESTADISTICAS = "http://localhost:8000";
+
 export const BASE_URL_USUARIOS = "http://localhost:3000/api/usuarios";
 export const BASE_URL_ESTADISTICAS = "http://localhost:8000";
 
