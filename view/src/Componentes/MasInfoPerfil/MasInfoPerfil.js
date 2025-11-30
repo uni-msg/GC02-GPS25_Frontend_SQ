@@ -203,7 +203,7 @@ const MasInfoPerfil = () => {
                         <p className="text-muted">Este artista aún no creó ningún elemento.</p>
                     ) : (
                         <div id="listaElementos">
-                            {elementosCreados.filter(elem => elem.esAlbum).map((elem) => (
+                            {elementosCreados.filter(elem => elem.esalbum).map((elem) => (
                                 <div key={elem.id} className="elemento">
                                     <div className="cabeElem">
                                         <h4><i className="fa-solid fa-rectangle-list"></i> {elem.nombre}</h4>
@@ -215,7 +215,7 @@ const MasInfoPerfil = () => {
                                         </div>
                                     </div>
 
-                                    {elem.esAlbum && expandido[elem.id] && (
+                                    {elem.esalbum && expandido[elem.id] && (
                                         <div className="canciones">
                                             {cancionesAlbum[elem.id]?.map((can, index) => (
                                                 <div key={can.idelemento} className="cardCancion">
@@ -230,7 +230,7 @@ const MasInfoPerfil = () => {
                                 </div>
                             ))}
 
-                            {elementosCreados.filter(elem => !elem.esAlbum && elem.album === null).map((elem) => (
+                            {elementosCreados.filter(elem => !elem.esalbum && elem.album === null).map((elem) => (
                                 <div key={elem.id} className="elemento">
                                     <div className="cabeElem">
                                         <h4><i className="fa-solid fa-record-vinyl"></i> {elem.nombre}</h4>
