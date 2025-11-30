@@ -1,4 +1,4 @@
-import { BASE_URL_USUARIO} from "../config"; //empleado para la llamada a la api
+import { BASE_URL_USUARIOS} from "../config"; //empleado para la llamada a la api
 import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 // ======================================================================
@@ -7,7 +7,7 @@ import axios from 'axios'; //llamadas a la api sin emplear el fetch
 
 export async function login(token) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/login`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/login`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -20,7 +20,7 @@ export async function login(token) {
 
 export async function logout(token) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/logout`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/logout`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -37,7 +37,7 @@ export async function logout(token) {
 
 export async function postUsuario(usuarioData) {
     try {
-        const response = await axios.post(`${BASE_URL_USUARIO}/`, usuarioData);
+        const response = await axios.post(`${BASE_URL_USUARIOS}/`, usuarioData);
         return response.data;
 
     } catch (error) {
@@ -48,7 +48,7 @@ export async function postUsuario(usuarioData) {
 
 export async function putUsuario(token, usuarioData) {
     try {
-        const response = await axios.put(`${BASE_URL_USUARIO}/`,
+        const response = await axios.put(`${BASE_URL_USUARIOS}/`,
             usuarioData,
             {
                 headers: { Authorization: `Bearer ${token}` }
@@ -64,7 +64,7 @@ export async function putUsuario(token, usuarioData) {
 
 export async function deleteUsuario(token, id) {
     try {
-        const response = await axios.delete(`${BASE_URL_USUARIO}/${id}`, {
+        const response = await axios.delete(`${BASE_URL_USUARIOS}/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -77,7 +77,7 @@ export async function deleteUsuario(token, id) {
 
 export async function getUsuarios() {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/`);
+        const response = await axios.get(`${BASE_URL_USUARIOS}/`);
         return response.data;
 
     } catch (error) {
@@ -88,7 +88,7 @@ export async function getUsuarios() {
 
 export async function getUsuarioById(id) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/${id}`);
+        const response = await axios.get(`${BASE_URL_USUARIOS}/${id}`);
         return response.data;
 
     } catch (error) {
@@ -103,7 +103,7 @@ export async function getUsuarioById(id) {
 
 export async function getFavoritosById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/favoritos/${id}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/favoritos/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -117,7 +117,7 @@ export async function getFavoritosById(token, id) {
 export async function getFavoritosByIds(token, idusuario, idelem, esArt) {
     try {
         const response = await axios.get(
-            `${BASE_URL_USUARIO}/favoritos/${idusuario}/${idelem}/${esArt ? "artista" : "contenido"}`,
+            `${BASE_URL_USUARIOS}/favoritos/${idusuario}/${idelem}/${esArt ? "artista" : "contenido"}`,
             {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -133,7 +133,7 @@ export async function getFavoritosByIds(token, idusuario, idelem, esArt) {
 export async function deleteFavorito(token, idusuario, idelem, esArt) {
     try {
         const response = await axios.delete(
-            `${BASE_URL_USUARIO}/favoritos/${idusuario}/${idelem}/${esArt ? "artista" : "contenido"}`,
+            `${BASE_URL_USUARIOS}/favoritos/${idusuario}/${idelem}/${esArt ? "artista" : "contenido"}`,
             {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -148,7 +148,7 @@ export async function deleteFavorito(token, idusuario, idelem, esArt) {
 
 export async function postFavorito(token, relacionData) {
     try {
-        const response = await axios.post(`${BASE_URL_USUARIO}/favoritos/`,
+        const response = await axios.post(`${BASE_URL_USUARIOS}/favoritos/`,
             relacionData,
             {
                 headers: { Authorization: `Bearer ${token}` }
@@ -168,7 +168,7 @@ export async function postFavorito(token, relacionData) {
 
 export async function getUsuarioTieneElementoById(token, idusuario) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/tiene/${idusuario}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/tiene/${idusuario}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -182,7 +182,7 @@ export async function getUsuarioTieneElementoById(token, idusuario) {
 export async function getTieneByIds(token, idusuario, idelem) {
     try {
         const response = await axios.get(
-            `${BASE_URL_USUARIO}/tiene/${idusuario}/${idelem}`,
+            `${BASE_URL_USUARIOS}/tiene/${idusuario}/${idelem}`,
             {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -201,7 +201,7 @@ export async function getTieneByIds(token, idusuario, idelem) {
 
 export async function getUsuarioDeseaElementoById(token, idusuario) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/desea/${idusuario}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/desea/${idusuario}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response.data;
@@ -215,7 +215,7 @@ export async function getUsuarioDeseaElementoById(token, idusuario) {
 export async function getDeseaByIds(token, idusuario, idelem) {
     try {
         const response = await axios.get(
-            `${BASE_URL_USUARIO}/desea/${idusuario}/${idelem}`,
+            `${BASE_URL_USUARIOS}/desea/${idusuario}/${idelem}`,
             {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -231,7 +231,7 @@ export async function getDeseaByIds(token, idusuario, idelem) {
 export async function deleteDesea(token, idusuario, idelem) {
     try {
         const response = await axios.delete(
-            `${BASE_URL_USUARIO}/desea/${idusuario}/${idelem}`,
+            `${BASE_URL_USUARIOS}/desea/${idusuario}/${idelem}`,
             {
                 headers: { Authorization: `Bearer ${token}` }
             }
@@ -246,7 +246,7 @@ export async function deleteDesea(token, idusuario, idelem) {
 
 export async function postDesea(token, relacionData) {
     try {
-        const response = await axios.post(`${BASE_URL_USUARIO}/desea/`,
+        const response = await axios.post(`${BASE_URL_USUARIOS}/desea/`,
             relacionData,
             {
                 headers: { Authorization: `Bearer ${token}` }

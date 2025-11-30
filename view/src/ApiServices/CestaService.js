@@ -1,4 +1,4 @@
-import { BASE_URL_USUARIO } from "../config"; // Empleado para la llamada a la API
+import { BASE_URL_USUARIOS } from "../config"; // Empleado para la llamada a la API
 import axios from 'axios'; // Llamadas a la API sin emplear fetch
 
 /**
@@ -11,7 +11,7 @@ import axios from 'axios'; // Llamadas a la API sin emplear fetch
  */
 export async function getCestaId(token,id) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/cesta/${id}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/cesta/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -34,7 +34,7 @@ export async function getCestaId(token,id) {
  */
 export async function exitElementoCesta(token,idusuario, idelemento) {
     try {
-        const response = await axios.get(`${BASE_URL_USUARIO}/cesta/${idusuario}/${idelemento}`, {
+        const response = await axios.get(`${BASE_URL_USUARIOS}/cesta/${idusuario}/${idelemento}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -56,7 +56,7 @@ export async function exitElementoCesta(token,idusuario, idelemento) {
 export async function postElementoCesta(token, cestaData) {
     try {
         console.log("Enviando a cesta:", cestaData); // Descomenta para depurar si hace falta
-        const response = await axios.post(`${BASE_URL_USUARIO}/cesta`, 
+        const response = await axios.post(`${BASE_URL_USUARIOS}/cesta`, 
             cestaData, 
             {
                 headers: {
@@ -83,7 +83,7 @@ export async function postElementoCesta(token, cestaData) {
  */
 export async function deleteElementoCestaById(token, idusuario, idelemento) {
     try {
-        const response = await axios.delete(`${BASE_URL_USUARIO}/cesta/${idusuario}/${idelemento}`, {
+        const response = await axios.delete(`${BASE_URL_USUARIOS}/cesta/${idusuario}/${idelemento}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -105,7 +105,7 @@ export async function deleteElementoCestaById(token, idusuario, idelemento) {
  */
 export async function postTiene(token,id) {
     try {
-        const response = await axios.post(`${BASE_URL_USUARIO}/tiene/${id}`,
+        const response = await axios.post(`${BASE_URL_USUARIOS}/tiene/${id}`,
             null,
             {
                 headers: {

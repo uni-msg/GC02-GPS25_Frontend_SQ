@@ -4,13 +4,13 @@ import logo from './../../Recursos/logoUnderSound.png';
 import datos from '../../Datos/tutoriales.json';
 
 import { UsuarioContext } from "../InicioSesion/UsuarioContext.js";
-import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
+import { CLOUD_URL_DEFAULT, URL_FOTO } from '../../config.js';
 
 import { Link } from "react-router-dom";
 import React, { useContext, useState } from 'react';
 
 function Header() {
-    const { isLoggedIn, setIsLoggedIn, fotoAmazon } = useContext(UsuarioContext);
+    const { isLoggedIn, fotoAmazon } = useContext(UsuarioContext);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [ayuda, setAyuda] = useState(null);
 
@@ -36,7 +36,7 @@ function Header() {
                     <>
                         <Link to="/cesta"><i className="fa-solid fa-basket-shopping"></i></Link>
                         <Link to="/deseos"><i className="fa-duotone fa-regular fa-heart"></i></Link>
-                        <Link to="/perfil"><img src={fotoAmazon && fotoAmazon !== "null"? `${AMAZON_URL_FOTO}${fotoAmazon}`: `${AMAZON_URL_DEFAULT}` } id="iconoPerfilHeader" alt="icono de la aplicacion" /></Link>
+                        <Link to="/perfil"><img src={fotoAmazon && fotoAmazon !== "null"? `${URL_FOTO}${fotoAmazon}`: `${CLOUD_URL_DEFAULT}` } id="iconoPerfilHeader" alt="icono de la aplicacion" /></Link>
                     </>
                 ) : (
                     <Link to="/inicio"><i className="fa-regular fa-circle-user"></i></Link>

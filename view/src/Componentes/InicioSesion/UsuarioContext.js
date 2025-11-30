@@ -75,6 +75,8 @@ export const UsuarioProvider = ({ children }) => {
       valoracion, setValoracion,
       idGenero, setIdGenero,
       nombreGenero, setNombreGenero,
+
+      logoutData
     }}>
       {children}
     </UsuarioContext.Provider>

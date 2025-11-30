@@ -12,8 +12,7 @@ import '../InicioSesion/firebaseConfig.js';
 import { getAuth, signOut } from "firebase/auth";
 import { URL_FOTO, CLOUD_URL_DEFAULT } from '../../config.js';
 
-import { getDeseosById, getElementoPropios } from "./../../ApiServices/ElementosService.js"
-import { getFavoritosById, putUsuario } from "./../../ApiServices/UsuarioService.js"
+import { getFavoritosById, putUsuario ,getUsuarioTieneElementoById, getUsuarioDeseaElementoById } from "./../../ApiServices/UsuarioService.js"
 
 function Perfil({ idMenu }) {
     const [menuPerfilActivo, setMenuPerfilActivo] = useState(1);
@@ -41,6 +40,7 @@ function Perfil({ idMenu }) {
         esNovedad,
         oyentes,
         valoracion,
+        logoutData
     } = useContext(UsuarioContext);
 
     const [formData, setFormData] = useState({
@@ -80,6 +80,7 @@ function Perfil({ idMenu }) {
             console.log("Sesión cerrada");
             setIdLoggedIn(null);
             setIsLoggedIn(false);
+            logoutData();
             setMostrarModal(false); // cerrar el modal después de cerrar sesión
             navigate("/");
         } catch (error) {

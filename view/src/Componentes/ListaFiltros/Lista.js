@@ -2,7 +2,7 @@ import './Lista.css';
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import ListaVacia from '../Utiles/ListaVacia/ListaVacia';
-import { AMAZON_URL_MP3, AMAZON_URL_FLAC, AMAZON_URL_WAV, AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
+import { URL_FOTO, CLOUD_URL_DEFAULT, URL_MP3, URL_WAV, URL_FLAC } from '../../config.js';
 
 const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -64,16 +64,16 @@ const descargarArchivo = (nombre,tipo = "mp3") => {
     let archivo ;
     switch (tipo) {
         case "mp3":
-            archivo = `${AMAZON_URL_MP3}${nombre}`;
+            archivo = `${URL_MP3}${nombre}`;
             break;
         case "flac":
-            archivo = `${AMAZON_URL_FLAC}${nombre}`;
+            archivo = `${URL_FLAC}${nombre}`;
             break;
         case "wav":
-            archivo = `${AMAZON_URL_WAV}${nombre}`;
+            archivo = `${URL_WAV}${nombre}`;
             break;
         default:
-            archivo = `${AMAZON_URL_MP3}${nombre}`;
+            archivo = `${URL_MP3}${nombre}`;
             break;
     }
     const link = document.createElement("a");
@@ -87,8 +87,8 @@ const descargarArchivo = (nombre,tipo = "mp3") => {
 
 const getFoto = (item) => {
     return item.fotoAmazon || item.rutafoto || item.urlFoto
-        ? `${AMAZON_URL_FOTO}${item.fotoAmazon || item.rutafoto || item.urlFoto}`
-        : AMAZON_URL_DEFAULT;
+        ? `${URL_FOTO}${item.fotoAmazon || item.rutafoto || item.urlFoto}`
+        : CLOUD_URL_DEFAULT;
 };
 
 function Elemento({ item, descarga = false, esAlbum }) {
