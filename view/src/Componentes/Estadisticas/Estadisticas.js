@@ -240,6 +240,19 @@ function Estadisticas() {
         // 3. Si es ARTISTA, registramos la búsqueda (Opcional, pero consistente con tu Catálogo)
         if (tipo === 'artista') {
             // Nota: Verifica si tienes esta función importada y si quieres contar esto como búsqueda
+            try {
+                // Usamos el servicio getElementoById
+                const dataDB = await getArtistaById(id);
+                
+                if (dataDB) {
+                    console.log("¡Datos completos recuperados!", dataDB);
+                    itemCompleto = dataDB; // Reemplazamos con el objeto full de la BD
+                }
+            } catch (error) {
+                console.error("Error al obtener detalles completos, usando básicos:", error);
+                // Si falla, no pasa nada, seguimos con el item original
+            }
+
             registrarBusquedaArtista(token, id, idLoggedIn)
                 .catch(err => console.error("Error registrando visita:", err));
         }
@@ -254,11 +267,9 @@ function Estadisticas() {
         // Nota: Añadimos el ID a la URL también para que quede limpia (ej: /masInfo/5)
         // si tus rutas en App.js esperan parametro, si no, quita `/${id}`
         if (ruta) {
-             // Si tus rutas en App.js son del tipo "/masInfo/:id", usa esta línea:
-             navigate(`${ruta}`, { state: itemCompleto });
              
              // Si tus rutas son solo "/masInfo" y dependen 100% del state, usa esta:
-             // navigate(ruta, { state: itemCompleto });
+             navigate(ruta, { state: itemCompleto });
         }
     };
 
