@@ -191,13 +191,7 @@ function Catalogo({ elementos, isLoading, artistas }) {
                 <div className="seccion-estadisticas mt-4">
                     <Estadisticas />
                 </div>
-            ) : (
-                categorias.map((categoria, index) => (
-                    <Section key={index} title={categoria.title} items={categoria.items} />
-                ))
-            )}
-
-            {menu === 5 ? (
+            ) : menu === 5 ? (
                 <div className="seccion-comunidades mt-5">
                     <Comunidades />
                 </div>

@@ -8,12 +8,14 @@ import {
     getRankingComunidadesMiembros,
     getTopContenidosValoracion,
     getTopContenidosComentarios,
-    getRankingComunidadesPublicaciones
+    getRankingComunidadesPublicaciones, 
+    getTopArtistasBusquedas
 } from '../../ApiServices/EstadisticasService';
 
 import { getArtistaById } from '../../ApiServices/ArtistasService';
 import { getElementoById } from '../../ApiServices/ElementosService';
 import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService';
+import { getComunidadById } from '../../ApiServices/ComunidadService';
 
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga';
 import './Estadisticas.css';
@@ -30,7 +32,8 @@ function Estadisticas() {
     const [topComunidades, setTopComunidades] = useState([]);      
     const [topComunidadesPublis, setTopComunidadesPublis] = useState([]); 
     const [topValoracion, setTopValoracion] = useState([]);
-    const [topComentados, setTopComentados] = useState([]);        
+    const [topComentados, setTopComentados] = useState([]);   
+    const [topBusquedas, setTopBusquedas] = useState([]); 
 
     useEffect(() => {
         const cargarDatos = async () => {
@@ -46,14 +49,15 @@ function Estadisticas() {
                 // 2. Resto de llamadas
                 const [
                     ventasData, generosData, comunidadesMiembrosData, 
-                    valoracionData, comentariosData, comunidadesPublisData 
+                    valoracionData, comentariosData, comunidadesPublisData, topBusquedasData
                 ] = await Promise.all([
                     getTopContenidosVentas(),
                     getTopGeneros(),
                     getRankingComunidadesMiembros(),
                     getTopContenidosValoracion(),
                     getTopContenidosComentarios(),      
-                    getRankingComunidadesPublicaciones() 
+                    getRankingComunidadesPublicaciones(), 
+                    getTopArtistasBusquedas()
                 ]);
 
 
@@ -123,6 +127,66 @@ function Estadisticas() {
                     });
                     return await Promise.all(promesas);
                 };
+
+                // Hacemos lo mismo que arriba: convertir IDs en Nombres
+                const rawBusquedas = topBusquedasData.data || topBusquedasData || [];
+                if (rawBusquedas.length > 0) {
+                    const promesasBusquedas = rawBusquedas.map(async (item) => {
+                        const artistId = Number(item.idArtista); // Aseguramos que sea número
+                        try {
+                            // Reutilizamos el servicio de buscar por ID
+                            const detalles = await getArtistaById(artistId);
+                            return {
+                                ...item,
+                                nombreArtistico: detalles.nombreusuario || detalles.nombre || `Artista ${artistId}`
+                            };
+                        } catch (error) {
+                            console.error(`Error cargando artista búsqueda ${artistId}`, error);
+                            return { ...item, nombreArtistico: `Artista ${artistId}` };
+                        }
+                    });
+                    setTopBusquedas(await Promise.all(promesasBusquedas));
+                } else {
+                    setTopBusquedas([]);
+                }
+
+                // --- C. HELPER PARA COMUNIDADES (NUEVO) ---
+                const enriquecerComunidades = async (lista) => {
+                    // 1. Ver qué lista bruta recibimos
+                    const datosRaw = lista.data || lista || []; 
+
+                    if (!datosRaw.length) return [];
+
+                    const promesas = datosRaw.map(async (item) => {
+                        try {
+
+                            const detalle = await getComunidadById(item.idComunidad);            
+                            // 3. ¡EL MÁS IMPORTANTE! Ver qué devolvió la API exactamente
+                            console.log(`📦 Respuesta API para ID ${item.idComunidad}:`, detalle);
+
+                            return {
+                                ...item,
+                                // Aquí veremos si coge el nombre o salta al fallback
+                                nombre: detalle.nombreComunidad || `Comunidad ${item.idComunidad}`
+                            };
+                        } catch (error) {
+                            console.error(`❌ Error peticionando comunidad ${item.idComunidad}:`, error);
+                            return { ...item, nombre: `Comunidad ${item.idComunidad}` };
+                        }
+                    });
+
+                    return await Promise.all(promesas);
+                };
+
+                // --- PROCESAR Y GUARDAR ESTADOS ---
+
+                // 1. Procesamos Comunidades por Miembros
+                setTopComunidades(await enriquecerComunidades(comunidadesMiembrosData));
+
+                // 2. Procesamos Comunidades por Publicaciones
+                setTopComunidadesPublis(await enriquecerComunidades(comunidadesPublisData));
+
+
                 // --- PROCESAR RESTO DE LISTAS ---
                 setTopVentas(await enriquecerContenido(ventasData));
                 setTopValoracion(await enriquecerContenido(valoracionData));
@@ -130,8 +194,8 @@ function Estadisticas() {
 
                 // --- GUARDAR DATOS SIMPLES ---
                 setTopGeneros(generosData.data || generosData || []);
-                setTopComunidades(comunidadesMiembrosData.data || comunidadesMiembrosData || []);
-                setTopComunidadesPublis(comunidadesPublisData.data || comunidadesPublisData || []);
+                console.log("Top búsquedas:", topBusquedasData);
+
 
             } catch (error) {
                 console.error("ERROR EN ESTADÍSTICAS:", error);
@@ -146,23 +210,55 @@ function Estadisticas() {
     // ---------------------------------------------------------
     //  AQUÍ ESTÁ LA MAGIA DE LA NAVEGACIÓN SEGÚN TUS RUTAS
     // ---------------------------------------------------------
-    const handleNavigation = (tipo, id) => {
-        console.log(`Navegando a ${tipo} con ID: ${id}`);
+
+    const handleNavigation = async (tipo, item) => {
         
+        // 1. Determinar el ID correcto. 
+        // En estadísticas a veces viene como idContenido, idArtista o id.
+        const id = item.idContenido || item.idArtista || item.id;
+        
+        console.log(`Navegando a ${tipo} con ID: ${id}`);
+
+        let itemCompleto = item; // Por defecto usamos lo que tenemos
+
+        // 2. Si es ÁLBUM o CANCIÓN, pedimos los datos completos (Igual que en ProductoCard)
+        if (tipo === 'album' || tipo === 'cancion') {
+            try {
+                // Usamos el servicio getElementoById
+                const dataDB = await getElementoById(token, id);
+                
+                if (dataDB) {
+                    console.log("¡Datos completos recuperados!", dataDB);
+                    itemCompleto = dataDB; // Reemplazamos con el objeto full de la BD
+                }
+            } catch (error) {
+                console.error("Error al obtener detalles completos, usando básicos:", error);
+                // Si falla, no pasa nada, seguimos con el item original
+            }
+        }
+
+        // 3. Si es ARTISTA, registramos la búsqueda (Opcional, pero consistente con tu Catálogo)
         if (tipo === 'artista') {
-            // Ruta definida en tu index.js: <Route path="masInfoPerfil" ... />
-            console.log(`Registrando visita estadísticas: Artista ${id}, Usuario ${idLoggedIn}`);
+            // Nota: Verifica si tienes esta función importada y si quieres contar esto como búsqueda
             registrarBusquedaArtista(token, id, idLoggedIn)
-                .catch(err => console.error("Error background stats:", err));
-            navigate('/masInfoPerfil', { state: { id: id, idArtista: id } }); 
-        } 
-        else if (tipo === 'album') {
-            // Ruta definida en tu index.js: <Route path="masInfoAlbum" ... />
-            navigate('/masInfoAlbum', { state: { id: id } });
-        } 
-        else if (tipo === 'cancion') {
-            // Ruta definida en tu index.js: <Route path="masInfo" ... />
-            navigate('/masInfo', { state: { id: id } });
+                .catch(err => console.error("Error registrando visita:", err));
+        }
+
+        // 4. Determinar la ruta exacta (Mapping de rutas)
+        let ruta = '';
+        if (tipo === 'album') ruta = '/masInfoAlbum';
+        else if (tipo === 'cancion') ruta = '/masInfo'; // Para canciones es /masInfo a secas
+        else if (tipo === 'artista') ruta = '/masInfoPerfil';
+
+        // 5. Navegar pasando el itemCompleto en el state
+        // Nota: Añadimos el ID a la URL también para que quede limpia (ej: /masInfo/5)
+        // si tus rutas en App.js esperan parametro, si no, quita `/${id}`
+        if (ruta) {
+             // Si tus rutas en App.js son del tipo "/masInfo/:id", usa esta línea:
+             navigate(`${ruta}`, { state: itemCompleto });
+             
+             // Si tus rutas son solo "/masInfo" y dependen 100% del state, usa esta:
+             // navigate(ruta, { state: itemCompleto });
         }
     };
 
@@ -194,11 +290,11 @@ function Estadisticas() {
                         <span className="badge-stats">Mensual</span>
                     </div>
                     <div className="ranking-list">
-                        {topArtistas.slice(0, 5).map((artista, idx) => (
+                        {topArtistas.map((artista, idx) => (
                             <div 
                                 key={idx} 
                                 className={`rank-item rank-${idx + 1}`}
-                                onClick={() => handleNavigation('artista', artista.nombreArtistico)}
+                                onClick={() => handleNavigation('artista', artista)}
                                 style={clickableStyle}
                                 title="Ver Perfil"
                             >
@@ -231,7 +327,7 @@ function Estadisticas() {
                             <div 
                                 key={idx} 
                                 className="rank-item"
-                                onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item)}
                                 style={clickableStyle}
                             >
                                 <div className="rank-pos">{renderRankIcon(idx)}</div>
@@ -282,14 +378,18 @@ function Estadisticas() {
                                 <li key={idx} className="community-item">
                                     <div className="com-rank">#{idx + 1}</div>
                                     <div className="com-details">
-                                        <strong>ID: {com.idComunidad}</strong>
+                                        {/* AQUI EL CAMBIO: Usamos com.nombre */}
+                                        <strong className="text-truncate" >
+                                            {com.nombre}
+                                        </strong>
                                         <small>{(com.numMiembros || 0).toLocaleString()} Miembros</small>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                     </div>
-
+                </div>
+                <div className="stat-column d-flex flex-column gap-4">
                     {/* Comunidades (Publicaciones) */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
@@ -300,7 +400,10 @@ function Estadisticas() {
                                 <li key={idx} className="community-item">
                                     <div className="com-rank">#{idx + 1}</div>
                                     <div className="com-details">
-                                        <strong>ID: {com.idComunidad}</strong>
+                                        {/* AQUI EL CAMBIO: Usamos com.nombre */}
+                                        <strong className="text-truncate">
+                                            {com.nombre}
+                                        </strong>
                                         <small>
                                             {(com.numPublicaciones || com.totalPublicaciones || 0).toLocaleString()} Publicaciones
                                         </small> 
@@ -308,6 +411,39 @@ function Estadisticas() {
                                 </li>
                             ))}
                         </ul>
+                    </div>
+                    {/* 6. TOP BÚSQUEDAS */}
+                    <div className="stat-card rating-card">
+                        <div className="card-header-stats">
+                            <h2><i className="fa-solid fa-magnifying-glass"></i> Artistas Más Buscados</h2>
+                        </div>
+                        <div className="ranking-list">
+                            {topBusquedas.map((artista, idx) => (  
+                                <div 
+                                    key={idx} 
+                                    className="rank-item"
+                                    // IMPORTANTE: Pasamos el ID del artista para navegar
+                                    onClick={() => handleNavigation('artista', artista)}
+                                    style={clickableStyle}
+                                >
+                                    {/* Círculo con el número de posición */}
+                                    <div className="rank-pos-circle orange">{idx + 1}</div>
+                                    
+                                    <div className="rank-info">
+                                        {/* Ahora sí pintamos el nombre del artista */}
+                                        <span className="item-name">
+                                            {artista.nombreArtistico}
+                                        </span>
+                                    </div>
+
+                                    <div className="rank-metric">
+                                        <i className="fa-solid fa-arrow-trend-up me-2 text-muted"></i>
+                                        {/* Mostramos el número de búsquedas */}
+                                        {(artista.numBusquedas || 0).toLocaleString()}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
@@ -324,7 +460,7 @@ function Estadisticas() {
                                 <div 
                                     key={idx} 
                                     className="rank-item"
-                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item)}
                                     style={clickableStyle}
                                 >
                                     <div className="rank-pos-circle">{idx + 1}</div>
@@ -350,7 +486,8 @@ function Estadisticas() {
                             ))}
                         </div>
                     </div>
-
+                </div>
+                <div className="stat-column d-flex flex-column gap-4">
                     {/* 5. MÁS COMENTADOS */}
                     <div className="stat-card rating-card">
                         <div className="card-header-stats">
@@ -361,7 +498,7 @@ function Estadisticas() {
                                 <div 
                                     key={idx} 
                                     className="rank-item"
-                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item.idContenido)}
+                                    onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item)}
                                     style={clickableStyle}
                                 >
                                     <div className="rank-pos-circle orange">{idx + 1}</div>
@@ -379,9 +516,7 @@ function Estadisticas() {
                             ))}
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
     );
