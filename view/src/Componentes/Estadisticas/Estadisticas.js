@@ -13,12 +13,13 @@ import {
 
 import { getArtistaById } from '../../ApiServices/ArtistasService';
 import { getElementoById } from '../../ApiServices/ElementosService';
+import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService';
 
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga';
 import './Estadisticas.css';
 
 function Estadisticas() {
-    const { token } = useContext(UsuarioContext);
+    const { token, idLoggedIn } = useContext(UsuarioContext);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
     
@@ -39,35 +40,56 @@ function Estadisticas() {
             try {
                 // 1. Artistas
                 const artistasData = await getRankingArtistasOyentes(); 
+                console.log("--- 1. DATOS ARTISTAS CARGADOS ---");
+                console.log(artistasData);
 
                 // 2. Resto de llamadas
                 const [
                     ventasData, generosData, comunidadesMiembrosData, 
                     valoracionData, comentariosData, comunidadesPublisData 
                 ] = await Promise.all([
-                    getTopContenidosVentas(5),
-                    getTopGeneros(5),
+                    getTopContenidosVentas(),
+                    getTopGeneros(),
                     getRankingComunidadesMiembros(),
-                    getTopContenidosValoracion(5),
-                    getTopContenidosComentarios(5),      
+                    getTopContenidosValoracion(),
+                    getTopContenidosComentarios(),      
                     getRankingComunidadesPublicaciones() 
                 ]);
 
-                // --- PROCESAR ARTISTAS ---
-                if (artistasData.length > 0) {
-                    const promesas = artistasData.map(async (artistaBD) => {
-                        try {
-                            const detalles = await getArtistaById(token, artistaBD.idArtista);
-                            return {
-                                ...artistaBD,
-                                nombreArtistico: detalles?.nombreusuario || `Artista ${artistaBD.idArtista}`
-                            };
-                        } catch (error) {
-                            return { ...artistaBD, nombreArtistico: `Artista ID ${artistaBD.idArtista}` };
-                        }
-                    });
+
+                    // --- PROCESAR ARTISTAS (BLOQUE CORREGIDO) ---
+                    if (artistasData.length > 0) {
+                        const promesas = artistasData.map(async (artistaBD) => {
+
+                    // Convertimos el ID con un nombre claro
+                    const artistId = Number(artistaBD.idArtista);
+
+                    // Llamamos al backend
+                    try {
+                        console.log(`🔍 Consultando detalles para el artista con ID: ${artistId}`);
+
+                        const detalles = await getArtistaById(artistId);
+
+                        return {
+                            ...artistaBD,
+                            nombreArtistico:
+                                detalles.nombreusuario ||
+                                detalles.nombre ||
+                                `Artista ${artistId}`
+                        };
+
+                    } catch (error) {
+                        console.error(`❌ Error consultando ID ${artistId}`, error);
+
+                        return {
+                            ...artistaBD,
+                            nombreArtistico: `Artista ${artistId}`
+                        };
+                    }
+                });
+
                     setTopArtistas(await Promise.all(promesas));
-                } 
+                }
 
                 // --- HELPER PARA ENRIQUECER CONTENIDOS ---
                 const enriquecerContenido = async (lista) => {
@@ -75,10 +97,25 @@ function Estadisticas() {
                     const promesas = lista.map(async (item) => {
                         try {
                             const detalle = await getElementoById(token, item.idContenido);
+                            
+                            // --- CORRECCIÓN AQUÍ ---
+                            // Verificamos si 'detalle.artista' es un objeto y sacamos el nombre
+                            let nombreDelArtista = null;
+
+                            if (detalle.nombreArtista) {
+                                nombreDelArtista = detalle.nombreArtista; // Si ya viene el texto plano
+                            } else if (detalle.artista && typeof detalle.artista === 'object') {
+                                // Si es un objeto, sacamos el nombreusuario o nombreArtistico
+                                nombreDelArtista = detalle.artista.nombreArtistico || detalle.artista.nombreusuario || "Artista Desconocido";
+                            } else if (typeof detalle.artista === 'string') {
+                                nombreDelArtista = detalle.artista;
+                            }
+                            // -----------------------
+
                             return {
                                 ...item,
                                 titulo: detalle.nombre || detalle.nombreAudio || detalle.titulo || `Elemento ${item.idContenido}`,
-                                artista: detalle.nombreArtista || detalle.artista || null
+                                artista: nombreDelArtista // Ahora seguro que es un texto o null
                             };
                         } catch (error) {
                             return { ...item, titulo: `Contenido ID ${item.idContenido} (Sin info)` };
@@ -86,7 +123,6 @@ function Estadisticas() {
                     });
                     return await Promise.all(promesas);
                 };
-
                 // --- PROCESAR RESTO DE LISTAS ---
                 setTopVentas(await enriquecerContenido(ventasData));
                 setTopValoracion(await enriquecerContenido(valoracionData));
@@ -115,6 +151,9 @@ function Estadisticas() {
         
         if (tipo === 'artista') {
             // Ruta definida en tu index.js: <Route path="masInfoPerfil" ... />
+            console.log(`Registrando visita estadísticas: Artista ${id}, Usuario ${idLoggedIn}`);
+            registrarBusquedaArtista(token, id, idLoggedIn)
+                .catch(err => console.error("Error background stats:", err));
             navigate('/masInfoPerfil', { state: { id: id, idArtista: id } }); 
         } 
         else if (tipo === 'album') {
@@ -159,7 +198,7 @@ function Estadisticas() {
                             <div 
                                 key={idx} 
                                 className={`rank-item rank-${idx + 1}`}
-                                onClick={() => handleNavigation('artista', artista.idArtista)}
+                                onClick={() => handleNavigation('artista', artista.nombreArtistico)}
                                 style={clickableStyle}
                                 title="Ver Perfil"
                             >
