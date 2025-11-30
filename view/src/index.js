@@ -24,6 +24,8 @@ import Soporte from './Componentes/Soporte/Soporte.js';
 import Estadisticas from './Componentes/Estadisticas/Estadisticas.js';
 import Prueba from './Componentes/prueba.js';
 import CrearElem from './Componentes/CrearElem/CrearElem.js';
+import Comunidades from './Componentes/Comunidad/Comunidad.js';
+import MasInfoComunidades from './Componentes/MasInfoComunidad/MasInfoComunidad.js';
 
 const Layout = () => {
   const [usuario, setUsuario] = useState("a");
@@ -72,6 +74,8 @@ function AppRoutes() {
         <Route path="estadisticas" element={<Estadisticas />} />
         <Route path='prueba' element={<Prueba />} />
         <Route path='crearElem' element={<CrearElem />} />
+        <Route path='comunidades' element={<Comunidades />} />
+        <Route path='masInfoComunidad' element={<MasInfoComunidades />} />
         {/* Rutas protegidas, sin sesion nada */}
         {isLoggedIn ? (
           <>

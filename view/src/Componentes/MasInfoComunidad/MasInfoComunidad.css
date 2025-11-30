@@ -1,0 +1,160 @@
+#masInfoComunidad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2em;
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* --- CABECERA --- */
+.comunidad-header-info {
+    width: 100%;
+    max-width: 1000px;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.titulo-comunidad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: var(--morado-color);
+}
+
+.imagen-detalle {
+    width: 100%;
+    max-width: 600px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 1rem;
+    margin: 1rem 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.desc-comunidad p {
+    font-size: 1.1rem;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.datos-extra {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.badge-artista {
+    background-color: var(--morado-color);
+    color: white;
+    padding: 0.3em 0.8em;
+    border-radius: 1em;
+}
+
+.fecha-creacion {
+    background-color: #f3ebff;
+    padding: 0.3em 0.8em;
+    border-radius: 1em;
+    color: var(--morado-color);
+}
+
+/* --- BOTÓN UNIRSE --- */
+.btnUnirse {
+    font-size: 0.9rem;
+    padding: 0.4em 1em;
+    border-radius: 0.5em;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.btnUnirse:hover {
+    transform: scale(1.05);
+}
+
+/* --- GRID DE CONTENIDO --- */
+.grid-contenido {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 2 partes Publicaciones, 1 parte Miembros */
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+}
+
+@media (max-width: 768px) {
+    .grid-contenido {
+        grid-template-columns: 1fr; /* En móvil, una debajo de otra */
+    }
+}
+
+/* --- PUBLICACIONES --- */
+.seccion-publicaciones h3, .seccion-miembros h3 {
+    color: var(--morado-color);
+    border-bottom: 2px solid #f3ebff;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.publicacion-card {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 0.8rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+}
+
+.publicacion-card:hover {
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.publicacion-card h4 {
+    margin-top: 0;
+    color: #333;
+}
+
+.pub-contenido {
+    color: #666;
+    line-height: 1.5;
+}
+
+.pub-footer {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #999;
+}
+
+/* --- MIEMBROS --- */
+.lista-miembros {
+    list-style: none;
+    padding: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.miembro-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.miembro-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f3ebff;
+}
