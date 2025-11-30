@@ -10,26 +10,26 @@ import axios from 'axios'; // Llamadas a la API sin emplear fetch
  */
 export async function getElementos(token) {
     try {
-      const response = await axios.get(`${BASE_URL_CONTENIDO}/contenidos`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        responseType: "text", // <- clave aquí
-      });
-  
-      const rawJson = response.data;
-      console.log("JSON crudo (string):", rawJson);
-  
-      // Parseo manual del JSON, si lo necesitás como objeto
-      const parsed = JSON.parse(rawJson);
-      return parsed;
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/contenidos`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            responseType: "text", // <- clave aquí
+        });
+
+        const rawJson = response.data;
+        console.log("JSON crudo (string):", rawJson);
+
+        // Parseo manual del JSON, si lo necesitás como objeto
+        const parsed = JSON.parse(rawJson);
+        return parsed;
     } catch (error) {
-      console.error("Error:", error);
-      throw error;
+        console.error("Error:", error);
+        throw error;
     }
-  }
-  
-  
+}
+
+
 /**
  * Obtiene un elemento según el ID dado.
  * 
@@ -84,10 +84,10 @@ export async function getElementosArtistas(token, id) {
  */
 export async function putElemento(token, elementoData) {
     try {
-        const response = await axios.put(`${BASE_URL_CONTENIDO}/elementos`,  
+        const response = await axios.put(`${BASE_URL_CONTENIDO}/elementos`,
             null,
             {
-                elementoData ,
+                elementoData,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -110,7 +110,7 @@ export async function putElemento(token, elementoData) {
  */
 export async function postElemento(token, elementoData) {
     try {
-        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`,
             elementoData,
             {
                 headers: {
@@ -135,10 +135,10 @@ export async function postElemento(token, elementoData) {
  */
 export async function postElementoParam(token, elementoData) {
     try {
-        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/elementos`,
             null,
             {
-                params: elementoData ,
+                params: elementoData,
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -229,7 +229,7 @@ export async function getElementoPropios(token, id) {
  * @returns {Promise<Object[]>} Lista de elementos filtrados en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function getElementoPropiosFiltra(token,id, filtro) {
+export async function getElementoPropiosFiltra(token, id, filtro) {
     try {
         const response = await axios.get(`${BASE_URL_USUARIOS}/usuario_tiene_elemento?idusuario=${id}`, {
             headers: {
@@ -253,7 +253,7 @@ export async function getElementoPropiosFiltra(token,id, filtro) {
  * @returns {Promise<Object[]>} Lista de elementos filtrados en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function postElementosTiene(token,idusuario, idelemento) {
+export async function postElementosTiene(token, idusuario, idelemento) {
 
     console.log("tokenUs:", token);
     console.log("idUsr:", idusuario);
@@ -267,21 +267,21 @@ export async function postElementosTiene(token,idusuario, idelemento) {
     console.log("Request Body JSON:", requestBody);
 
     try {
-        
+
         const response = await axios.post(
-            `${BASE_URL_CONTENIDO}/usuario_tiene_elemento`, 
+            `${BASE_URL_CONTENIDO}/usuario_tiene_elemento`,
             requestBody,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`,  
-                    'Content-Type': 'application/json', 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 }
             }
         );
-        return response.data;  
+        return response.data;
     } catch (error) {
         console.error("Error al agregar el elemento:", error);
-        throw new Error('Error al agregar el elemento: ' + error.message); 
+        throw new Error('Error al agregar el elemento: ' + error.message);
     }
 }
 
@@ -294,7 +294,7 @@ export async function postElementosTiene(token,idusuario, idelemento) {
  * @returns {Promise<Object>} Lista de elementos en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function getDeseosById(token,id) {
+export async function getDeseosById(token, id) {
     try {
         const response = await axios.get(`${BASE_URL_USUARIOS}/usuario_desea_elemento?idusuario=${id}`, {
             headers: {
@@ -316,9 +316,9 @@ export async function getDeseosById(token,id) {
  * @returns {Promise<Object>} Informacion de la accion formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function postDeseo(token,relacinoData) {
+export async function postDeseo(token, relacinoData) {
     try {
-        const response = await axios.post(`${BASE_URL_USUARIOS}/usuario_desea_elemento`, 
+        const response = await axios.post(`${BASE_URL_USUARIOS}/usuario_desea_elemento`,
             relacinoData,
             {
                 headers: {
@@ -342,7 +342,7 @@ export async function postDeseo(token,relacinoData) {
  * @returns {Promise<Object>} Informacion de la accion formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function deleteDeseo(token,id,idelem) {
+export async function deleteDeseo(token, id, idelem) {
     try {
         const response = await axios.delete(`${BASE_URL_USUARIOS}/usuario_desea_elemento?idusuario=${id}&&idelemento=${idelem}`,
             {
@@ -360,16 +360,16 @@ export async function deleteDeseo(token,id,idelem) {
 
 // VALORA
 /**
- * Obtiene los elementos valorados del usuario segun id dado.
+ * Obtiene los elementos valorados del usuario segun id dado. //ESTO NO EXITE 
  * 
  * @param {string} token - Token de verificación de sesión (JWT).
  * @param {string} id - Identificador del usuario.
  * @returns {Promise<Object>} Lista de elementos en formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function getValoracionesById(token,id) {
+export async function getValoracionesById(token, id) {
     try {
-        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?id=${id}`, {
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuarioValoraElem?id=${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`, // Enviamos el token 
             },
@@ -390,13 +390,13 @@ export async function getValoracionesById(token,id) {
  */
 export async function getValoracionesByIdelem(idelem) {
     try {
-      const response = await axios.get(`${BASE_URL_CONTENIDO}/usuarioValoraElem?idelemento=${idelem}`);
-      return response.data;
+        const response = await axios.get(`${BASE_URL_CONTENIDO}/usuarioValoraElem?idelemento=${idelem}`);
+        return response.data;
     } catch (error) {
-      console.error("Error:", error);
-      throw error;
+        console.error("Error:", error);
+        throw error;
     }
-  }
+}
 
 /**
  * Añade una nueva relacion de usuario y elemento como valorado
@@ -406,9 +406,9 @@ export async function getValoracionesByIdelem(idelem) {
  * @returns {Promise<Object>} Informacion de la accion formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function postValora(token,relacinoData) {
+export async function postValora(token, relacinoData) {
     try {
-        const response = await axios.post(`${BASE_URL_CONTENIDO}/usuario_valora_elemento`, 
+        const response = await axios.post(`${BASE_URL_CONTENIDO}/usuarioValoraElem`,
             relacinoData,
             {
                 headers: {
@@ -432,9 +432,9 @@ export async function postValora(token,relacinoData) {
  * @returns {Promise<Object>} Informacion de la accion formato JSON.
  * @throws {Error} Si ocurre un error en la solicitud HTTP.
  */
-export async function deleteValora(token,id,idelem) {
+export async function deleteValora(token, id, idelem) {
     try {
-        const response = await axios.delete(`${BASE_URL_CONTENIDO}/usuario_valora_elemento?id=${id}&&idelem=${idelem}`,
+        const response = await axios.delete(`${BASE_URL_CONTENIDO}/usuarioValoraElem?id=${id}&&idelem=${idelem}`,
             {
                 headers: {
                     Authorization: `Bearer ${token}`, // Enviamos el token

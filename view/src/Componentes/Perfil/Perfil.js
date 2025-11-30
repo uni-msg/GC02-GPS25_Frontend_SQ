@@ -10,29 +10,29 @@ import Carga from '../Utiles/PantallaCarga/PantallaCarga.js';
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
 import '../InicioSesion/firebaseConfig.js';
 import { getAuth, signOut } from "firebase/auth";
-import { AMAZON_URL_FOTO, AMAZON_URL_DEFAULT } from '../../config.js';
+import { URL_FOTO, CLOUD_URL_DEFAULT } from '../../config.js';
 
-import {getDeseosById , getElementoPropios} from "./../../ApiServices/ElementosService.js"
-import {getFavoritosById, putUsuario } from "./../../ApiServices/UsuarioService.js"
+import { getDeseosById, getElementoPropios } from "./../../ApiServices/ElementosService.js"
+import { getFavoritosById, putUsuario } from "./../../ApiServices/UsuarioService.js"
 
-function Perfil({idMenu}) {
+function Perfil({ idMenu }) {
     const [menuPerfilActivo, setMenuPerfilActivo] = useState(1);
     const [masDatos, setMasDatos] = useState(true);
     const [editar, setEditar] = useState(false);
-    useEffect(()=>{
+    useEffect(() => {
         setMenuPerfilActivo(idMenu)
-    },[idMenu])
+    }, [idMenu])
 
     //para cerrar sesión
     const [mostrarModal, setMostrarModal] = useState(false);
     const auth = getAuth();
     const navigate = useNavigate();
     //datos del usuarip
-    const { 
+    const {
         token,
         idLoggedIn, setIdLoggedIn,
         setIsLoggedIn,
-        contrasenia, 
+        contrasenia,
         nombreUsuario, setNombreUsuario,
         correo,
         descripcion, setDescripcion,
@@ -53,14 +53,14 @@ function Perfil({idMenu}) {
         console.log("DATOS :", formData);
         setEditar(false); // cierra edición después de guardar
 
-        try{
-            if (formData.descripcion !== descripcion || formData.fotoAmazon !== fotoAmazon || formData.nombreusuario !== nombreUsuario){
+        try {
+            if (formData.descripcion !== descripcion || formData.fotoAmazon !== fotoAmazon || formData.nombreusuario !== nombreUsuario) {
                 //put de usuario
-                const elementoData = { 
+                const elementoData = {
                     ...formData
                 };
-                const result = await putUsuario(token,idLoggedIn,elementoData)
-                
+                const result = await putUsuario(token, idLoggedIn, elementoData)
+
                 //se pudo realizar, set de esos valores
                 setDescripcion(formData.descripcion)
                 setFotoAmazon(formData.fotoAmazon)
@@ -69,7 +69,7 @@ function Perfil({idMenu}) {
             } else {
                 console.log("No hay cambios que guardar.");
             }
-        }catch{
+        } catch {
             alert("error al envio de datos")
         }
     };
@@ -78,10 +78,10 @@ function Perfil({idMenu}) {
         try {
             await signOut(auth);
             console.log("Sesión cerrada");
-            setIdLoggedIn(null); 
-            setIsLoggedIn(false);   
+            setIdLoggedIn(null);
+            setIsLoggedIn(false);
             setMostrarModal(false); // cerrar el modal después de cerrar sesión
-            navigate("/");  
+            navigate("/");
         } catch (error) {
             console.error("Error al cerrar sesión:", error.message);
         }
@@ -89,9 +89,9 @@ function Perfil({idMenu}) {
 
     // MANEJO DE ELMENTOS PROPIOS DEL PERFIL, LOS TRAIGO Y YA SE VERA QUE SE MOSTRARA, SE MANDARA AL ELEMENTO Y ESTE LO MANEJA PARA MAS REUTILIZACION
     // SE REALIZARA UNA LLAMADA PRINCIPAL CON USEEFFECT PARA TRAER TODOS LOS DATOS
-    const [elementosTiene, setElementosTiene] = useState([]); 
-    const [elementosDeseo, setElementosDeseo] = useState([]); 
-    const [artFav, setArtFav] = useState([]); 
+    const [elementosTiene, setElementosTiene] = useState([]);
+    const [elementosDeseo, setElementosDeseo] = useState([]);
+    const [artFav, setArtFav] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         const fetchData = async () => {
@@ -107,7 +107,7 @@ function Perfil({idMenu}) {
                 setArtFav(art);
             } catch (error) {
                 console.error("Error al cargar datos:", error);
-            }finally{
+            } finally {
                 //aqui ya se podria mostrar lo que sea, traemos los datos y mostramos una pantalla de carga
                 setLoading(false);
             }
@@ -124,13 +124,13 @@ function Perfil({idMenu}) {
             <div id='headerPerfil'>
                 <form id='cardPerfil' className="card" onSubmit={actualizoDatos}>
                     <div id="fotoPerfilName">
-                        <img src={formData.fotoAmazon && formData.fotoAmazon !== "null"? `${AMAZON_URL_FOTO}${formData.fotoAmazon}`: `${AMAZON_URL_DEFAULT}` } className={`card-img-top ${esArtista?"bordeArt":""}  ${esNovedad?"bordeNovedad":""}`} alt="foto de perfil" />
+                        <img src={formData.fotoAmazon && formData.fotoAmazon !== "null" ? `${URL_FOTO}${formData.fotoAmazon}` : `${CLOUD_URL_DEFAULT}`} className={`card-img-top ${esArtista ? "bordeArt" : ""}  ${esNovedad ? "bordeNovedad" : ""}`} alt="foto de perfil" />
                         <div>
                             <label htmlFor="fname"> User Name </label>
                             <input type="text" id="fname" name="fname" value={formData.nombreusuario} onChange={(e) => setFormData({ ...formData, nombreusuario: e.target.value })} disabled={!editar} />
                         </div>
                         <>
-                            {!editar && <button type="button" onClick={() => (editar) ?setEditar(false) : setEditar(true)}> Editar </button> }
+                            {!editar && <button type="button" onClick={() => (editar) ? setEditar(false) : setEditar(true)}> Editar </button>}
                             {editar && <button type="submit">Guardar</button>}
                         </>
                     </div>
@@ -138,7 +138,7 @@ function Perfil({idMenu}) {
                         <label htmlFor="descDatos"> Descripcion </label>
                         <textarea type="text" id="descDatos" name="descDatos" maxLength={256}
                             value={formData.descripcion} onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-                        disabled={!editar} />
+                            disabled={!editar} />
                     </div>
                     <div id="correoCont" className={` ${(masDatos) ? "oculto" : ""}`}>
                         <label for="correo"> Correo </label>
@@ -158,33 +158,33 @@ function Perfil({idMenu}) {
                         </div>
                         <i className={`fa-solid fa-credit-card disabled `}></i>
                     </div>
-                    { esArtista &&
-                    <>
-                        <div id="oyenCont" className={` ${(masDatos) ? "oculto" : ""}`}>
-                            <label htmlFor="oyentes"> Oyentes </label>
-                            <input type="number" id="oyentes" name="oyentes" value={oyentes} disabled/>
-                        </div>
-                        <div id='valoracion' className={` ${(masDatos) ? "oculto" : ""}`}>
-                            {Array.from({ length: 5 }, (_, i) => (
-                                <i
-                                key={i}
-                                className={
-                                    i < valoracion
-                                    ? "bi bi-file-music-fill text-info my-icon" // Icono lleno
-                                    : "bi bi-file-music text-info my-icon"      // Icono vacío
-                                }
-                                />
-                            ))}
-                        </div>
-                    </>}
+                    {esArtista &&
+                        <>
+                            <div id="oyenCont" className={` ${(masDatos) ? "oculto" : ""}`}>
+                                <label htmlFor="oyentes"> Oyentes </label>
+                                <input type="number" id="oyentes" name="oyentes" value={oyentes} disabled />
+                            </div>
+                            <div id='valoracion' className={` ${(masDatos) ? "oculto" : ""}`}>
+                                {Array.from({ length: 5 }, (_, i) => (
+                                    <i
+                                        key={i}
+                                        className={
+                                            i < valoracion
+                                                ? "bi bi-file-music-fill text-info my-icon" // Icono lleno
+                                                : "bi bi-file-music text-info my-icon"      // Icono vacío
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        </>}
                     <button id="masInfo" type="button"
-                        className={` ${(!masDatos)? "masInfoActivo" : ""}`}
-                        onClick={() => {(masDatos)?setMasDatos(false):setMasDatos(true)}}
+                        className={` ${(!masDatos) ? "masInfoActivo" : ""}`}
+                        onClick={() => { (masDatos) ? setMasDatos(false) : setMasDatos(true) }}
                     >
                         Mas Datos <i className="fa-solid fa-arrow-down"></i>
                     </button>
                 </form>
-                <button type="button" className="btn btn-danger ms-auto"  onClick={() => setMostrarModal(true)}> Cerrar Sesion </button>
+                <button type="button" className="btn btn-danger ms-auto" onClick={() => setMostrarModal(true)}> Cerrar Sesion </button>
             </div>
 
             <div id='menuPerfil' >
@@ -197,28 +197,28 @@ function Perfil({idMenu}) {
 
                         <div className="collapse navbar-collapse" id="navbarText">
                             <ul className="navbar-nav ms-auto mb-2 mb-lg-0 ">
-                                <li 
-                                    className={`nav-link ${menuPerfilActivo === 1 ? "menuPerfilActivo" : ""}`} 
+                                <li
+                                    className={`nav-link ${menuPerfilActivo === 1 ? "menuPerfilActivo" : ""}`}
                                     onClick={() => { setMenuPerfilActivo(1) }}
                                 >
                                     <a className="nav-link" >Mis canciones</a>
                                 </li>
-                                <li 
-                                    className={`nav-link ${menuPerfilActivo === 2 ? "menuPerfilActivo" : ""}`} 
+                                <li
+                                    className={`nav-link ${menuPerfilActivo === 2 ? "menuPerfilActivo" : ""}`}
                                     onClick={() => { setMenuPerfilActivo(2) }}
                                 >
                                     <a className="nav-link" >Lista de deseos</a>
                                 </li>
-                                <li 
-                                    className={`nav-link ${menuPerfilActivo === 3 ? "menuPerfilActivo" : ""}`} 
-                                    onClick={() => {setMenuPerfilActivo(3)}}
+                                <li
+                                    className={`nav-link ${menuPerfilActivo === 3 ? "menuPerfilActivo" : ""}`}
+                                    onClick={() => { setMenuPerfilActivo(3) }}
                                 >
                                     <a className="nav-link" >Artistas favoritos</a>
                                 </li>
                                 {
                                     esArtista &&
-                                    <li 
-                                        className={`nav-link ${menuPerfilActivo === 4 ? "menuPerfilActivo" : ""}`} 
+                                    <li
+                                        className={`nav-link ${menuPerfilActivo === 4 ? "menuPerfilActivo" : ""}`}
                                         onClick={() => { setMenuPerfilActivo(4) }}
                                     >
                                         <a className="nav-link" >Crear canciones</a>
@@ -230,11 +230,11 @@ function Perfil({idMenu}) {
                     </div>
                 </nav>
                 {
-                    loading?
+                    loading ?
                         <Carga />
-                    :
+                        :
                         <div id={`${menuPerfilActivo === 4 ? "crearElem" : "listaElemen"}`}>
-                            {menuPerfilActivo === 1 && <Lista elementosDatos={elementosTiene} titulo='Tiene' descarga={true}/>}
+                            {menuPerfilActivo === 1 && <Lista elementosDatos={elementosTiene} titulo='Tiene' descarga={true} />}
                             {menuPerfilActivo === 2 && <Lista elementosDatos={elementosDeseo} titulo='Deseos' />}
                             {menuPerfilActivo === 3 && <Lista elementosDatos={artFav} titulo='Artistas Favortitos' />}
                             {menuPerfilActivo === 4 && <ManejadorElem />}
