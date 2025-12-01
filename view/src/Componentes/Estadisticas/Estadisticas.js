@@ -15,6 +15,7 @@ import {
 import { getArtistaById } from '../../ApiServices/ArtistasService';
 import { getElementoById } from '../../ApiServices/ElementosService';
 import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService';
+// Asegúrate de que esta importación sea correcta según tu estructura
 import { getComunidadById } from '../../ApiServices/ComunidadService';
 
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga';
@@ -29,7 +30,7 @@ function Estadisticas() {
     const [topArtistas, setTopArtistas] = useState([]);
     const [topVentas, setTopVentas] = useState([]);
     const [topGeneros, setTopGeneros] = useState([]);
-    const [topComunidades, setTopComunidades] = useState([]);      
+    const [topComunidades, setTopComunidades] = useState([]);       
     const [topComunidadesPublis, setTopComunidadesPublis] = useState([]); 
     const [topValoracion, setTopValoracion] = useState([]);
     const [topComentados, setTopComentados] = useState([]);   
@@ -43,9 +44,7 @@ function Estadisticas() {
             try {
                 // 1. Artistas
                 const artistasData = await getRankingArtistasOyentes(); 
-                console.log("--- 1. DATOS ARTISTAS CARGADOS ---");
-                console.log(artistasData);
-
+                
                 // 2. Resto de llamadas
                 const [
                     ventasData, generosData, comunidadesMiembrosData, 
@@ -60,38 +59,23 @@ function Estadisticas() {
                     getTopArtistasBusquedas()
                 ]);
 
-
-                    // --- PROCESAR ARTISTAS (BLOQUE CORREGIDO) ---
-                    if (artistasData.length > 0) {
-                        const promesas = artistasData.map(async (artistaBD) => {
-
-                    // Convertimos el ID con un nombre claro
-                    const artistId = Number(artistaBD.idArtista);
-
-                    // Llamamos al backend
-                    try {
-                        console.log(`🔍 Consultando detalles para el artista con ID: ${artistId}`);
-
-                        const detalles = await getArtistaById(artistId);
-
-                        return {
-                            ...artistaBD,
-                            nombreArtistico:
-                                detalles.nombreusuario ||
-                                detalles.nombre ||
-                                `Artista ${artistId}`
-                        };
-
-                    } catch (error) {
-                        console.error(`❌ Error consultando ID ${artistId}`, error);
-
-                        return {
-                            ...artistaBD,
-                            nombreArtistico: `Artista ${artistId}`
-                        };
-                    }
-                });
-
+                // --- PROCESAR ARTISTAS ---
+                if (artistasData.length > 0) {
+                    const promesas = artistasData.map(async (artistaBD) => {
+                        const artistId = Number(artistaBD.idArtista);
+                        try {
+                            const detalles = await getArtistaById(artistId);
+                            return {
+                                ...artistaBD,
+                                nombreArtistico: detalles.nombreusuario || detalles.nombre || `Artista ${artistId}`
+                            };
+                        } catch (error) {
+                            return {
+                                ...artistaBD,
+                                nombreArtistico: `Artista ${artistId}`
+                            };
+                        }
+                    });
                     setTopArtistas(await Promise.all(promesas));
                 }
 
@@ -101,25 +85,20 @@ function Estadisticas() {
                     const promesas = lista.map(async (item) => {
                         try {
                             const detalle = await getElementoById(token, item.idContenido);
-                            
-                            // --- CORRECCIÓN AQUÍ ---
-                            // Verificamos si 'detalle.artista' es un objeto y sacamos el nombre
                             let nombreDelArtista = null;
 
                             if (detalle.nombreArtista) {
-                                nombreDelArtista = detalle.nombreArtista; // Si ya viene el texto plano
+                                nombreDelArtista = detalle.nombreArtista; 
                             } else if (detalle.artista && typeof detalle.artista === 'object') {
-                                // Si es un objeto, sacamos el nombreusuario o nombreArtistico
                                 nombreDelArtista = detalle.artista.nombreArtistico || detalle.artista.nombreusuario || "Artista Desconocido";
                             } else if (typeof detalle.artista === 'string') {
                                 nombreDelArtista = detalle.artista;
                             }
-                            // -----------------------
 
                             return {
                                 ...item,
                                 titulo: detalle.nombre || detalle.nombreAudio || detalle.titulo || `Elemento ${item.idContenido}`,
-                                artista: nombreDelArtista // Ahora seguro que es un texto o null
+                                artista: nombreDelArtista
                             };
                         } catch (error) {
                             return { ...item, titulo: `Contenido ID ${item.idContenido} (Sin info)` };
@@ -128,20 +107,18 @@ function Estadisticas() {
                     return await Promise.all(promesas);
                 };
 
-                // Hacemos lo mismo que arriba: convertir IDs en Nombres
+                // --- PROCESAR BÚSQUEDAS ---
                 const rawBusquedas = topBusquedasData.data || topBusquedasData || [];
                 if (rawBusquedas.length > 0) {
                     const promesasBusquedas = rawBusquedas.map(async (item) => {
-                        const artistId = Number(item.idArtista); // Aseguramos que sea número
+                        const artistId = Number(item.idArtista);
                         try {
-                            // Reutilizamos el servicio de buscar por ID
                             const detalles = await getArtistaById(artistId);
                             return {
                                 ...item,
                                 nombreArtistico: detalles.nombreusuario || detalles.nombre || `Artista ${artistId}`
                             };
                         } catch (error) {
-                            console.error(`Error cargando artista búsqueda ${artistId}`, error);
                             return { ...item, nombreArtistico: `Artista ${artistId}` };
                         }
                     });
@@ -150,23 +127,20 @@ function Estadisticas() {
                     setTopBusquedas([]);
                 }
 
-                // --- C. HELPER PARA COMUNIDADES (NUEVO) ---
+                // --- C. HELPER PARA COMUNIDADES ---
                 const enriquecerComunidades = async (lista) => {
-                    // 1. Ver qué lista bruta recibimos
                     const datosRaw = lista.data || lista || []; 
-
                     if (!datosRaw.length) return [];
 
                     const promesas = datosRaw.map(async (item) => {
                         try {
-
+                            // Obtenemos el detalle completo
                             const detalle = await getComunidadById(item.idComunidad);            
-                            // 3. ¡EL MÁS IMPORTANTE! Ver qué devolvió la API exactamente
-                            console.log(`📦 Respuesta API para ID ${item.idComunidad}:`, detalle);
-
+                            
                             return {
                                 ...item,
-                                // Aquí veremos si coge el nombre o salta al fallback
+                                // Guardamos todo el objeto detalle para tenerlo listo
+                                ...detalle,
                                 nombre: detalle.nombreComunidad || `Comunidad ${item.idComunidad}`
                             };
                         } catch (error) {
@@ -174,28 +148,19 @@ function Estadisticas() {
                             return { ...item, nombre: `Comunidad ${item.idComunidad}` };
                         }
                     });
-
                     return await Promise.all(promesas);
                 };
 
-                // --- PROCESAR Y GUARDAR ESTADOS ---
-
-                // 1. Procesamos Comunidades por Miembros
+                // Procesamos Comunidades
                 setTopComunidades(await enriquecerComunidades(comunidadesMiembrosData));
-
-                // 2. Procesamos Comunidades por Publicaciones
                 setTopComunidadesPublis(await enriquecerComunidades(comunidadesPublisData));
 
-
-                // --- PROCESAR RESTO DE LISTAS ---
+                // Procesamos resto de listas
                 setTopVentas(await enriquecerContenido(ventasData));
                 setTopValoracion(await enriquecerContenido(valoracionData));
                 setTopComentados(await enriquecerContenido(comentariosData));
 
-                // --- GUARDAR DATOS SIMPLES ---
                 setTopGeneros(generosData.data || generosData || []);
-                console.log("Top búsquedas:", topBusquedasData);
-
 
             } catch (error) {
                 console.error("ERROR EN ESTADÍSTICAS:", error);
@@ -208,67 +173,60 @@ function Estadisticas() {
     }, [token]);
 
     // ---------------------------------------------------------
-    //  AQUÍ ESTÁ LA MAGIA DE LA NAVEGACIÓN SEGÚN TUS RUTAS
+    //  NAVEGACIÓN MODIFICADA PARA INCLUIR COMUNIDADES
     // ---------------------------------------------------------
 
     const handleNavigation = async (tipo, item) => {
         
-        // 1. Determinar el ID correcto. 
-        // En estadísticas a veces viene como idContenido, idArtista o id.
-        const id = item.idContenido || item.idArtista || item.id;
+        // Determinar el ID correcto.
+        const id = item.idContenido || item.idArtista || item.idComunidad || item.id;
         
         console.log(`Navegando a ${tipo} con ID: ${id}`);
 
-        let itemCompleto = item; // Por defecto usamos lo que tenemos
-
-        // 2. Si es ÁLBUM o CANCIÓN, pedimos los datos completos (Igual que en ProductoCard)
-        if (tipo === 'album' || tipo === 'cancion') {
-            try {
-                // Usamos el servicio getElementoById
-                const dataDB = await getElementoById(token, id);
-                
-                if (dataDB) {
-                    console.log("¡Datos completos recuperados!", dataDB);
-                    itemCompleto = dataDB; // Reemplazamos con el objeto full de la BD
-                }
-            } catch (error) {
-                console.error("Error al obtener detalles completos, usando básicos:", error);
-                // Si falla, no pasa nada, seguimos con el item original
-            }
-        }
-
-        // 3. Si es ARTISTA, registramos la búsqueda (Opcional, pero consistente con tu Catálogo)
-        if (tipo === 'artista') {
-            // Nota: Verifica si tienes esta función importada y si quieres contar esto como búsqueda
-            try {
-                // Usamos el servicio getElementoById
-                const dataDB = await getArtistaById(id);
-                
-                if (dataDB) {
-                    console.log("¡Datos completos recuperados!", dataDB);
-                    itemCompleto = dataDB; // Reemplazamos con el objeto full de la BD
-                }
-            } catch (error) {
-                console.error("Error al obtener detalles completos, usando básicos:", error);
-                // Si falla, no pasa nada, seguimos con el item original
-            }
-
-            registrarBusquedaArtista(token, id, idLoggedIn)
-                .catch(err => console.error("Error registrando visita:", err));
-        }
-
-        // 4. Determinar la ruta exacta (Mapping de rutas)
+        let itemCompleto = item; 
         let ruta = '';
-        if (tipo === 'album') ruta = '/masInfoAlbum';
-        else if (tipo === 'cancion') ruta = '/masInfo'; // Para canciones es /masInfo a secas
-        else if (tipo === 'artista') ruta = '/masInfoPerfil';
 
-        // 5. Navegar pasando el itemCompleto en el state
-        // Nota: Añadimos el ID a la URL también para que quede limpia (ej: /masInfo/5)
-        // si tus rutas en App.js esperan parametro, si no, quita `/${id}`
+        try {
+            // 1. Caso ÁLBUM / CANCIÓN
+            if (tipo === 'album' || tipo === 'cancion') {
+                const dataDB = await getElementoById(token, id);
+                if (dataDB) itemCompleto = dataDB;
+                
+                ruta = (tipo === 'album') ? '/masInfoAlbum' : '/masInfo';
+            }
+
+            // 2. Caso ARTISTA
+            else if (tipo === 'artista') {
+                const dataDB = await getArtistaById(id);
+                if (dataDB) itemCompleto = dataDB;
+                
+                // Registramos búsqueda
+                registrarBusquedaArtista(token, id, idLoggedIn).catch(err => console.error(err));
+                
+                ruta = '/masInfoPerfil';
+            }
+
+            // 3. NUEVO CASO: COMUNIDAD
+            else if (tipo === 'comunidad') {
+                // Recuperamos el objeto completo usando el servicio que indicaste
+                const dataDB = await getComunidadById(id);
+                if (dataDB) {
+                    console.log("¡Datos de comunidad recuperados!", dataDB);
+                    itemCompleto = dataDB; 
+                }
+                
+                // IMPORTANTE: Cambia '/comunidad' por la ruta que tengas definida en App.js 
+                // para ver una comunidad (ej: '/chat', '/foro', '/detalleComunidad')
+                ruta = '/masInfoComunidad'; 
+            }
+
+        } catch (error) {
+            console.error("Error obteniendo detalles completos para navegación:", error);
+            // Si falla, navegamos con los datos básicos que ya teníamos
+        }
+
+        // Navegar
         if (ruta) {
-             
-             // Si tus rutas son solo "/masInfo" y dependen 100% del state, usa esta:
              navigate(ruta, { state: itemCompleto });
         }
     };
@@ -379,18 +337,22 @@ function Estadisticas() {
                         </div>
                     </div>
 
-                    {/* Comunidades (Miembros) */}
+                    {/* Comunidades (Miembros) - AHORA CLICKABLES */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
                             <h2><i className="fa-solid fa-users"></i> Más Populares</h2>
                         </div>
                         <ul className="community-list">
                             {topComunidades.slice(0, 3).map((com, idx) => (
-                                <li key={idx} className="community-item">
+                                <li 
+                                    key={idx} 
+                                    className="community-item"
+                                    onClick={() => handleNavigation('comunidad', com)} // CLICK AQUI
+                                    style={clickableStyle} 
+                                >
                                     <div className="com-rank">#{idx + 1}</div>
                                     <div className="com-details">
-                                        {/* AQUI EL CAMBIO: Usamos com.nombre */}
-                                        <strong className="text-truncate" >
+                                        <strong className="text-truncate">
                                             {com.nombre}
                                         </strong>
                                         <small>{(com.numMiembros || 0).toLocaleString()} Miembros</small>
@@ -400,18 +362,23 @@ function Estadisticas() {
                         </ul>
                     </div>
                 </div>
+
                 <div className="stat-column d-flex flex-column gap-4">
-                    {/* Comunidades (Publicaciones) */}
+                    {/* Comunidades (Publicaciones) - AHORA CLICKABLES */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
                             <h2><i className="fa-solid fa-pen-to-square"></i> Más Activas</h2>
                         </div>
                         <ul className="community-list">
                             {topComunidadesPublis.slice(0, 3).map((com, idx) => (
-                                <li key={idx} className="community-item">
+                                <li 
+                                    key={idx} 
+                                    className="community-item"
+                                    onClick={() => handleNavigation('comunidad', com)} // CLICK AQUI
+                                    style={clickableStyle}
+                                >
                                     <div className="com-rank">#{idx + 1}</div>
                                     <div className="com-details">
-                                        {/* AQUI EL CAMBIO: Usamos com.nombre */}
                                         <strong className="text-truncate">
                                             {com.nombre}
                                         </strong>
@@ -423,6 +390,7 @@ function Estadisticas() {
                             ))}
                         </ul>
                     </div>
+
                     {/* 6. TOP BÚSQUEDAS */}
                     <div className="stat-card rating-card">
                         <div className="card-header-stats">
@@ -433,23 +401,17 @@ function Estadisticas() {
                                 <div 
                                     key={idx} 
                                     className="rank-item"
-                                    // IMPORTANTE: Pasamos el ID del artista para navegar
                                     onClick={() => handleNavigation('artista', artista)}
                                     style={clickableStyle}
                                 >
-                                    {/* Círculo con el número de posición */}
                                     <div className="rank-pos-circle orange">{idx + 1}</div>
-                                    
                                     <div className="rank-info">
-                                        {/* Ahora sí pintamos el nombre del artista */}
                                         <span className="item-name">
                                             {artista.nombreArtistico}
                                         </span>
                                     </div>
-
                                     <div className="rank-metric">
                                         <i className="fa-solid fa-arrow-trend-up me-2 text-muted"></i>
-                                        {/* Mostramos el número de búsquedas */}
                                         {(artista.numBusquedas || 0).toLocaleString()}
                                     </div>
                                 </div>
@@ -460,7 +422,6 @@ function Estadisticas() {
 
                 {/* COLUMNA 4: Valoraciones y Comentarios */}
                 <div className="stat-column d-flex flex-column gap-4">
-
                     {/* 4. VALORACIÓN */}
                     <div className="stat-card rating-card">
                         <div className="card-header-stats">
@@ -498,6 +459,7 @@ function Estadisticas() {
                         </div>
                     </div>
                 </div>
+
                 <div className="stat-column d-flex flex-column gap-4">
                     {/* 5. MÁS COMENTADOS */}
                     <div className="stat-card rating-card">
