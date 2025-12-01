@@ -57,9 +57,12 @@ function Perfil({ idMenu }) {
             if (formData.descripcion !== descripcion || formData.fotoAmazon !== fotoAmazon || formData.nombreusuario !== nombreUsuario) {
                 //put de usuario
                 const elementoData = {
-                    ...formData
+                    id: idLoggedIn,
+                    nombreusuario: formData.nombreUsuario,
+                    descripcion: formData.descripcion,
+                    rutafoto: formData.fotoAmazon //foto de perfil
                 };
-                const result = await putUsuario(token, idLoggedIn, elementoData)
+                const result = await putUsuario(token, elementoData)
 
                 //se pudo realizar, set de esos valores
                 setDescripcion(formData.descripcion)
