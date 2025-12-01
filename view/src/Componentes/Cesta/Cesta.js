@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './Cesta.css';
 import Popup from '../MetodoPago/MetodoPago.js';
+import PantallaCarga from "../Utiles/PantallaCarga/PantallaCarga.js";
 import { VaciarCestaProvider } from '../MetodoPago/VaciarCestaContext.js';
 import { deleteElementoCestaById, getCestaId,  } from "../../ApiServices/CestaService.js";
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
@@ -13,25 +14,25 @@ function Cesta() {
     const [productos, setProductos] = useState([]);
     const [precioTotal, setPrecioTotal] = useState(0);
     const [popUpAbierto, popUpCerrado] = useState(false);
+    const [cargando, setCargando] = useState(false); //PANTALLA DE CARGA
 
-    useEffect(() => {
-        const fetchCesta = async () => {
-            //console.log("idcesta", idLoggedIn)
-            if (idLoggedIn && token) {
-                try {
-                    const cestaData = await getCestaId(token, idLoggedIn);
+    useEffect(() => {  fetchCesta(); }, [idLoggedIn, token]);
 
-                    setProductos(cestaData.items);
-                    setPrecioTotal(cestaData.total);
+    const fetchCesta = async () => {
+        if (idLoggedIn && token) {
+            try {
+                setCargando(true);
+                const cestaData = await getCestaId(token, idLoggedIn);
 
-                } catch (error) {
-                    console.error("Error al cargar la cesta:", error);
-                }
+                setProductos(cestaData.items);
+                setPrecioTotal(cestaData.total);
+            } catch (error) {
+                console.error("Error al cargar la cesta:", error);
+            } finally {
+                setCargando(false);
             }
-        };
-
-        fetchCesta();
-    }, [idLoggedIn, token]);
+        }
+    };
 
     const deleteElementosCesta = async () => {
         if (productos.length <= 0) return;
@@ -73,6 +74,7 @@ function Cesta() {
         try {
             await deleteElementoCestaById(token, idLoggedIn, elem.idelemento);
             setPrecioTotal(precioTotal-elem.precio);
+            fetchCesta();
         } catch (error) {
             console.error("Error eliminando el elemento:", error);
             alert("No se pudo eliminar el elemento de la cesta.");
@@ -99,13 +101,15 @@ function Cesta() {
     const totalConDonativo = (parseFloat(precioTotal?.precio || precioTotal || 0) + parseFloat(donativo || 0));
 
     return (
-        <div id="cesta">
+    <div id="cesta">
+      {cargando?(<PantallaCarga mensaje="Cargando cesta..." />):
+      (
+        <>
             <div id='tituloCesta'>
                 <h1> {"Cesta de productos"} </h1>
             </div>
             <div id='datosCesta'
-                style={{ display: Array.isArray(productos) &&
-                            productos.flat().length === 0
+                style={{ display: Array.isArray(productos) && productos.flat().length === 0
                             ? 'none'  // mostrar si está vacía
                             : 'block'   // ocultar si hay productos
                 }}
@@ -113,7 +117,7 @@ function Cesta() {
                 <ul className='ps-0'>
                     {Array.isArray(productos) && productos.map((item, index) =>
                         <li key={index} className='d-flex justify-content-between align-items-center'>
-                            <p>{item.nombre}</p>
+                            <p><i className={item.tipo === 1 ? "fa-solid fa-record-vinyl" : "fa-solid fa-rectangle-list"}></i>{" )"} {item.nombre}</p>
                             <p>{item.precio}&euro;
                                 <i className="fa-solid fa-trash botonPapelera"
                                     onClick={() => eliminarElemento(item)}>
@@ -124,15 +128,7 @@ function Cesta() {
                     <div className="peticion">
                         <p>Apoya a tus artistas con un pequeño donativo</p>
                         <i className="fa-solid fa-heart corazon"></i>
-                        <input
-                            type="text"
-                            value={numero}
-                            onChange={handleDonativo}
-                            inputMode="numeric"
-                            id="donativo"
-                            name="donativo"
-                            placeholder="Donativo €"
-                        />
+                        <input type="text" value={numero} onChange={handleDonativo} inputMode="numeric" id="donativo"  name="donativo" placeholder="Donativo €" />
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -148,8 +144,7 @@ function Cesta() {
             <div className="cestaVacia" id='divBotonComprar'
                 style={{
                     display:
-                        Array.isArray(productos) &&
-                            productos.flat().length === 0
+                        Array.isArray(productos) && productos.flat().length === 0
                             ? 'block'  // mostrar si está vacía
                             : 'none'   // ocultar si hay productos
                 }}
@@ -160,16 +155,11 @@ function Cesta() {
 
             {popUpAbierto && (
                 <VaciarCestaProvider vaciarCesta={vaciarCesta}>
-                    <Popup closePopup={cerrarPopup} 
-                    productos={productos} 
-                    precio={totalConDonativo.toFixed(2)} 
-                    idUsuario={idLoggedIn}
-                    tokenUsuario={token}
-                    />
+                    <Popup closePopup={cerrarPopup} productos={productos} precio={totalConDonativo.toFixed(2)} idUsuario={idLoggedIn} tokenUsuario={token} />
                 </VaciarCestaProvider>
             )}
-        </div>
-
+        </>)}
+    </div>
     );
 }
 export default Cesta;
