@@ -247,10 +247,7 @@ function Estadisticas() {
                 const dataDB = await getArtistaById(id);
                 if (dataDB) itemCompleto = dataDB;
                 
-                // Registramos búsqueda (Solo si hay sesión, para evitar errores)
-                if (isLoggedIn && idLoggedIn) {
                     registrarBusquedaArtista(token, id, idLoggedIn).catch(err => console.error(err));
-                }
                 
                 ruta = '/masInfoPerfil';
             }
