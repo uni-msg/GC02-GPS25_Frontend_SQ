@@ -48,27 +48,40 @@ function Perfil({ idMenu }) {
     const [formData, setFormData] = useState({
         nombreusuario: nombreUsuario,
         descripcion: descripcion,
-        fotoAmazon: fotoAmazon //foto de perfil
+        fotoAmazon: fotoAmazon, //foto de perfil
+        fotoFile: null, // <-- inicializar explícitamente
     });
+
     const actualizoDatos = async (e) => {
         e.preventDefault();
         console.log("DATOS :", formData);
         setEditar(false); // cierra edición después de guardar
 
         try {
-            if (formData.descripcion !== descripcion || formData.fotoAmazon !== fotoAmazon || formData.nombreusuario !== nombreUsuario) {
+            if (formData.descripcion !== descripcion || formData.fotoFile instanceof File || formData.nombreusuario !== nombreUsuario) {
+                const urlCloud = `perfil_${idLoggedIn}`+'_' + new Date().toISOString().slice(0, 10).replace(/-/g, '');
+
+                const originalFile = formData['fotoFile'];
+                const extension = originalFile.name.split('.').pop();
+                const newFileName = `${urlCloud}.${extension}`;
+                const renamedFile = new File([originalFile],newFileName, {
+                    type: originalFile.type,
+                });
+                
                 //put de usuario
                 const elementoData = {
                     id: idLoggedIn,
                     nombreusuario: formData.nombreUsuario,
                     descripcion: formData.descripcion,
-                    rutafoto: formData.fotoAmazon //foto de perfil
+                    rutafoto: newFileName //foto de perfil
                 };
+
                 const result = await putUsuario(token, elementoData)
+                const subidaArchivo = await subirArchivo(renamedFile, "fotos/", urlCloud); 
 
                 //se pudo realizar, set de esos valores
                 setDescripcion(formData.descripcion)
-                setFotoAmazon(formData.fotoAmazon)
+                setFotoAmazon(newFileName)
                 setNombreUsuario(formData.nombreusuario)
                 console.log("Usuario actualizado correctamente:", result);
             } else {
