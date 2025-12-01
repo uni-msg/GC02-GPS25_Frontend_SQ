@@ -2,18 +2,21 @@ import './MasInfoPerfil.css';
 import React, { useContext, useEffect, useState } from "react";
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {URL_FOTO} from '../../config.js';
+
+import {URL_FOTO , CLOUD_URL_DEFAULT } from '../../config.js';
+
+// 1. IMPORTANTE: Añadimos getArtistaById
 import { getElementosArtistasP } from '../../ApiServices/ElementosService';
 import { getCancionesByAlbum } from "./../../ApiServices/CancionesService.js"
 import { postFavorito, deleteFavorito, getFavoritosByIds } from "./../../ApiServices/UsuarioService.js"
-import { getArtistaById } from '../../ApiServices/ArtistasService.js';
+import { getArtistaById } from '../../ApiServices/ArtistasService.js'; 
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
 
 const MasInfoPerfil = () => {
     const location = useLocation();
     const stateRecibido = location.state; // Puede ser un Objeto Artista O un ID (entero)
 
-    // Convertimos 'artista' en un estado. Inicialmente es null o el objeto si ya venía completo.
+    // 2. Convertimos 'artista' en un estado. Inicialmente es null o el objeto si ya venía completo.
     const [artista, setArtista] = useState(
         (stateRecibido && typeof stateRecibido === 'object') ? stateRecibido : null
     );
@@ -26,7 +29,7 @@ const MasInfoPerfil = () => {
     const [isFavorite, setIsFavorite] = useState(false);
     const navigate = useNavigate();
 
-    // Lógica unificada para cargar Artista (si hace falta) y sus Elementos
+    // 3. Lógica unificada para cargar Artista (si hace falta) y sus Elementos
     useEffect(() => {
         const cargarDatos = async () => {
             setCargando(true);
@@ -41,7 +44,7 @@ const MasInfoPerfil = () => {
                     datosArtista = await getArtistaById(idParaBuscar);
                     setArtista(datosArtista);
                     console.log("Datos del artista cargados:", datosArtista);
-                }
+                } 
                 // Caso B: Nos llegó el objeto completo
                 else if (stateRecibido?.id) {
                     idParaBuscar = stateRecibido.id;
@@ -50,7 +53,7 @@ const MasInfoPerfil = () => {
 
                 // Si tenemos un ID válido, cargamos sus canciones/álbumes y favoritos
                 if (idParaBuscar) {
-                    // Cargar Elementos
+                    // Cargar Elementos (CORREGIDO: Quitamos el 'null' extra)
                     const creados = await getElementosArtistasP(idParaBuscar);
                     setElementosCreados(creados);
                     console.log("Elementos creados por el artista:", creados);
@@ -74,7 +77,7 @@ const MasInfoPerfil = () => {
 
         cargarDatos();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [stateRecibido, isLoggedIn, token, idLoggedIn]);
+    }, [stateRecibido, isLoggedIn, token, idLoggedIn]); 
 
 
     // Función para cargar canciones de un álbum específico
@@ -115,7 +118,7 @@ const MasInfoPerfil = () => {
                 key={i}
                 className={
                     i < safeRating
-                        ? "bi bi-file-music-fill text-info my-icon"
+                        ? "bi bi-file-music-fill text-info my-icon" 
                         : "bi bi-file-music text-info my-icon"
                 }
             />
@@ -125,7 +128,7 @@ const MasInfoPerfil = () => {
 
     const toggleFavorite = async () => {
         if (!artista) return;
-
+        
         const cambioEstado = !isFavorite
         setIsFavorite(cambioEstado);
 
@@ -171,7 +174,7 @@ const MasInfoPerfil = () => {
                 <img
                     src={artista.fotoAmazon && artista.fotoAmazon !== "null"
                         ? `${URL_FOTO}${artista.fotoAmazon}`
-                        : URL_FOTO}
+                        : CLOUD_URL_DEFAULT}
                     alt="Foto del artista"
                     className="card-img-top card-img-circle"
                 />
@@ -180,69 +183,70 @@ const MasInfoPerfil = () => {
                     <p>{artista.descripcion}</p>
                 </div>
                 <div className="anio">
-                    <p className="mb-0">Inicio de la Carrera: {new Date(artista.fechaCrea).toLocaleDateString()}</p>
+                    {/* Protección de fecha */}
+                    <p className="mb-0">Inicio de la Carrera: {artista.fechaCrea ? new Date(artista.fechaCrea).toLocaleDateString() : 'Desconocida'}</p>
                 </div>
                 <div className="oye">
                     <p>Número de Oyentes: {artista.oyentes}</p>
                 </div>
                 <div id="etiquetas">
-                    <span className="tags me-2">{artista.genero?.nombre || "Sin género"}</span>
+                    {/* Protección de género por si es objeto o string */}
+                    <span className="tags me-2">{artista.genero?.nombre || artista.genero || 'Sin género'}</span>
                 </div>
             </div>
 
             <div id="listaElementos">
                 <h3>Elementos del artista:</h3>
-                {cargando ? (
-                    <PantallaCarga />
-                ) : (
-                    <div className="canciones-listado">
-                        {elementosCreados.length === 0 ? (
-                            <p className="text-muted">Este artista aún no creo ningún elemento.</p>
-                        ) : (
-                            <div id="listaElementos">
-                                {/* Mapeo de Albumes */}
-                                {elementosCreados.filter(elem => elem.esalbum).map((elem) => (
-                                    <div key={elem.id} className="elemento">
-                                        <div className="cabeElem">
-                                            <h4><i className="fa-solid fa-rectangle-list"></i> {elem.nombre}</h4>
-                                            <div>
-                                                <button className="botonCanAlb" onClick={() => verCancionesAlbum(elem.id)}>
-                                                    {expandido[elem.id] ? "Ocultar canciones" : "Ver canciones"}
-                                                </button>
-                                                <button className="verMasElem" onClick={() => verMasElemento(elem, 1)}>Ver más</button>
-                                            </div>
+                
+                <div className="canciones-listado">
+                    {elementosCreados.length === 0 ? (
+                        <p className="text-muted">Este artista aún no creó ningún elemento.</p>
+                    ) : (
+                        <div id="listaElementos">
+                            {elementosCreados.filter(elem => elem.esalbum).map((elem) => (
+                                <div key={elem.id} className="elemento">
+                                    <div className="cabeElem">
+                                        <h4><i className="fa-solid fa-rectangle-list"></i> {elem.nombre}</h4>
+                                        <div>
+                                            <button className="botonCanAlb" onClick={() => verCancionesAlbum(elem.id)}>
+                                                {expandido[elem.id] ? "Ocultar canciones" : "Ver canciones"}
+                                            </button>
+                                            <button className="verMasElem" onClick={() => verMasElemento(elem, 1)}>Ver más</button>
                                         </div>
+                                    </div>
 
-                                        {elem.esalbum && expandido[elem.id] && (
-                                            <div className="canciones">
-                                                {cancionesAlbum[elem.id]?.map((can, index) => (
-                                                    <div key={can.idelemento} className="cardCancion">
-                                                        <span>{index + 1}. {can.nombre}</span>
-                                                        <div>
-                                                            <button className="verMasCanc" onClick={() => { verMasElemento(elementosCreados.find(elem => elem.id === can.idelemento), 2); }}>Ver más</button>
-                                                        </div>
+                                    {elem.esalbum && expandido[elem.id] && (
+                                        <div className="canciones">
+                                            {cancionesAlbum[elem.id]?.map((can, index) => (
+                                                <div key={can.idelemento} className="cardCancion">
+                                                    <span>{index + 1}. {can.nombre}</span>
+                                                    <div>
+                                                        <button className="verMasCanc" onClick={() => { verMasElemento(elementosCreados.find(elem => elem.id === can.idelemento), 2); }}>Ver más</button>
                                                     </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
 
-                                {/* Mapeo de Sencillos/EPs */}
-                                {elementosCreados.filter(elem => !elem.esalbum && elem.album === null).map((elem) => (
-                                    <div key={elem.id} className="elemento">
-                                        <div className="cabeElem">
-                                            <h4><i className="fa-solid fa-record-vinyl"></i> {elem.nombre}</h4>
-                                            <div>
-                                                <button className="verMasElem" onClick={() => verMasElemento(elem, 2)}>Ver más</button>
-                                            </div>
+                            {/* SECCIÓN DE CANCIONES SUELTAS (SINGLES) */}
+                            {/* Cambiamos 'elem.album === null' por '!elem.album' */}
+                            {elementosCreados.filter(elem => !elem.esalbum && !elem.album).map((elem) => (
+                                <div key={elem.id} className="elemento">
+                                    <div className="cabeElem">
+                                        <h4><i className="fa-solid fa-record-vinyl"></i> {elem.nombre}</h4>
+                                        <div>
+                                            <button className="verMasElem" onClick={() => verMasElemento(elem, 2)}>Ver más</button>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                )}
+                                </div>
+                            ))}
+                        </div>
+
+                    )}
+                </div>
+                
             </div>
         </div>
     );

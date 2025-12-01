@@ -205,6 +205,7 @@ const MasInfoComunidad = () => {
                                             className="miembro-avatar"
                                         />
                                         <span>{miembro.nombreUsuario || `Usuario ${miembro.idUsuario}`}</span>
+                                        {miembro.esArtista && <i className="bi bi-patch-check-fill text-primary ms-2" title="Artista verificado"></i>}
                                     </li>
                                 ))}
                             </ul>
