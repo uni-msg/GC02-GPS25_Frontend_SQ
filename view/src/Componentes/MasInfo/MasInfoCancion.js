@@ -7,11 +7,13 @@ import { getElementos, getValoracionesByIdelem, postValora, getLetraById} from '
 import { getGeneroById} from '../../ApiServices/GeneroService.js';
 import { getUsuarioById, getFavoritosByIds, getTieneByIds, getDeseaByIds, postDesea, deleteDesea, postFavorito, deleteFavorito} from '../../ApiServices/UsuarioService.js';
 import { postElementoCesta } from "../../ApiServices/CestaService";
+import { registrarReproduccion } from '../../ApiServices/EstadisticasService.js'; 
 
 import Popup from '../MetodoPago/MetodoPago.js';
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga.js';
 import { URL_FOTO, URL_MP3 } from '../../config.js';
 import { UsuarioContext } from "../InicioSesion/UsuarioContext";
+
 
 
 function MasInfo() {
@@ -42,6 +44,13 @@ function MasInfo() {
     } else {
       audioRef.current.play();
       setGirar(true);
+      if (token && idLoggedIn && song?.id) {
+          console.log("▶️ Botón Play pulsado. Registrando reproducción...");
+          
+          // Enviamos '120' segundos fijos (o lo que quieras) para cumplir con la API
+          registrarReproduccion(token, idLoggedIn, song.id, 120) 
+            .catch(err => console.error("Error registrando play:", err));
+      }
     }
     setIsPlaying(!isPlaying);
   };
