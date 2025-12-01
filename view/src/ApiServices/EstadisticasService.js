@@ -328,3 +328,71 @@ export async function getRankingComunidadesPublicaciones() {
         throw error;
     }
 }
+
+// ==========================================
+//                REPRODUCCIONES
+// ==========================================
+
+/**
+ * Registra que un usuario ha escuchado una canción/álbum.
+ * Endpoint: PUT /reproducciones/registrar
+ */
+export async function registrarReproduccion(token, idUsuario, idContenido, segundos) {
+    try {
+        const body = {
+            idUsuario: parseInt(idUsuario),
+            idContenido: parseInt(idContenido),
+            segundos: parseInt(segundos)
+        };
+
+        // Usamos PUT porque así está definido en tu backend (@router.put)
+        const response = await axios.put(`${API_URL}/reproducciones/registrar`, body, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error en registrarReproduccion:", error);
+        throw error;
+    }
+}
+
+/**
+ * Obtiene el historial completo de reproducciones de un usuario.
+ * Endpoint: GET /reproducciones/usuario/{id}
+ */
+export async function getHistorialReproducciones(token, idUsuario) {
+    try {
+        const response = await axios.get(`${API_URL}/reproducciones/usuario/${idUsuario}`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        return response.data; // Espera { status, count, data: [...] }
+    } catch (error) {
+        // Si devuelve 404 es que no tiene historial, devolvemos estructura vacía para no romper la UI
+        if (error.response && error.response.status === 404) {
+            return { status: "success", count: 0, data: [] };
+        }
+        console.error(`Error en getHistorialReproducciones (${idUsuario}):`, error);
+        throw error;
+    }
+}
+
+/**
+ * Obtiene el TOP de canciones más escuchadas por el usuario.
+ * Endpoint: GET /reproducciones/top/usuario/{id}?limit=X
+ */
+export async function getTopReproduccionesUsuario(token, idUsuario, limit = 10) {
+    try {
+        const response = await axios.get(`${API_URL}/reproducciones/top/usuario/${idUsuario}`, {
+            params: { limit },
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        return response.data; // Devuelve lista de ReproduccionDTO (donde segundos = contador)
+    } catch (error) {
+        // Si devuelve 404, devolvemos array vacío
+        if (error.response && error.response.status === 404) {
+            return [];
+        }
+        console.error(`Error en getTopReproduccionesUsuario (${idUsuario}):`, error);
+        throw error;
+    }
+}

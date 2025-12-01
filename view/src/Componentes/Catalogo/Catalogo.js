@@ -8,7 +8,7 @@ import Comunidades from '../Comunidad/Comunidad';
 // --- NUEVOS IMPORTS ---
 import { UsuarioContext } from '../InicioSesion/UsuarioContext';
 import { getElementoById } from '../../ApiServices/ElementosService';
-import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService.js';
+import { registrarBusquedaArtista, registrarReproduccion } from '../../ApiServices/EstadisticasService.js';
 
 function Catalogo({ elementos, isLoading, artistas }) {
     const [menu, setMenu] = useState(() => {
@@ -324,6 +324,7 @@ function ProductoCard({ item }) {
             navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
+            registrarBusquedaArtista(token, idUsuarioActual, item.id).catch(err => console.error(err));
             navigate("/masInfoPerfil", { state: item.id });
             console.log("Dato enviado", {state: item.id});
         }

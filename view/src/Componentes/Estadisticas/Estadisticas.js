@@ -9,24 +9,24 @@ import {
     getTopContenidosValoracion,
     getTopContenidosComentarios,
     getRankingComunidadesPublicaciones, 
-    getTopArtistasBusquedas
+    getTopArtistasBusquedas,
+    getTopReproduccionesUsuario // <--- NUEVO IMPORT
 } from '../../ApiServices/EstadisticasService';
 
 import { getArtistaById } from '../../ApiServices/ArtistasService';
 import { getElementoById } from '../../ApiServices/ElementosService';
 import { registrarBusquedaArtista } from '../../ApiServices/EstadisticasService';
-// Asegúrate de que esta importación sea correcta según tu estructura
 import { getComunidadById } from '../../ApiServices/ComunidadService';
 
 import PantallaCarga from '../Utiles/PantallaCarga/PantallaCarga';
 import './Estadisticas.css';
 
 function Estadisticas() {
-    const { token, idLoggedIn } = useContext(UsuarioContext);
+    const { token, idLoggedIn, isLoggedIn } = useContext(UsuarioContext);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
     
-    // Estados para los distintos rankings
+    // Estados para los distintos rankings públicos
     const [topArtistas, setTopArtistas] = useState([]);
     const [topVentas, setTopVentas] = useState([]);
     const [topGeneros, setTopGeneros] = useState([]);
@@ -35,6 +35,9 @@ function Estadisticas() {
     const [topValoracion, setTopValoracion] = useState([]);
     const [topComentados, setTopComentados] = useState([]);   
     const [topBusquedas, setTopBusquedas] = useState([]); 
+
+    // Estado para el ranking personal (Privado)
+    const [topPersonal, setTopPersonal] = useState([]); // <--- NUEVO ESTADO
 
     useEffect(() => {
         const cargarDatos = async () => {
@@ -45,7 +48,7 @@ function Estadisticas() {
                 // 1. Artistas
                 const artistasData = await getRankingArtistasOyentes(); 
                 
-                // 2. Resto de llamadas
+                // 2. Resto de llamadas PÚBLICAS
                 const [
                     ventasData, generosData, comunidadesMiembrosData, 
                     valoracionData, comentariosData, comunidadesPublisData, topBusquedasData
@@ -58,6 +61,50 @@ function Estadisticas() {
                     getRankingComunidadesPublicaciones(), 
                     getTopArtistasBusquedas()
                 ]);
+
+                // --- NUEVO: LLAMADA PRIVADA (TOP REPRODUCCIONES) ---
+                let personalData = [];
+                if (isLoggedIn && token && idLoggedIn) {
+                    try {
+                        // Obtenemos la lista de DTOs { idContenido, segundosReproducidos (contador) }
+                        const rawPersonal = await getTopReproduccionesUsuario(token, idLoggedIn, 5);
+                        
+                        // Enriquecemos con los datos reales de la canción (nombre, foto, artista...)
+                        if (rawPersonal && rawPersonal.length > 0) {
+                            const promesasPersonal = rawPersonal.map(async (item) => {
+                                try {
+                                    const detalle = await getElementoById(token, item.idContenido);
+                                    let nombreDelArtista = "Desconocido";
+
+                                    // Lógica para sacar el nombre del artista del objeto detalle
+                                    if (detalle.nombreArtista) {
+                                        nombreDelArtista = detalle.nombreArtista;
+                                    } else if (detalle.artista && typeof detalle.artista === 'object') {
+                                        nombreDelArtista = detalle.artista.nombreusuario || detalle.artista.nombreArtistico || "Artista Desconocido";
+                                    } else if (typeof detalle.artista === 'string') {
+                                        nombreDelArtista = detalle.artista;
+                                    }
+
+                                    return {
+                                        ...item, // Conservamos el contador (segundosReproducidos)
+                                        titulo: detalle.nombre || detalle.nombreAudio || detalle.titulo,
+                                        artista: nombreDelArtista,
+                                        urlFoto: detalle.urlFoto,
+                                        esAlbum: detalle.esAlbum || false,
+                                        id: item.idContenido // Para la navegación
+                                    };
+                                } catch (err) {
+                                    return { ...item, titulo: `Canción ${item.idContenido}` };
+                                }
+                            });
+                            personalData = await Promise.all(promesasPersonal);
+                        }
+                    } catch (error) {
+                        console.error("Error cargando top personal:", error);
+                    }
+                }
+                setTopPersonal(personalData);
+                // ----------------------------------------------------
 
                 // --- PROCESAR ARTISTAS ---
                 if (artistasData.length > 0) {
@@ -79,7 +126,7 @@ function Estadisticas() {
                     setTopArtistas(await Promise.all(promesas));
                 }
 
-                // --- HELPER PARA ENRIQUECER CONTENIDOS ---
+                // --- HELPER PARA ENRIQUECER CONTENIDOS (VENTAS, VALORACIÓN, ETC) ---
                 const enriquecerContenido = async (lista) => {
                     if (!lista || lista.length === 0) return [];
                     const promesas = lista.map(async (item) => {
@@ -170,7 +217,7 @@ function Estadisticas() {
         };
 
         cargarDatos();
-    }, [token]);
+    }, [token, idLoggedIn, isLoggedIn]); // Añadido isLoggedIn a dependencias
 
     // ---------------------------------------------------------
     //  NAVEGACIÓN MODIFICADA PARA INCLUIR COMUNIDADES
@@ -200,8 +247,10 @@ function Estadisticas() {
                 const dataDB = await getArtistaById(id);
                 if (dataDB) itemCompleto = dataDB;
                 
-                // Registramos búsqueda
-                registrarBusquedaArtista(token, id, idLoggedIn).catch(err => console.error(err));
+                // Registramos búsqueda (Solo si hay sesión, para evitar errores)
+                if (isLoggedIn && idLoggedIn) {
+                    registrarBusquedaArtista(token, id, idLoggedIn).catch(err => console.error(err));
+                }
                 
                 ruta = '/masInfoPerfil';
             }
@@ -211,12 +260,9 @@ function Estadisticas() {
                 // Recuperamos el objeto completo usando el servicio que indicaste
                 const dataDB = await getComunidadById(id);
                 if (dataDB) {
-                    console.log("¡Datos de comunidad recuperados!", dataDB);
                     itemCompleto = dataDB; 
                 }
                 
-                // IMPORTANTE: Cambia '/comunidad' por la ruta que tengas definida en App.js 
-                // para ver una comunidad (ej: '/chat', '/foro', '/detalleComunidad')
                 ruta = '/masInfoComunidad'; 
             }
 
@@ -337,7 +383,7 @@ function Estadisticas() {
                         </div>
                     </div>
 
-                    {/* Comunidades (Miembros) - AHORA CLICKABLES */}
+                    {/* Comunidades (Miembros) */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
                             <h2><i className="fa-solid fa-users"></i> Más Populares</h2>
@@ -347,7 +393,7 @@ function Estadisticas() {
                                 <li 
                                     key={idx} 
                                     className="community-item"
-                                    onClick={() => handleNavigation('comunidad', com)} // CLICK AQUI
+                                    onClick={() => handleNavigation('comunidad', com)}
                                     style={clickableStyle} 
                                 >
                                     <div className="com-rank">#{idx + 1}</div>
@@ -364,7 +410,7 @@ function Estadisticas() {
                 </div>
 
                 <div className="stat-column d-flex flex-column gap-4">
-                    {/* Comunidades (Publicaciones) - AHORA CLICKABLES */}
+                    {/* Comunidades (Publicaciones) */}
                     <div className="stat-card small-card">
                         <div className="card-header-stats">
                             <h2><i className="fa-solid fa-pen-to-square"></i> Más Activas</h2>
@@ -374,7 +420,7 @@ function Estadisticas() {
                                 <li 
                                     key={idx} 
                                     className="community-item"
-                                    onClick={() => handleNavigation('comunidad', com)} // CLICK AQUI
+                                    onClick={() => handleNavigation('comunidad', com)}
                                     style={clickableStyle}
                                 >
                                     <div className="com-rank">#{idx + 1}</div>
@@ -491,6 +537,48 @@ function Estadisticas() {
                     </div>
                 </div>
             </div>
+
+            {/* ========================================================
+                NUEVA SECCIÓN: TOP PERSONAL (Solo si logueado)
+               ======================================================== */}
+            {isLoggedIn && topPersonal.length > 0 && (
+                <div className="personal-stats-section mt-5 fade-in">
+                    <div className="card-header-stats" style={{ borderBottom: '2px solid #0dcaf0', paddingBottom: '10px' }}>
+                        <h2><i className="fa-solid fa-heart-pulse me-2" style={{color: '#0dcaf0'}}></i> Tu Ritmo Musical</h2>
+                        <span className="badge bg-info text-dark">Lo que más has escuchado</span>
+                    </div>
+                    
+                    <div className="d-flex flex-wrap justify-content-center gap-3 mt-4">
+                        {topPersonal.map((item, idx) => (
+                            <div 
+                                key={idx} 
+                                className="card personal-card text-white bg-dark mb-3" 
+                                style={{ width: '18rem', cursor: 'pointer', border: '1px solid #333' }}
+                                onClick={() => handleNavigation(item.esAlbum ? 'album' : 'cancion', item)}
+                            >
+                                <div className="row g-0 align-items-center">
+                                    <div className="col-md-4 text-center">
+                                        {/* Número de posición grande */}
+                                        <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#0dcaf0' }}>#{idx + 1}</div>
+                                    </div>
+                                    <div className="col-md-8">
+                                        <div className="card-body">
+                                            <h5 className="card-title text-truncate" title={item.titulo}>{item.titulo}</h5>
+                                            <p className="card-text text-muted mb-1"><small>{item.artista}</small></p>
+                                            <p className="card-text">
+                                                <i className="fa-solid fa-play me-2 text-info"></i> 
+                                                {/* Aquí 'segundosReproducidos' es en realidad el CONTEO de veces */}
+                                                {item.segundosReproducidos} veces
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
