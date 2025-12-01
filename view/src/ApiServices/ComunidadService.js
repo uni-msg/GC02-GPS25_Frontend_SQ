@@ -5,7 +5,6 @@ import { BASE_URL_COMUNIDADES } from '../config'; // llamada a la api
 
 export async function getComunidades() {
     try {
-        // Usamos la variable importada
         const response = await axios.get(`${BASE_URL_COMUNIDADES}/`);
         return response.data;
     } catch (error) {
@@ -22,6 +21,18 @@ export async function getComunidadById(idComunidad) {
     }
 };
 
+// --- GESTIÓN DE LA COMUNIDAD (Artista) ---
+
+export const actualizarComunidad = async (idComunidad, datosJson) => {
+    const response = await axios.put(`${BASE_URL_COMUNIDADES}/${idComunidad}/`, datosJson);
+    return response.data;
+};  
+
+export const eliminarComunidad = async (idComunidad) => {
+    await axios.delete(`${BASE_URL_COMUNIDADES}/${idComunidad}/`);
+    return true;
+};
+
 // --- PUBLICACIONES ---
 
 export async function getPublicacionesComunidad(idComunidad) {
@@ -34,6 +45,59 @@ export async function getPublicacionesComunidad(idComunidad) {
             return [];
         }
         throw new Error(error.response?.data?.message || 'Error al obtener las publicaciones');
+    }
+};
+
+// --- GESTIÓN DE PUBLICACIONES (Artista) ---
+
+export const crearPublicacion = async (idComunidad, datosJson) => {
+    // POST /comunidad/publicaciones/{idComunidad}/ (Endpoints genéricos de publicaciones)
+    const response = await axios.post(`${BASE_URL_COMUNIDADES}/publicaciones/${idComunidad}/`, datosJson);
+    return response.data;
+};
+
+export const eliminarPublicacion = async (idComunidad, idPublicacion) => {
+    // DELETE /comunidad/publicaciones/{idComunidad}/{idPublicacion}/
+    await axios.delete(`${BASE_URL_COMUNIDADES}/publicaciones/${idComunidad}/${idPublicacion}/`);
+    return true;
+};
+
+export const editarPublicacion = async (idComunidad, idPublicacion, datosJson) => {
+    // PUT /comunidad/publicaciones/{idComunidad}/{idPublicacion}/
+    const response = await axios.patch(`${BASE_URL_COMUNIDADES}/publicaciones/${idComunidad}/${idPublicacion}/`, datosJson);
+    return response.data;
+};
+
+// --- LIKES EN PUBLICACIONES ---
+
+export async function getLikesPublicacion(idPublicacion) {
+    try {
+        const response = await axios.get(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`);
+        return response.data;
+    } catch (error) {
+        throw new Error('Error al verificar likes');
+    }
+};
+
+export async function darLikePublicacion(idPublicacion, idUsuario) {
+    try {
+        const response = await axios.post(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`, {
+            data: { idUsuario: idUsuario }    // body de la petición POST, pasamos el id del usuario que da el like
+        });
+        return response.data; // Devuelve el nuevo contador
+    } catch (error) {
+        throw new Error(error.response?.data?.error || 'Error al dar like');
+    }
+};
+
+export async function quitarLikePublicacion(idPublicacion, idUsuario) {
+    try {
+        const response = await axios.delete(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`, {
+            data: { idUsuario: idUsuario }      // body de la petición DELETE, pasamos el id del usuario que quita el like
+        });
+        return response.data; // Devuelve el nuevo contador
+    } catch (error) {
+        throw new Error(error.response?.data?.error || 'Error al quitar like');
     }
 };
 
@@ -68,36 +132,45 @@ export async function salirComunidad(idComunidad, idUsuario) {
     }
 };
 
-// --- LIKES EN PUBLICACIONES ---
+// --- GESTIÓN DE PALABRAS VETADAS (Artista) ---
 
-export async function getLikesPublicacion(idPublicacion) {
-    try {
-        const response = await axios.get(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`);
-        return response.data;
-    } catch (error) {
-        throw new Error('Error al verificar likes');
-    }
+export const getPalabrasVetadas = async (idComunidad) => {
+    const response = await axios.get(`${BASE_URL_COMUNIDADES}/${idComunidad}/palabras-vetadas/`);
+    // Asumimos que el DTO devuelve { "palabras": ["a", "b"] }
+    return response.data.palabras || [];
 };
 
-export async function darLikePublicacion(idPublicacion, idUsuario) {
-    try {
-        const response = await axios.post(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`, {
-            idUsuario: idUsuario
-        });
-        return response.data; // Devuelve el nuevo contador
-    } catch (error) {
-        throw new Error(error.response?.data?.error || 'Error al dar like');
-    }
+export const addPalabraVetada = async (idComunidad, palabra) => {
+    // El controlador espera: { "palabras": ["nueva"] } para añadir
+    const response = await axios.post(`${BASE_URL_COMUNIDADES}/${idComunidad}/palabras-vetadas/`, { palabras: [palabra] });
+    return response.data.palabras;
 };
 
-export async function quitarLikePublicacion(idPublicacion, idUsuario) {
-    try {
-        // Para DELETE con body en axios se usa la propiedad 'data'
-        const response = await axios.delete(`${BASE_URL_COMUNIDADES}/publicaciones/megusta/${idPublicacion}/`, {
-            data: { idUsuario: idUsuario }
-        });
-        return response.data; // Devuelve el nuevo contador
-    } catch (error) {
-        throw new Error(error.response?.data?.error || 'Error al quitar like');
-    }
+export const eliminarPalabraVetada = async (idComunidad, palabra) => {
+    // axios.delete con body requiere la propiedad 'data'
+    const response = await axios.delete(`${BASE_URL_COMUNIDADES}/${idComunidad}/palabras-vetadas/`, {
+        data: { palabras: [palabra] }
+    });
+    return response.data.palabras;
+};
+
+// --- GESTIÓN DE USUARIOS VETADOS (Artista) ---
+
+// Obtener IDs de usuarios vetados
+export const getUsuariosVetadosIds = async (idComunidad) => {
+    // Asumimos un endpoint que devuelve una lista de IDs: [1, 5, 20]
+    const response = await axios.get(`${BASE_URL_COMUNIDADES}/vetados/${idComunidad}/`);
+    return response.data; 
+};
+
+export const vetarUsuario = async (idComunidad, idUsuarioAVetar) => {
+    await axios.post(`${BASE_URL_COMUNIDADES}/vetados/${idComunidad}/`, 
+        { idUsuario: idUsuarioAVetar });
+    return true;
+};
+
+export const quitarVetoUsuario = async (idComunidad, idUsuarioAQuitar) => {
+     await axios.delete(`${BASE_URL_COMUNIDADES}/vetados/${idComunidad}/${idUsuarioAQuitar}`, {
+    });
+    return true;
 };
