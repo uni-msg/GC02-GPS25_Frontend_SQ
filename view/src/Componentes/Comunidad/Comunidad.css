@@ -89,3 +89,47 @@
   font-weight: bold;
   color: #333;
 }
+
+/* --- ESTILOS PARA LAS PESTAÑAS DE FILTRO --- */
+.tabs-filtro-comunidad {
+    display: flex;
+    justify-content: left;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 0; /* Importante para que la línea activa quede pegada */
+}
+
+.tab-filtro-btn {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.1rem;
+    color: #777;
+    cursor: pointer;
+    font-weight: 600;
+    position: relative;
+    transition: all 0.3s;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px; /* Truco para que la línea activa se superponga al borde del contenedor */
+}
+
+.tab-filtro-btn:hover {
+    color: #572362; /* Tu color morado principal */
+}
+
+.tab-filtro-btn.active {
+    color: #572362;
+    border-bottom-color: #572362;
+}
+
+/* Responsive para las pestañas en móvil */
+@media (max-width: 600px) {
+    .tabs-filtro-comunidad {
+        gap: 0.5rem;
+    }
+    .tab-filtro-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+    }
+}
