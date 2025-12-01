@@ -324,7 +324,7 @@ function ProductoCard({ item }) {
             navigate("/masInfo", { state: itemCompleto });
         }
         else if (item.tipo === 0) {
-            registrarBusquedaArtista(token, idUsuarioActual, item.id).catch(err => console.error(err));
+            registrarBusquedaArtista(token, item.id, idLoggedIn).catch(err => console.error(err));
             navigate("/masInfoPerfil", { state: item.id });
             console.log("Dato enviado", {state: item.id});
         }
@@ -442,10 +442,10 @@ function ProductoCard({ item }) {
     );
 }
 
-function Popup({ closeModal, item, togglePlay, isPlaying }) {
+function Popup({ closeModal, item, togglePlay, isPlaying}) {
     const [girar, setGirar] = useState(false);
     const audioRef = useRef(null);
-
+    const { token, idLoggedIn } = useContext(UsuarioContext);
     // Alternar entre play y pause
     useEffect(() => {
         const audio = audioRef.current;
@@ -453,6 +453,7 @@ function Popup({ closeModal, item, togglePlay, isPlaying }) {
         if (!audio) return; // ← evita errores si aún no se ha montado
 
         if (isPlaying) {
+            registrarReproduccion(token, idLoggedIn, item.id, 120).catch(err => console.error("Error registrando play:", err));
             audio.play().catch(error => console.log("Error al reproducir:", error));
             setGirar(true);
         } else {
