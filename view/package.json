@@ -28,8 +28,8 @@
   },
   "scripts": {
     "_start_old": "CHOKIDAR_USEPOLLING=true BROWSER=none DANGEROUSLY_DISABLE_HOST_CHECK=true react-scripts start --host 0.0.0.0",
-    "start": "set PORT=3001 && react-scripts start --host 0.0.0.0",
-    "dev": "set PORT=3001 && react-scripts start --host 0.0.0.0",
+    "start": "set PORT=3333 && react-scripts start --host 0.0.0.0",
+    "dev": "set PORT=3333 && react-scripts start --host 0.0.0.0",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

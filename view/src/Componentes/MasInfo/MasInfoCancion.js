@@ -3,9 +3,9 @@ import './MasInfoCancion.css';
 import React, { useState, useRef, useEffect, useContext, useMemo} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-import { getElementos, getValoracionesByIdelem, postDeseo, postValora, deleteDeseo, getDeseosById, getLetraById} from '../../ApiServices/ElementosService';
+import { getElementos, getValoracionesByIdelem, postValora, getLetraById} from '../../ApiServices/ElementosService';
 import { getGeneroById} from '../../ApiServices/GeneroService.js';
-import { getUsuarioById, getUsuarioTieneElementoById } from '../../ApiServices/UsuarioService.js';
+import { getUsuarioById, getFavoritosByIds, getTieneByIds, getDeseaByIds, postDesea, deleteDesea, postFavorito, deleteFavorito} from '../../ApiServices/UsuarioService.js';
 import { postElementoCesta } from "../../ApiServices/CestaService";
 
 import Popup from '../MetodoPago/MetodoPago.js';
@@ -106,12 +106,35 @@ function MasInfo() {
     setShowPopup(true);
   };
 
-
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
   };
+
+  //DESEA 
+  const [isDeseado, setIsDeseado] = useState(false);
+  const toggleDeseado = async () => {
+    const nuevoEstado = !isDeseado;
+    setIsDeseado(nuevoEstado);
+
+    if (token && idLoggedIn && song?.id != null) {
+      try {
+        if (nuevoEstado) {
+          const relacion = {
+            idusuario: idLoggedIn,
+            idelemento: song.id,
+          };
+          await postDesea(token, relacion);
+        } else {
+          await deleteDesea(token, idLoggedIn, song.id);
+        }
+      } catch (error) {
+        console.error("Error al actualizar favorito:", error);
+      }
+    }
+  };
+
   //FAVORITO 
   const [isFavorite, setIsFavorite] = useState(false);
   const toggleFavorite = async () => {
@@ -121,15 +144,14 @@ function MasInfo() {
     if (token && idLoggedIn && song?.id != null) {
       try {
         if (nuevoEstado) {
-          // Añadir favorito
           const relacion = {
             idusuario: idLoggedIn,
             idelemento: song.id,
+            tipo: 1
           };
-          await postDeseo(token, relacion);
+          await postFavorito(token, relacion);
         } else {
-          // Eliminar favorito
-          await deleteDeseo(token, idLoggedIn, song.id);
+          await deleteFavorito(token, idLoggedIn, song.id, false);
         }
       } catch (error) {
         console.error("Error al actualizar favorito:", error);
@@ -142,9 +164,11 @@ function MasInfo() {
     const verificarFavorito = async () => {
       if (token && idLoggedIn && song?.id != null) {
         try {
-          const deseos = await getDeseosById(token, idLoggedIn);
-          const yaFavorito = deseos.some(d => d.id === song.id);
+          const yaFavorito = await getFavoritosByIds(token, idLoggedIn,song.id, false)
+          const yaDeseado = await getDeseaByIds(token, idLoggedIn,song.id)
+          
           setIsFavorite(yaFavorito);
+          setIsDeseado(yaDeseado);
         } catch (error) {
           console.error("Error al verificar si es favorito:", error);
         }
@@ -153,9 +177,6 @@ function MasInfo() {
   
     verificarFavorito();
   }, [token, idLoggedIn, song?.id]); // Se ejecuta cuando cambie el token, id o la canción
-  
-
-
 
   //Backend 
   const [generoNombre, setGeneroNombre] = useState('');
@@ -199,11 +220,9 @@ function MasInfo() {
     }
   };
 
-  
   //LETRA DE CANCION 
   const [letra, setLetra] = useState();
  
-
   //CAJA COMENTARIOS 
   const [comentario, setComentario] = useState('');
   const [valoracion, setValoracion] = useState(0);
@@ -257,13 +276,8 @@ function MasInfo() {
   useEffect(() => {
     const verificarSiTieneElemento = async () => {
       try {
-        const resultado = await getUsuarioTieneElementoById(token, idLoggedIn);
-        if (Array.isArray(resultado)) {
-          const tiene = resultado.some(e => e.id === song.id);
-          setPuedeComentar(tiene);
-        } else {
-          setPuedeComentar(false);
-        }
+        const tiene = await getTieneByIds(token, idLoggedIn, song.id);
+        setPuedeComentar(tiene);
       } catch (error) {
         console.error("Error al verificar si el usuario tiene el elemento:", error);
         setPuedeComentar(false);
@@ -277,9 +291,6 @@ function MasInfo() {
 
   // Canciones relacionadas
   const [relacionadas, setRelacionadas] = useState([]);
-
-
-
 
   // Ver más click 
   const vermasClick = (cancion) => {
@@ -404,16 +415,13 @@ function MasInfo() {
   cargarComentarios();
 }, [song?.id, token]);
 
-
   useEffect(() => {
     console.log("objeto letra es: ", letra)
   }, [letra]);
   
-  
   while (loading) {
     return <PantallaCarga mensaje="Cargando información de la canción..." />;
   }
-
 
   return (
     <>
@@ -435,21 +443,29 @@ function MasInfo() {
             <i className="fa-solid fa-record-vinyl vinilo-icon"></i>
           </div>
 
-
           {/* Reproductor */}
           <div id="reproductor" className="mt-3 p-3 d-flex flex-column align-items-center">
             <div className="filaPlayFav w-100 mb-3">
               <button type="button" className="btnPlay" onClick={togglePlay}>
                 <i className={`fa-solid ${isPlaying ? "fa-pause" : "fa-play"}`}></i>
               </button>
-              {token && !puedeComentar &&(
-                <button type="button" className="btnFavorite" onClick={toggleFavorite}>
-                  {isFavorite ? (
-                    <i className="fa-solid fa-heart"></i>
-                  ) : (
-                    <i className="fa-regular fa-heart"></i>
-                  )}
-                </button>
+              {token &&( 
+                <>
+                  <button type="button" className="btnFavorite" onClick={toggleFavorite}>
+                    {isFavorite ? (
+                      <i className="fa-solid fa-star"></i>
+                    ) : (
+                      <i className="fa-regular fa-star"></i>
+                    )}
+                  </button>
+                  <button type="button" className="btnDeseado" onClick={toggleDeseado}>
+                    {isDeseado ? (
+                      <i className="fa-solid fa-heart"></i>
+                    ) : (
+                      <i className="fa-regular fa-heart"></i>
+                    )}
+                  </button>
+                </>
               )}
             </div>
             <div className="barraProgreso d-flex column">

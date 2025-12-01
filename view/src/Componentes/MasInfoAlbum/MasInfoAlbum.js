@@ -8,7 +8,7 @@ import { getArtistaByElemento, getArtistaById} from '../../ApiServices/ArtistasS
 import { getValoracionesByIdelem} from '../../ApiServices/ElementosService';
 import { getGeneroById} from '../../ApiServices/GeneroService.js';
 import { postElementoCesta } from "../../ApiServices/CestaService";
-import { getUsuarioById, getUsuarioTieneElementoById } from '../../ApiServices/UsuarioService.js';
+import { getUsuarioById, getUsuarioTieneElementoById, postDesea, deleteDesea, postFavorito, deleteFavorito, getFavoritosByIds, getTieneByIds, getDeseaByIds } from '../../ApiServices/UsuarioService.js';
 import { UsuarioContext } from "../InicioSesion/UsuarioContext";
 import Carga from '../Utiles/PantallaCarga/PantallaCarga.js';
 
@@ -25,7 +25,6 @@ function MasInfoPageAlbum() {
   const [duration, setDuration] = useState(0);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [tracklist, setTracklist] = useState([]);
@@ -89,6 +88,7 @@ function MasInfoPageAlbum() {
                 const a = Array.isArray(artistData) ? artistData[0] : artistData;
                 setPrimerTrack(prev => ({ ...prev, artistaNombre: a?.nombrereal || a?.nombre || "Desconocido" }));
             }
+
         } catch (e) { console.warn("Error artista", e); }
 
         // Buscar Comentarios
@@ -198,6 +198,25 @@ useEffect(() => {
     }
   }, [isPlaying]);
 
+  //verificar favorito 
+  useEffect(() => {
+    const verificarFavorito = async () => {
+      if (token && idLoggedIn && album?.id != null) {
+        try {
+          const yaFavorito = await getFavoritosByIds(token, idLoggedIn,album.id, false)
+          const yaDeseado = await getDeseaByIds(token, idLoggedIn,album.id)
+          
+          setIsFavorite(yaFavorito);
+          setIsDeseado(yaDeseado);
+        } catch (error) {
+          console.error("Error al verificar si es favorito:", error);
+        }
+      }
+    };
+  
+    verificarFavorito();
+  }, [token, idLoggedIn, album?.id]); // Se ejecuta cuando cambie el token, id o la canción
+
   const togglePlay = () => setIsPlaying(!isPlaying);
 
   const formatTime = (seconds) => {
@@ -231,7 +250,53 @@ useEffect(() => {
   const handlePrev = () => setCurrentTrackIndex(prev => (prev - 1 + tracklist.length) % tracklist.length);
   
   const handleComprarClick = () => setShowPopup(true);
-  const toggleFavorite = () => setIsFavorite((prev) => !prev);
+  //const toggleFavorite = () => setIsFavorite((prev) => !prev);
+    //DESEA 
+  const [isDeseado, setIsDeseado] = useState(false);
+  const toggleDeseado = async () => {
+    const nuevoEstado = !isDeseado;
+    setIsDeseado(nuevoEstado);
+
+    if (token && idLoggedIn && album?.id != null) {
+      try {
+        if (nuevoEstado) {
+          const relacion = {
+            idusuario: idLoggedIn,
+            idelemento: album.id,
+          };
+          await postDesea(token, relacion);
+        } else {
+          await deleteDesea(token, idLoggedIn, album.id);
+        }
+      } catch (error) {
+        console.error("Error al actualizar favorito:", error);
+      }
+    }
+  };
+
+  //FAVORITO 
+  const [isFavorite, setIsFavorite] = useState(false);
+  const toggleFavorite = async () => {
+    const nuevoEstado = !isFavorite;
+    setIsFavorite(nuevoEstado);
+
+    if (token && idLoggedIn && album?.id != null) {
+      try {
+        if (nuevoEstado) {
+          const relacion = {
+            idusuario: idLoggedIn,
+            idelemento: album.id,
+            tipo: 2
+          };
+          await postFavorito(token, relacion);
+        } else {
+          await deleteFavorito(token, idLoggedIn, album.id, false);
+        }
+      } catch (error) {
+        console.error("Error al actualizar favorito:", error);
+      }
+    }
+  };
 
   const handleAnadirACesta = async () => {
     if (!token || !idLoggedIn) return alert("Inicia sesión para añadir a la cesta.");
@@ -265,12 +330,21 @@ useEffect(() => {
           
           <div id="reproductor" className="mt-3 p-3 d-flex flex-column align-items-center">
             <div className="reproductorAlineacion mb-3">
+              {token && 
+              (<>
+                <button className="btnDeseaAlbum" onClick={toggleDeseado}>
+                  {isDeseado ? <i className="fa-solid fa-heart"></i> : <i className="fa-regular fa-heart"></i>}
+                </button>
+              </>)}
               <button className="btnCancionAnterior" onClick={handlePrev}><i className="fa-solid fa-backward"></i></button>
               <button className="btnPlay" onClick={togglePlay}><i className={`fa-solid ${isPlaying ? "fa-pause" : "fa-play"}`}></i></button>
               <button className="btnCancionPosterior" onClick={handleNext}><i className="fa-solid fa-forward"></i></button>
-              <button className="btnFavoriteAlbum" onClick={toggleFavorite}>
-                {isFavorite ? <i className="fa-solid fa-heart"></i> : <i className="fa-regular fa-heart"></i>}
-              </button>
+              {token && 
+              (<>
+                <button className="btnFavoriteAlbum" onClick={toggleFavorite}>
+                  {isFavorite ? <i className="fa-solid fa-star"></i> : <i className="fa-regular fa-star"></i>}
+                </button>
+              </>)}
             </div>
             <div className="barraProgreso d-flex column">
               <div className="tiempoAhora">{formatTime(currentTime)}</div>

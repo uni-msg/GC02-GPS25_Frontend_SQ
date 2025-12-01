@@ -118,12 +118,22 @@
 }
 
 .btnFavorite{
-  color: rgb(201, 0, 0);
+  color: rgb(246, 255, 0);
   position: relative;
-  left: 35%;
+  left: 25%;
 }
 
 .btnFavorite:hover{
+  color: rgb(212, 219, 8);
+}
+
+.btnDeseado{
+  color: rgb(201, 0, 0);
+  position: relative;
+  left: 30%;
+}
+
+.btnDeseado:hover{
   color: rgb(120, 2, 2);
 }
 /*PRECIO*/
