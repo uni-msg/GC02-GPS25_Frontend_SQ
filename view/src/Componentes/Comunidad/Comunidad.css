@@ -97,7 +97,7 @@
     gap: 1rem;
     margin-bottom: 2rem;
     border-bottom: 2px solid #eee;
-    padding-bottom: 0; /* Importante para que la línea activa quede pegada */
+    padding-bottom: 0; /* Para que la línea activa quede pegada */
 }
 
 .tab-filtro-btn {
@@ -111,16 +111,16 @@
     position: relative;
     transition: all 0.3s;
     border-bottom: 3px solid transparent;
-    margin-bottom: -2px; /* Truco para que la línea activa se superponga al borde del contenedor */
+    margin-bottom: -2px; /* Para que la línea activa se superponga al borde del contenedor */
 }
 
 .tab-filtro-btn:hover {
-    color: #572362; /* Tu color morado principal */
+    color: var(--morado-color); 
 }
 
 .tab-filtro-btn.active {
-    color: #572362;
-    border-bottom-color: #572362;
+    color: var(--morado-color);
+    border-bottom-color: var(--morado-color);
 }
 
 /* Responsive para las pestañas en móvil */
@@ -133,3 +133,103 @@
         font-size: 0.95rem;
     }
 }
+
+/* Cabecera con botón */
+.header-comunidades {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.btn-crear-flotante {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: #572362;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-crear-flotante:hover {
+    background-color: #451c4e;
+    transform: translateY(-2px);
+}
+
+/* Responsive para el botón */
+@media (max-width: 768px) {
+    .header-comunidades {
+        flex-direction: column;
+        gap: 15px;
+    }
+    .btn-crear-flotante {
+        position: static; /* En móvil deja de flotar y se pone debajo */
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* --- ESTILOS DEL MODAL (Copiados para independencia) --- */
+.info-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.info-modal-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    position: relative;
+    animation: slideUp 0.2s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+}
+
+.btn-close-modal {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #999;
+}
+.btn-close-modal:hover { color: #ff4444; }
+
+.text-purple { color: #572362; }
+
+.btn-purple {
+    background-color: #572362;
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+}
+.btn-purple:hover { background-color: #3e1846; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

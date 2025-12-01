@@ -217,9 +217,10 @@ export const vetarUsuario = async (idComunidad, idUsuarioAVetar) => {
 };
 
 // Quitar veto a un usuario en una comunidad.
-export const quitarVetoUsuario = async (idComunidad, idUsuarioAQuitar) => {
+export const quitarVetoUsuario = async (idComunidad, UsuarioAQuitar) => {
     // DELETE /comunidad/vetados/{idComunidad}/{idUsuarioAQuitar}/
-     await axios.delete(`${BASE_URL_COMUNIDADES}/vetados/${idComunidad}/${idUsuarioAQuitar}`, {
+    console.log ("Intentando quitar veto a usuario", UsuarioAQuitar, "en comunidad", idComunidad);
+     await axios.delete(`${BASE_URL_COMUNIDADES}/vetados/${idComunidad}/${UsuarioAQuitar}/`, {
     });
     return true;
 };
