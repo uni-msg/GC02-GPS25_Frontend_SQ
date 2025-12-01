@@ -267,7 +267,7 @@ function Perfil({ idMenu }) {
                                     className={`nav-link ${menuPerfilActivo === 3 ? "menuPerfilActivo" : ""}`}
                                     onClick={() => { setMenuPerfilActivo(3) }}
                                 >
-                                    <a className="nav-link" >Artistas favoritos</a>
+                                    <a className="nav-link" >Lista de favoritos</a>
                                 </li>
                                 {
                                     esArtista &&
