@@ -13,13 +13,13 @@
 
 #masInfoPerfil .btnFavoritePer{
     margin-left: 0.2em;
-    color: rgb(201, 0, 0);
+    color: rgb(246, 255, 0);
     background: transparent;
     border: 0em solid transparent;
 }
   
 #masInfoPerfil  .btnFavoritePer:hover{
-    color: rgb(120, 2, 2);
+    color: rgb(212, 219, 8);
 }
 
 #masInfoPerfil .text-esNovedad {

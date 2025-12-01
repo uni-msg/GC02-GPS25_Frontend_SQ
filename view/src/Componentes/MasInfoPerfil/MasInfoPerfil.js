@@ -57,15 +57,6 @@ const MasInfoPerfil = () => {
                     const creados = await getElementosArtistasP(idParaBuscar);
                     setElementosCreados(creados);
                     console.log("Elementos creados por el artista:", creados);
-                    // Verificar Favoritos
-                    if (isLoggedIn) {
-                        try {
-                            await getFavoritosByIds(token, idLoggedIn, idParaBuscar);
-                            setIsFavorite(true);
-                        } catch (error) {
-                            setIsFavorite(false);
-                        }
-                    }
                 }
 
             } catch (error) {
@@ -78,6 +69,21 @@ const MasInfoPerfil = () => {
         cargarDatos();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stateRecibido, isLoggedIn, token, idLoggedIn]); 
+
+    useEffect(() => {
+        const verificarFavorito = async () => {
+            if (token && idLoggedIn && stateRecibido?.id != null) {
+            try {
+                const yaFavorito = await getFavoritosByIds(token, idLoggedIn,stateRecibido.id, true)
+                
+                setIsFavorite(yaFavorito);
+            } catch (error) {
+                console.error("Error al verificar si es favorito:", error);
+            }
+            }
+        };
+        verificarFavorito();
+    }, [token, idLoggedIn, stateRecibido?.id]); // Se ejecuta cuando cambie el token, id o la canción
 
 
     // Función para cargar canciones de un álbum específico
@@ -125,10 +131,7 @@ const MasInfoPerfil = () => {
         ));
     };
 
-
     const toggleFavorite = async () => {
-        if (!artista) return;
-        
         const cambioEstado = !isFavorite
         setIsFavorite(cambioEstado);
 
@@ -136,13 +139,14 @@ const MasInfoPerfil = () => {
             try {
                 if (cambioEstado) {
                     const relacion = {
-                        usuario_id: idLoggedIn,
-                        id_artista: artista.id,
+                        idusuario: idLoggedIn,
+                        idelemento: artista.id,
+                        tipo: 0
                     };
 
                     await postFavorito(token, relacion);
                 } else {
-                    await deleteFavorito(token, idLoggedIn, artista.id);
+                    await deleteFavorito(token, idLoggedIn, artista.id, true);
                 }
             } catch (error) {
                 console.error("❌ Error al actualizar favorito:", error);
@@ -164,9 +168,9 @@ const MasInfoPerfil = () => {
                     {isLoggedIn && (
                         <button type="button" className="btnFavoritePer" onClick={toggleFavorite}>
                             {isFavorite ? (
-                                <i className="fa-solid fa-heart"></i>
+                                <i className="fa-solid fa-star"></i>
                             ) : (
-                                <i className="fa-regular fa-heart"></i>
+                                <i className="fa-regular fa-star"></i>
                             )}
                         </button>
                     )}

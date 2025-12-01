@@ -130,6 +130,7 @@ function MasInfo() {
           await deleteDesea(token, idLoggedIn, song.id);
         }
       } catch (error) {
+        setIsDeseado(!nuevoEstado);
         console.error("Error al actualizar favorito:", error);
       }
     }
@@ -154,6 +155,7 @@ function MasInfo() {
           await deleteFavorito(token, idLoggedIn, song.id, false);
         }
       } catch (error) {
+        setIsFavorite(!nuevoEstado);
         console.error("Error al actualizar favorito:", error);
       }
     }
