@@ -1,13 +1,15 @@
 import './Perfil.css';
 
-import { useState, useEffect, useContext } from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Lista from "./../ListaFiltros/Lista.js";
 import ManejadorElem from "../ManejadorElem/ManejadorElem.js";
 import Carga from '../Utiles/PantallaCarga/PantallaCarga.js';
+import logo from './../../Recursos/elementoDefecto.png';
 
 import { UsuarioContext } from '../InicioSesion/UsuarioContext.js';
+import { subirArchivo } from "./../../ApiServices/FileSerive";
 import '../InicioSesion/firebaseConfig.js';
 import { getAuth, signOut } from "firebase/auth";
 import { URL_FOTO, CLOUD_URL_DEFAULT } from '../../config.js';
@@ -97,6 +99,42 @@ function Perfil({ idMenu }) {
     const [elementosDeseo, setElementosDeseo] = useState([]);
     const [artFav, setArtFav] = useState([]);
     const [loading, setLoading] = useState(true);
+    const initialPreview = formData.fotoAmazon && formData.fotoAmazon !== "null" ? `${URL_FOTO}${formData.fotoAmazon}` : CLOUD_URL_DEFAULT;
+    const [preview, setPreview] = useState(initialPreview);
+    const inputRef = useRef(null);
+    const [error, setError] = useState(""); // Estado para manejar errores
+
+    useEffect(() => {
+        const newPreview = formData.fotoAmazon && formData.fotoAmazon !== "null"
+            ? `${URL_FOTO}${formData.fotoAmazon}`
+            : CLOUD_URL_DEFAULT;
+
+        setPreview(newPreview);
+    }, [formData.fotoAmazon]);
+
+
+    const clicPort = () => {
+        inputRef.current.click();
+    };
+
+    const cambioPortada = (e) => {
+        const file = e.target.files[0];
+        if (file) { //si hay imagen
+            const validTypes = ["image/jpeg", "image/png", "image/gif"]; // comprueba los tipos validos
+            if (!validTypes.includes(file.type)) {
+                setError("Por favor, selecciona una imagen válida (JPEG, PNG, GIF).");
+                return;
+            }
+
+            setFormData({ ...formData, fotoFile: file }); //copia el formualrio de dato entero menos la
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -124,7 +162,10 @@ function Perfil({ idMenu }) {
             <div id='headerPerfil'>
                 <form id='cardPerfil' className="card" onSubmit={actualizoDatos}>
                     <div id="fotoPerfilName">
-                        <img src={formData.fotoAmazon && formData.fotoAmazon !== "null" ? `${URL_FOTO}${formData.fotoAmazon}` : `${CLOUD_URL_DEFAULT}`} className={`card-img-top ${esArtista ? "bordeArt" : ""}  ${esNovedad ? "bordeNovedad" : ""}`} alt="foto de perfil" />
+                        <div id="fotoCrearElem">
+                            <img src={preview} className={`card-img-top ${esArtista ? "bordeArt" : ""}  ${esNovedad ? "bordeNovedad" : ""}`} alt="foto de perfil" {...(editar ? { onClick: clicPort } : {})}/>
+                            <input type="file" accept="image/*" name="fotoFile" style={{ display: "none" }} ref={inputRef} onChange={cambioPortada} />
+                        </div>
                         <div>
                             <label htmlFor="fname"> User Name </label>
                             <input type="text" id="fname" name="fname" value={formData.nombreusuario} onChange={(e) => setFormData({ ...formData, nombreusuario: e.target.value })} disabled={!editar} />
