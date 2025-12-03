@@ -23,7 +23,6 @@ const CrearElem = ({ datos = null, crearModo = false, manejarResultado }) => {
     token,
     idLoggedIn,
   } = useContext(UsuarioContext);
-  // let token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdjNzQ5NTFmNjBhMDE0NzE3ZjFlMzA4ZDZiMjgwZjQ4ZjFlODhmZGEiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiUHJ1ZWJhQXJ0aXN0YTIiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdW5kZXJzb3VuZHMtZGMwZGQiLCJhdWQiOiJ1bmRlcnNvdW5kcy1kYzBkZCIsImF1dGhfdGltZSI6MTc2NDQwOTU2MSwidXNlcl9pZCI6IjkiLCJzdWIiOiI5IiwiaWF0IjoxNzY0NDA5NTYxLCJleHAiOjE3NjQ0MTMxNjEsImVtYWlsIjoicHJ1ZWJhYXJ0aXN0YTJAZXhhbXBsZS5jb20iLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZW1haWwiOlsicHJ1ZWJhYXJ0aXN0YTJAZXhhbXBsZS5jb20iXX0sInNpZ25faW5fcHJvdmlkZXIiOiJwYXNzd29yZCJ9fQ.ZFZA7ZoRcPD9db_rcGGrKAyjulab6Ufui0quYGTNaKhkiTDnlWhTaMZUUkrB0i8UBJyAYyVtK3Ap7bWU5K358126GG9Li53nEGhz04TPM5WZAhkrl6Q-VrTZbHTGwMYza2Muv05f6t6ng3j1lU88iN4kVW3T9-DA_gqPWnwAxOlQxOD7X3ex0y_KZ2QmbTlukpEXaRnAOGgs3yltAdlR0zRePbE8TFika4l_GMi9rG3g3zbekFuagJPkMrSv8ODJ7cX4hR3EPZBHC3VTW6a_3nrHG6D2lDvaNV1vFmRqcvTbFwnxVZAVeOAu0MRnHj9LjftJwlFGgi5690W7ZAdv5w";
   // let idLoggedIn = 1; // PARA PRUEBAS
   const [formData, setFormData] = useState({
     id: null,
