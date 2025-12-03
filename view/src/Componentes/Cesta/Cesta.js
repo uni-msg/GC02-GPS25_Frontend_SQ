@@ -94,11 +94,11 @@ function Cesta() {
         }
 
         setNumero(valor);
-        const donativoNuevo = parseFloat(valor) || 0;
+        const donativoNuevo = Number.parseFloat(valor) || 0;
         setDonativo(donativoNuevo); // Guardamos el donativo como número
     };
 
-    const totalConDonativo = (parseFloat(precioTotal?.precio || precioTotal || 0) + parseFloat(donativo || 0));
+    const totalConDonativo = (Number.parseFloat(precioTotal?.precio || precioTotal || 0) + Number.parseFloat(donativo || 0));
 
     return (
     <div id="cesta">
