@@ -42,7 +42,7 @@ export async function getArtistaById(id) {
 export async function syncArtista(token, idArtista) {
     try {
         const response = await axios.put(`${API_URL}/artistas/oyentes`, 
-            { idArtista: parseInt(idArtista) },
+            { idArtista: Number.parseInt(idArtista) },
             {
                 headers: token ? { Authorization: `Bearer ${token}` } : {},
             }
@@ -88,8 +88,8 @@ export async function getRankingArtistasOyentes() {
  */
 export async function registrarBusquedaArtista(token, idArtista, idUsuario = null) {
     try {
-        const body = { idArtista: parseInt(idArtista) };
-        if (idUsuario) body.idUsuario = parseInt(idUsuario);
+        const body = { idArtista: Number.parseInt(idArtista) };
+        if (idUsuario) body.idUsuario = Number.parseInt(idUsuario);
 
         const response = await axios.put(`${API_URL}/artistas/busqueda`, body, {
             headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -155,7 +155,7 @@ export async function getContenidoById(id) {
 export async function syncContenido(token, idContenido) {
     try {
         const response = await axios.put(`${API_URL}/contenido`, 
-            { idContenido: parseInt(idContenido) },
+            { idContenido: Number.parseInt(idContenido) },
             { headers: token ? { Authorization: `Bearer ${token}` } : {} }
         );
         return response.data;
@@ -340,9 +340,9 @@ export async function getRankingComunidadesPublicaciones() {
 export async function registrarReproduccion(token, idUsuario, idContenido, segundos) {
     try {
         const body = {
-            idUsuario: parseInt(idUsuario),
-            idContenido: parseInt(idContenido),
-            segundos: parseInt(segundos)
+            idUsuario: Number.parseInt(idUsuario),
+            idContenido: Number.parseInt(idContenido),
+            segundos: Number.parseInt(segundos)
         };
 
         // Usamos PUT porque así está definido en tu backend (@router.put)
